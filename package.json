@@ -3,5 +3,10 @@
     "@anthropic-ai/claude-code": "^1.0.112",
     "@google/gemini-cli": "^0.4.1",
     "@qwen-code/qwen-code": "^0.0.10"
-  }
+  },
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ]
 }
