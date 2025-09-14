@@ -25,7 +25,14 @@ const JWT_SECRET = process.env.JWT_SECRET || 'dev-insecure-secret';
 const TOKEN_EXPIRY = '1h';
 
 export const register = async (input: z.infer<typeof CreateUserSchema>) => {
-  const parsed = CreateUserSchema.parse(input);
+  const parsedResult = CreateUserSchema.safeParse(input);
+  if (!parsedResult.success) {
+    throw Object.assign(new Error('Invalid registration payload'), {
+      status: 400,
+      issues: parsedResult.error.issues,
+    });
+  }
+  const parsed = parsedResult.data;
   const existing = users.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
   if (existing) {
     throw Object.assign(new Error('Email already registered'), { status: 409 });
@@ -51,7 +58,14 @@ export const register = async (input: z.infer<typeof CreateUserSchema>) => {
 };
 
 export const login = async (input: z.infer<typeof LoginSchema>) => {
-  const parsed = LoginSchema.parse(input);
+  const parsedResult = LoginSchema.safeParse(input);
+  if (!parsedResult.success) {
+    throw Object.assign(new Error('Invalid login payload'), {
+      status: 400,
+      issues: parsedResult.error.issues,
+    });
+  }
+  const parsed = parsedResult.data;
   const user = users.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
   if (!user) {
     throw Object.assign(new Error('Invalid credentials'), { status: 401 });

@@ -2,6 +2,11 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
+import { authRouter } from './routes/auth.js';
+import { userRouter } from './routes/user.js';
+import { servicesRouter } from './routes/services.js';
+import { appointmentsRouter } from './routes/appointments.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 // Load environment variables once here (idempotent if called multiple times in tests)
 dotenv.config();
@@ -17,14 +22,14 @@ export const createApp = (): Application => {
     res.status(200).json({ status: 'ok' });
   });
 
-  // TODO (T028/T029): mount routers here, e.g.:
-  // app.use('/auth', authRouter);
-  // app.use('/user', userRouter);
-  // app.use('/services', servicesRouter);
-  // app.use('/appointments', appointmentsRouter);
+  // Routers
+  app.use('/auth', authRouter);
+  app.use('/user', userRouter);
+  app.use('/services', servicesRouter);
+  app.use('/appointments', appointmentsRouter);
 
-  // TODO (T030): global error handler
-  // app.use(errorHandler);
+  // Error handler
+  app.use(errorHandler);
 
   return app;
 };
