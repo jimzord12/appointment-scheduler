@@ -158,7 +158,6 @@ ios/ or android/
 ## Phase 0: Outline & Research
 
 1. **Extract unknowns from Technical Context** above:
-
    - For each NEEDS CLARIFICATION → research task
    - For each dependency → best practices task
    - For each integration → patterns task
@@ -184,25 +183,21 @@ ios/ or android/
 _Prerequisites: research.md complete_
 
 1. **Extract entities from feature spec** → `data-model.md`:
-
    - Entity name, fields, relationships
    - Validation rules from requirements
    - State transitions if applicable
 
 2. **Generate API contracts** from functional requirements:
-
    - For each user action → endpoint
    - Use standard REST/GraphQL patterns
    - Output OpenAPI/GraphQL schema to `/contracts/`
 
 3. **Generate contract tests** from contracts:
-
    - One test file per endpoint
    - Assert request/response schemas
    - Tests must fail (no implementation yet)
 
 4. **Extract test scenarios** from user stories:
-
    - Each story → integration test scenario
    - Quickstart test = story validation steps
 
@@ -266,12 +261,22 @@ _This checklist is updated during execution flow_
 [x] Phase 1: Design complete (/plan command)
 [ ] Phase 2: Task planning complete (/plan command - describe approach only)
 [x] Phase 3: Tasks generated (/tasks command)
-[ ] Phase 4: Implementation in progress
+[x] Phase 4: Implementation in progress
 [ ] Phase 5: Validation passed
 
 **Implementation Progress**:
 
 - [x] T001: Monorepo structure initialized (backend/, frontend/, shared/, shared/README.md, package.json workspaces)
+- [x] T006: Schema scaffolding added (backend/src/schemas) re-exporting contract Zod schemas
+- [x] T007–T010: Contract tests authored (auth register/login, user profile get/patch) now enforcing success/validation expectations and FAILING (proper RED state established)
+- [x] T011–T015: Remaining contract tests (services list/create, appointment requests get/post/patch) authored and FAILING (RED layer complete for all individual endpoints)
+- [x] T016–T018: Integration flow tests (auth, services, appointments lifecycle) authored and FAILING (full Phase 3.2 RED coverage established; blocked until backend implementation tasks T019+)
+      // Phase 3.3 (Backend Core Implementation)
+- [x] T019: Database config & Drizzle setup (db connection, drizzle config, migration scripts scaffolding)
+- [x] T020: User schema + model (users table with unique email index + role index)
+- [x] T021: Service schema + model (services table with indexes, defaults)
+- [x] T022: AppointmentRequest schema + model (appointment_requests table with status/date/user/service indexes)
+- [x] T023: Appointment schema + model (appointments table with unique FK on request_id)
 
 **Gate Status**:
 

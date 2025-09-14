@@ -1,35 +1,25 @@
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express from 'express';
-// Use dynamic import for helmet to avoid type resolution issues if types not installed
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import helmet from 'helmet';
 
-// Load environment variables
+// Load environment variables once here (idempotent if called multiple times in tests)
 dotenv.config();
 
-const app = express();
+export const createApp = () => {
+  const app = express();
+  app.use(helmet());
+  app.use(cors());
+  app.use(express.json());
 
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
+  app.get('/health', (req: express.Request, res: express.Response) => {
+    res.status(200).json({ status: 'ok' });
+  });
 
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
+  return app;
+};
 
-const PORT = process.env.PORT || 3000;
-
-// ESM direct execution detection
-// if (import.meta.url === `file://${process.argv[1]}`) {
-//   app.listen(PORT, () => {
-//     console.log(`Backend server running on port ${PORT}`);
-//   });
-// }
-
-app.listen(PORT, () => {
-  console.log(`Backend server running on port ${PORT}`);
-});
-
+// Export a singleton app instance for simple imports, while allowing test factories if needed
+const app = createApp();
 export default app;
-

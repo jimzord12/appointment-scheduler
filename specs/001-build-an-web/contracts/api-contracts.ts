@@ -3,6 +3,19 @@
 
 import { z } from 'zod';
 
+// Helper: ISO 8601 date (YYYY-MM-DD) string (not Date instance). Adjust if timezones later required.
+const isoDateString = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, { message: 'Expected date in YYYY-MM-DD format' })
+  .refine(
+    v => {
+      const d = new Date(v + 'T00:00:00Z');
+      // Check constructed date validity and preserve original components (avoid JS date coercion mismatches)
+      return !isNaN(d.getTime()) && v === d.toISOString().slice(0, 10);
+    },
+    { message: 'Invalid calendar date' }
+  );
+
 // User schemas
 export const UserSchema = z.object({
   id: z.string().uuid(),
@@ -49,7 +62,7 @@ export const AppointmentRequestSchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
   serviceId: z.string().uuid(),
-  requestedDate: z.string().date(), // ISO date string
+  requestedDate: isoDateString, // ISO date string (validated)
   requestedTime: z.string(), // HH:MM format
   status: z.enum(['pending', 'approved', 'rejected']),
   notes: z.string().optional(),
@@ -60,7 +73,7 @@ export const AppointmentRequestSchema = z.object({
 
 export const CreateAppointmentRequestSchema = z.object({
   serviceId: z.string().uuid(),
-  requestedDate: z.string().date(),
+  requestedDate: isoDateString,
   requestedTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
   notes: z.string().optional(),
 });
@@ -135,3 +148,4 @@ export const appointmentProcedures = {
     output: AppointmentRequestSchema,
   },
 };
+

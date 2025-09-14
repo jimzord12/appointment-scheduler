@@ -1,13 +1,31 @@
 {
+  "name": "appointment-scheduler-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Monorepo for appointment scheduler web application (frontend + backend + shared)",
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "dev": "concurrently \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck"
+  },
   "devDependencies": {
     "@anthropic-ai/claude-code": "^1.0.112",
     "@google/gemini-cli": "^0.4.1",
     "@qwen-code/qwen-code": "^0.0.10",
+    "concurrently": "^9.0.0",
     "jsdom": "^27.0.0"
   },
   "workspaces": [
     "backend",
     "frontend",
     "shared"
-  ]
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  }
 }
