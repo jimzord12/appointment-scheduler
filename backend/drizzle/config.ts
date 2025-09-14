@@ -17,6 +17,6 @@ export default defineConfig({
   },
   strict: true,
   verbose: true,
-  casing: 'camel',
+  casing: 'camelCase',
 });
 

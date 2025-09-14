@@ -277,6 +277,11 @@ _This checklist is updated during execution flow_
 - [x] T021: Service schema + model (services table with indexes, defaults)
 - [x] T022: AppointmentRequest schema + model (appointment_requests table with status/date/user/service indexes)
 - [x] T023: Appointment schema + model (appointments table with unique FK on request_id)
+      // Phase 3.3 Services Layer
+- [x] T024: Auth service (in-memory) register/login with bcrypt + JWT (will migrate to DB later)
+- [x] T025: User profile service (get/update leveraging auth store; to be refactored to DB)
+- [x] T026: Service management service (create/list with manager role enforcement)
+- [x] T027: Appointment workflow service (create/list/update + double-book prevention in-memory)
 
 **Gate Status**:
 

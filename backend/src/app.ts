@@ -1,21 +1,30 @@
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import express from 'express';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 
 // Load environment variables once here (idempotent if called multiple times in tests)
 dotenv.config();
 
-export const createApp = () => {
+export const createApp = (): Application => {
   const app = express();
   app.use(helmet());
   app.use(cors());
   app.use(express.json());
 
-  app.get('/health', (req: express.Request, res: express.Response) => {
+  // Health endpoint (no auth)
+  app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({ status: 'ok' });
   });
+
+  // TODO (T028/T029): mount routers here, e.g.:
+  // app.use('/auth', authRouter);
+  // app.use('/user', userRouter);
+  // app.use('/services', servicesRouter);
+  // app.use('/appointments', appointmentsRouter);
+
+  // TODO (T030): global error handler
+  // app.use(errorHandler);
 
   return app;
 };
