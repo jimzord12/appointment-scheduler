@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { optionalAuth, requireAuth, requireManager } from '../middleware/auth.js';
+import { validateBody } from '../middleware/validate.js';
 import { CreateServiceSchema } from '../schemas/index.js';
 import { createService, listServices } from '../services/serviceService.js';
-import { validateBody } from '../middleware/validate.js';
 
 export const servicesRouter = Router();
 
@@ -29,3 +29,4 @@ servicesRouter.post(
     }
   }
 );
+

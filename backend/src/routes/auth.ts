@@ -22,3 +22,4 @@ authRouter.post('/login', validateBody(LoginSchema), async (req, res, next) => {
     next(err);
   }
 });
+

@@ -1,5 +1,4 @@
-import { ZodError } from 'zod';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 export function validateBody(schema: any) {
   return (req: Request, _res: Response, next: NextFunction) => {
@@ -11,3 +10,4 @@ export function validateBody(schema: any) {
     }
   };
 }
+

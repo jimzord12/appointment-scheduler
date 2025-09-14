@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-insecure-secret';
@@ -42,3 +42,4 @@ export function requireManager(req: Request, res: Response, next: NextFunction) 
   if (req.user.role !== 'manager') return res.status(403).json({ error: 'forbidden' });
   next();
 }
+

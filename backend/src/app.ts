@@ -2,11 +2,11 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
-import { authRouter } from './routes/auth.js';
-import { userRouter } from './routes/user.js';
-import { servicesRouter } from './routes/services.js';
-import { appointmentsRouter } from './routes/appointments.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { appointmentsRouter } from './routes/appointments.js';
+import { authRouter } from './routes/auth.js';
+import { servicesRouter } from './routes/services.js';
+import { userRouter } from './routes/user.js';
 
 // Load environment variables once here (idempotent if called multiple times in tests)
 dotenv.config();

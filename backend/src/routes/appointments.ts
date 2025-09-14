@@ -1,13 +1,12 @@
 import { Router } from 'express';
+import { z } from 'zod';
 import { requireAuth } from '../middleware/auth.js';
+import { validateBody } from '../middleware/validate.js';
 import {
   CreateAppointmentRequestSchema,
-  AppointmentRequestSchema,
   UpdateAppointmentRequestSchema,
 } from '../schemas/index.js';
 import { createRequest, listRequests, updateRequest } from '../services/appointmentService.js';
-import { validateBody } from '../middleware/validate.js';
-import { z } from 'zod';
 
 export const appointmentsRouter = Router();
 
@@ -38,7 +37,10 @@ appointmentsRouter.patch(
   '/requests/:id',
   requireAuth,
   validateBody(
-    z.object({ status: UpdateAppointmentRequestSchema.shape.status, managerNotes: z.string().optional() })
+    z.object({
+      status: UpdateAppointmentRequestSchema.shape.status,
+      managerNotes: z.string().optional(),
+    })
   ),
   async (req, res, next) => {
     try {
@@ -49,3 +51,4 @@ appointmentsRouter.patch(
     }
   }
 );
+

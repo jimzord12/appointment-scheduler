@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 
 export function errorHandler(err: any, _req: Request, res: Response, _next: NextFunction) {
@@ -6,7 +6,10 @@ export function errorHandler(err: any, _req: Request, res: Response, _next: Next
   const payload: any = { error: err?.message || 'Internal Server Error' };
 
   const isZod = err instanceof ZodError;
-  const looksLikeZod = !isZod && Array.isArray(err?.issues) && err.issues.every((i: any) => i && typeof i === 'object' && 'code' in i && 'message' in i);
+  const looksLikeZod =
+    !isZod &&
+    Array.isArray(err?.issues) &&
+    err.issues.every((i: any) => i && typeof i === 'object' && 'code' in i && 'message' in i);
 
   if (isZod || looksLikeZod) {
     status = 400;
@@ -22,3 +25,4 @@ export function errorHandler(err: any, _req: Request, res: Response, _next: Next
   }
   res.status(status).json(payload);
 }
+
