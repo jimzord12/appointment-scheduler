@@ -1,4 +1,5 @@
 import { date, index, pgEnum, pgTable, text, time, timestamp, uuid } from 'drizzle-orm/pg-core';
+
 import { services } from './services.js';
 import { users } from './users.js';
 
@@ -36,4 +37,3 @@ export const appointmentRequests = pgTable(
 
 export type AppointmentRequest = typeof appointmentRequests.$inferSelect;
 export type NewAppointmentRequest = typeof appointmentRequests.$inferInsert;
-

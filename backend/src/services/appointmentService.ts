@@ -1,8 +1,10 @@
 import { z } from 'zod';
+
 import {
   AppointmentRequestSchema,
   CreateAppointmentRequestSchema,
 } from '../../src/schemas/index.js';
+
 import { __findUserById } from './authService.js';
 import { __findServiceById } from './serviceService.js';
 
@@ -114,4 +116,3 @@ function normalizeRequest(r: StoredAppointmentRequest) {
 export function __resetAppointmentStore() {
   requests.splice(0, requests.length);
 }
-

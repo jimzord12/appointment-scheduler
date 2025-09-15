@@ -1,5 +1,6 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import app from '../../src/app';
 import { UserSchema } from '../../src/schemas';
 
@@ -24,4 +25,3 @@ describe('PATCH /user/profile (contract)', () => {
     expect(res.status).toBe(401); // fails now (likely 404)
   });
 });
-

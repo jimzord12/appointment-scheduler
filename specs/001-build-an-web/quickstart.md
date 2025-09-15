@@ -140,12 +140,10 @@ After setup, the following users are available:
 ### Common Issues
 
 1. **Port already in use**
-
    - Change ports in .env file
    - Kill processes using the ports
 
 2. **Database connection failed**
-
    - Check DATABASE_URL in .env
    - Ensure database is running
    - Run migrations: `npm run db:migrate`

@@ -11,6 +11,7 @@
  */
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import { createApp } from '../../src/app';
 import { AuthResponseSchema, UserSchema } from '../../src/schemas';
 
@@ -73,4 +74,3 @@ describe('T016: Auth flow (expected FAIL)', () => {
     expect(parsed.success).toBe(true);
   });
 });
-

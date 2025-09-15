@@ -28,4 +28,3 @@ export const users = pgTable(
 // Inferred types used elsewhere
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
-

@@ -1,5 +1,7 @@
 import { z } from 'zod';
+
 import { UserSchema } from '../../src/schemas/index.js';
+
 import { __findUserById, __updateUser, sanitizeUser } from './authService.js';
 
 const UpdateProfileInput = z.object({
@@ -26,4 +28,3 @@ export async function updateProfile(input: z.infer<typeof UpdateProfileInput>) {
 }
 
 export { UpdateProfileInput };
-

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { optionalAuth, requireAuth, requireManager } from '../middleware/auth.js';
 import { validateBody } from '../middleware/validate.js';
 import { CreateServiceSchema } from '../schemas/index.js';
@@ -29,4 +30,3 @@ servicesRouter.post(
     }
   }
 );
-

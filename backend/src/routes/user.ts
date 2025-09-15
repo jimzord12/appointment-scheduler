@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { requireAuth } from '../middleware/auth.js';
 import { validateBody } from '../middleware/validate.js';
 import { getProfile, updateProfile, UpdateProfileInput } from '../services/userService.js';
@@ -27,4 +28,3 @@ userRouter.patch(
     }
   }
 );
-

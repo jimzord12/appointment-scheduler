@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
+
 import {
   AuthResponseSchema,
   CreateUserSchema,
@@ -110,4 +111,3 @@ export function __updateUser(id: string, patch: Partial<Pick<StoredUser, 'name' 
 }
 
 export type AuthUser = ReturnType<typeof sanitizeUser>;
-

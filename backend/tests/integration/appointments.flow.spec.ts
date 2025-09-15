@@ -8,6 +8,7 @@
  */
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import { createApp } from '../../src/app';
 import { AppointmentRequestSchema } from '../../src/schemas';
 
@@ -98,4 +99,3 @@ describe('T018: Appointment lifecycle (expected FAIL)', () => {
     expect(approveRes.status).toBe(409); // expected FAIL (404 now)
   });
 });
-

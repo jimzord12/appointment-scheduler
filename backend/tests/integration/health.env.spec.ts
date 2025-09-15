@@ -1,5 +1,6 @@
 import { agent } from 'supertest';
 import { beforeAll, describe, expect, it } from 'vitest';
+
 import app from '../../src/app';
 
 // Basic environment variables expectation (extend as needed)
@@ -32,4 +33,3 @@ describe('Environment & Health', () => {
     expect(fallback).toBeDefined();
   });
 });
-

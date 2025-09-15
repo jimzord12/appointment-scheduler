@@ -1,5 +1,6 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import app from '../../src/app';
 import { CreateServiceSchema, ServiceSchema } from '../../src/schemas';
 
@@ -26,4 +27,3 @@ describe('POST /services (contract)', () => {
     expect(CreateServiceSchema.safeParse({}).success).toBe(false);
   });
 });
-

@@ -1,5 +1,6 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import app from '../../src/app';
 import { AppointmentRequestSchema, CreateAppointmentRequestSchema } from '../../src/schemas';
 
@@ -35,4 +36,3 @@ describe('POST /appointments/requests (contract)', () => {
     expect(CreateAppointmentRequestSchema.safeParse({}).success).toBe(false);
   });
 });
-

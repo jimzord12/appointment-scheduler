@@ -1,5 +1,6 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import app from '../../src/app';
 import { AppointmentRequestSchema, UpdateAppointmentRequestSchema } from '../../src/schemas';
 
@@ -33,4 +34,3 @@ describe('PATCH /appointments/requests/:id (contract)', () => {
     expect(UpdateAppointmentRequestSchema.shape).toBeDefined();
   });
 });
-

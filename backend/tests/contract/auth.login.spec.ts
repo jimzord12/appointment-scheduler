@@ -1,5 +1,6 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import app from '../../src/app';
 import { AuthResponseSchema, LoginSchema } from '../../src/schemas';
 
@@ -28,4 +29,3 @@ describe('POST /auth/login (contract)', () => {
     expect(invalid.success).toBe(false);
   });
 });
-

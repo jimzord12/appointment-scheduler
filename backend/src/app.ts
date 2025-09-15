@@ -2,6 +2,7 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
+
 import { errorHandler } from './middleware/errorHandler.js';
 import { appointmentsRouter } from './routes/appointments.js';
 import { authRouter } from './routes/auth.js';

@@ -9,4 +9,3 @@ Each schema file should:
 - Avoid business logic; keep pure data shape + relations
 
 Migration generation will scan this directory.
-

@@ -28,4 +28,3 @@ export {
 
 // Example placeholder for future internal-only schema variations
 // export const InternalUserWithPasswordSchema = UserSchema.extend({ passwordHash: z.string() });
-

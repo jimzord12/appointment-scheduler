@@ -148,4 +148,3 @@ export const appointmentProcedures = {
     output: AppointmentRequestSchema,
   },
 };
-

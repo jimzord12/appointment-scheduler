@@ -272,4 +272,3 @@ describe('POST /auth/register (contract)', () => {
 
 - Use database indexes
 - (Future) Implement caching where appropriate
-

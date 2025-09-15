@@ -9,6 +9,7 @@
  */
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import { createApp } from '../../src/app';
 import { ServiceSchema } from '../../src/schemas';
 
@@ -75,4 +76,3 @@ describe('T017: Services flow (expected FAIL)', () => {
     }
   });
 });
-

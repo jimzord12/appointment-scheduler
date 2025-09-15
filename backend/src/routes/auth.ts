@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { validateBody } from '../middleware/validate.js';
 import { CreateUserSchema, LoginSchema } from '../schemas/index.js';
 import { login, register } from '../services/authService.js';
@@ -22,4 +23,3 @@ authRouter.post('/login', validateBody(LoginSchema), async (req, res, next) => {
     next(err);
   }
 });
-

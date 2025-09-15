@@ -9,4 +9,3 @@ const instance = app ?? createApp();
 instance.listen(PORT, () => {
   console.log(`Backend server running on port ${PORT}`);
 });
-

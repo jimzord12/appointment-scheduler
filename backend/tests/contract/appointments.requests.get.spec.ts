@@ -1,5 +1,6 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
+
 import app from '../../src/app';
 import { AppointmentRequestSchema } from '../../src/schemas';
 
@@ -23,4 +24,3 @@ describe('GET /appointments/requests (contract)', () => {
     expect(res.status).toBe(401); // fails now (404)
   });
 });
-

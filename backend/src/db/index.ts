@@ -19,4 +19,3 @@ const pool = new Pool({ connectionString });
 export const db = drizzle(pool, { logger: false });
 
 export type DbClient = typeof db;
-
