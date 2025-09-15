@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 
-export function errorHandler(err: any, _req: Request, res: Response, _next: NextFunction) {
+import { createLogger } from './logging.js';
+
+const logger = createLogger();
+
+export function errorHandler(err: any, req: Request, res: Response, _next: NextFunction) {
   let status = (err && typeof err.status === 'number' && err.status) || 500;
   const payload: any = { error: err?.message || 'Internal Server Error' };
 
@@ -23,5 +27,15 @@ export function errorHandler(err: any, _req: Request, res: Response, _next: Next
       payload.validationNote = 'Treated as ZodError via heuristic (issues[] detected)';
     }
   }
+
+  // Log the error
+  logger.error('Unhandled error', {
+    method: req.method,
+    url: req.originalUrl,
+    error: err.message,
+    stack: err.stack,
+    statusCode: status,
+  });
+
   res.status(status).json(payload);
 }

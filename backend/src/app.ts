@@ -4,6 +4,7 @@ import express, { Application, Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { errorHandler } from './middleware/errorHandler.js';
+import { loggingMiddleware, LogLevel } from './middleware/logging.js';
 import { appointmentsRouter } from './routes/appointments.js';
 import { authRouter } from './routes/auth.js';
 import { servicesRouter } from './routes/services.js';
@@ -17,6 +18,16 @@ export const createApp = (): Application => {
   app.use(helmet());
   app.use(cors());
   app.use(express.json());
+
+  // Logging middleware
+  app.use(
+    loggingMiddleware({
+      level: LogLevel.INFO, // Can be configured via environment variable in production
+      logRequestBody: false, // Set to true for debugging in development
+      logResponseBody: false, // Set to true for debugging in development
+      excludePaths: ['/health'], // Don't log health checks
+    })
+  );
 
   // Health endpoint (no auth)
   app.get('/health', (_req: Request, res: Response) => {
