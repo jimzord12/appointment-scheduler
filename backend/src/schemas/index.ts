@@ -11,7 +11,7 @@ import {
   ServiceSchema,
   UpdateAppointmentRequestSchema,
   UserSchema,
-} from '../../../specs/001-build-an-web/contracts/api-contracts';
+} from '../../../specs/001-build-an-web/contracts/api-contracts.js';
 
 export {
   AppointmentRequestSchema,
