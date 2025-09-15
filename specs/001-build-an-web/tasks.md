@@ -1,5 +1,11 @@
 # Tasks: Appointment Management Web Application
 
+## Completion Summary
+
+- **32 tasks (54.2%) are completed** ✅
+- **0 tasks (0%) are partially completed** ⚠️
+- **27 tasks (45.8%) are not completed** ❌
+
 **Input**: Design documents from `c:/Users/jimzord12/Documents/GitHub/appointment-scheduler/specs/001-build-an-web/`
 **Prerequisites**: `plan.md` (required), `research.md`, `data-model.md`, `contracts/`
 
@@ -30,16 +36,16 @@ Includes: Acceptance Criteria (AC), Dependencies (Deps), Effort (S= <1h, M=1-2h,
 
 ## Phase 3.1: Repository & Environment Setup
 
-- [ ] T001 Initialize monorepo structure (create `backend/`, `frontend/`, placeholder `shared/README.md`).
+- [x] T001 Initialize monorepo structure (create `backend/`, `frontend/`, placeholder `shared/README.md`).
       AC: Directories exist; root `package.json` updated with workspaces if using PNPM/Yarn; no lint errors.
       Effort: S
       Links: plan.md (Project Structure)
-- [ ] T002 Backend TypeScript setup: init `backend/package.json`, add deps (`express@5`, `zod`, `drizzle-orm`, `pg`, `better-auth`, `cors`, `helmet`, `express-rate-limit`, `dotenv`, `typescript`, `ts-node-dev`, `vitest`, `supertest`, `eslint`, `prettier`).
+- [x] T002 Backend TypeScript setup: init `backend/package.json`, add deps (`express@5`, `zod`, `drizzle-orm`, `pg`, `better-auth`, `cors`, `helmet`, `express-rate-limit`, `dotenv`, `typescript`, `ts-node-dev`, `vitest`, `supertest`, `eslint`, `prettier`).
       AC: Can run `pnpm dev` to start placeholder server returning 200 `/health`.
       Deps: T001
       Effort: M
       Links: research.md (Backend stack)
-- [ ] T003 Frontend Vite React TS setup: `frontend/` with React 19, TailwindCSS 4, shadcn components, TanStack Router, TanStack Query, Zustand, React Hook Form, date-fns, Vitest, RTL, MSW, ESLint, Prettier.
+- [x] T003 Frontend Vite React TS setup: `frontend/` with React 19, TailwindCSS 4, shadcn components, TanStack Router, TanStack Query, Zustand, React Hook Form, date-fns, Vitest, RTL, MSW, ESLint, Prettier.
       AC: `pnpm dev` runs Vite app with placeholder landing page.
       Deps: T001
       Effort: M
@@ -49,7 +55,7 @@ Includes: Acceptance Criteria (AC), Dependencies (Deps), Effort (S= <1h, M=1-2h,
       Deps: T001
       Effort: M
       Links: research.md (Best Practices)
-- [ ] T005 Environment configuration: `.env.example` for backend (DATABASE_URL, JWT_SECRET, RATE_LIMIT, NODE_ENV), frontend (.env variables for API base). Add `dotenv` loading.
+- [x] T005 Environment configuration: `.env.example` for backend (DATABASE_URL, JWT_SECRET, RATE_LIMIT, NODE_ENV), frontend (.env variables for API base). Add `dotenv` loading.
       AC: App boots with sample env; secrets excluded via `.gitignore`.
       Deps: T002, T003
       Effort: S
@@ -63,65 +69,65 @@ Contract source: `specs/001-build-an-web/contracts/api-contracts.ts` endpoints (
 
 Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
 
-- [ ] T006 Generate shared Zod schema export scaffolding in `backend/src/schemas/` (no implementation logic; export placeholders referencing spec).
+- [x] T006 Generate shared Zod schema export scaffolding in `backend/src/schemas/` (no implementation logic; export placeholders referencing spec).
       AC: Schemas imported compile; no route/server code yet.
       Deps: T002
       Effort: S
       Links: contracts/api-contracts.ts
-- [ ] T007 [P] Contract test: POST /auth/register (file: `backend/tests/contract/auth.register.spec.ts`) asserts schema match + required fields validation errors.
+- [x] T007 [P] Contract test: POST /auth/register (file: `backend/tests/contract/auth.register.spec.ts`) asserts schema match + required fields validation errors.
       AC: Test fails (endpoint 404 or not implemented).
       Deps: T006
       Effort: S
       Links: contracts/api-contracts.ts (authProcedures.register)
-- [ ] T008 [P] Contract test: POST /auth/login (`backend/tests/contract/auth.login.spec.ts`).
+- [x] T008 [P] Contract test: POST /auth/login (`backend/tests/contract/auth.login.spec.ts`).
       AC: Failing test; covers invalid credentials path.
       Deps: T006
       Effort: S
       Links: contracts/api-contracts.ts (authProcedures.login)
-- [ ] T009 [P] Contract test: GET /user/profile (`backend/tests/contract/user.profile.get.spec.ts`).
+- [x] T009 [P] Contract test: GET /user/profile (`backend/tests/contract/user.profile.get.spec.ts`).
       AC: Fails; expects 401 when unauthenticated.
       Deps: T006
       Effort: S
       Links: userProcedures.getProfile
-- [ ] T010 [P] Contract test: PATCH /user/profile (`backend/tests/contract/user.profile.patch.spec.ts`).
+- [x] T010 [P] Contract test: PATCH /user/profile (`backend/tests/contract/user.profile.patch.spec.ts`).
       AC: Fails; tests validation rules & partial update.
       Deps: T006
       Effort: S
       Links: userProcedures.updateProfile
-- [ ] T011 [P] Contract test: GET /services (`backend/tests/contract/services.get.spec.ts`).
+- [x] T011 [P] Contract test: GET /services (`backend/tests/contract/services.get.spec.ts`).
       AC: Fails; expects array schema.
       Deps: T006
       Effort: S
       Links: serviceProcedures.getServices
-- [ ] T012 [P] Contract test: POST /services (`backend/tests/contract/services.post.spec.ts`).
+- [x] T012 [P] Contract test: POST /services (`backend/tests/contract/services.post.spec.ts`).
       AC: Fails; validates field constraints.
       Deps: T006
       Effort: S
       Links: serviceProcedures.createService
-- [ ] T013 [P] Contract test: GET /appointments/requests (`backend/tests/contract/appointments.requests.get.spec.ts`).
+- [x] T013 [P] Contract test: GET /appointments/requests (`backend/tests/contract/appointments.requests.get.spec.ts`).
       AC: Fails; unauthorized when no auth.
       Deps: T006
       Effort: S
       Links: appointmentProcedures.getRequests
-- [ ] T014 [P] Contract test: POST /appointments/requests (`backend/tests/contract/appointments.requests.post.spec.ts`).
+- [x] T014 [P] Contract test: POST /appointments/requests (`backend/tests/contract/appointments.requests.post.spec.ts`).
       AC: Fails; validates time format and date.
       Deps: T006
       Effort: S
       Links: appointmentProcedures.createRequest
-- [ ] T015 [P] Contract test: PATCH /appointments/requests/:id (`backend/tests/contract/appointments.requests.patch.spec.ts`).
+- [x] T015 [P] Contract test: PATCH /appointments/requests/:id (`backend/tests/contract/appointments.requests.patch.spec.ts`).
       AC: Fails; ensures only status & managerNotes accepted.
       Deps: T006
       Effort: S
       Links: appointmentProcedures.updateRequest
-- [ ] T016 Integration test: User registration + login flow (`backend/tests/integration/auth.flow.spec.ts`) – register, duplicate handling, login invalid password, success path (expected fail).
+- [x] T016 Integration test: User registration + login flow (`backend/tests/integration/auth.flow.spec.ts`) – register, duplicate handling, login invalid password, success path (expected fail).
       Deps: T007,T008
       Effort: M
       Links: authProcedures.\*
-- [ ] T017 Integration test: Service CRUD minimal flow (`backend/tests/integration/services.flow.spec.ts`) – create (manager), list (customer), authorization difference (expected fail).
+- [x] T017 Integration test: Service CRUD minimal flow (`backend/tests/integration/services.flow.spec.ts`) – create (manager), list (customer), authorization difference (expected fail).
       Deps: T011,T012
       Effort: M
       Links: serviceProcedures.\*
-- [ ] T018 Integration test: Appointment request lifecycle (`backend/tests/integration/appointments.flow.spec.ts`) – create request, approve, reject alt path, double-book prevention (expected fail).
+- [x] T018 Integration test: Appointment request lifecycle (`backend/tests/integration/appointments.flow.spec.ts`) – create request, approve, reject alt path, double-book prevention (expected fail).
       Deps: T013,T014,T015
       Effort: L
       Links: appointmentProcedures.\* data-model.md (business rules)
@@ -130,62 +136,62 @@ Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
 
 (No task here starts until ALL Phase 3.2 tests exist & fail.)
 
-- [ ] T019 Database config & Drizzle setup (`backend/src/db/index.ts`, migration folder).
+- [x] T019 Database config & Drizzle setup (`backend/src/db/index.ts`, migration folder).
       AC: Can run migration generation; connection uses env.
       Deps: T005,T006
       Effort: M
       Links: data-model.md
-- [ ] T020 User schema + Drizzle model (`backend/src/db/schema/users.ts`).
+- [x] T020 User schema + Drizzle model (`backend/src/db/schema/users.ts`).
       AC: Matches attributes & constraints; email unique index.
       Deps: T019
       Effort: S
       Links: data-model.md (User)
-- [ ] T021 Service schema + model (`backend/src/db/schema/services.ts`).
+- [x] T021 Service schema + model (`backend/src/db/schema/services.ts`).
       AC: durationMinutes range enforce; isActive default true.
       Deps: T019
       Effort: S
       Links: data-model.md (Service)
-- [ ] T022 AppointmentRequest schema + model (`backend/src/db/schema/appointment_requests.ts`).
+- [x] T022 AppointmentRequest schema + model (`backend/src/db/schema/appointment_requests.ts`).
       AC: status enum default pending; indexes per spec.
       Deps: T019
       Effort: M
       Links: data-model.md (Appointment Request)
-- [ ] T023 Appointment schema + model (`backend/src/db/schema/appointments.ts`).
+- [x] T023 Appointment schema + model (`backend/src/db/schema/appointments.ts`).
       AC: FK unique on request_id; cascade delete policy documented.
       Deps: T022
       Effort: S
       Links: data-model.md (Appointment)
-- [ ] T024 Auth service (register/login) (`backend/src/services/authService.ts`) using better-auth + bcrypt hashing strategy.
+- [x] T024 Auth service (register/login) (`backend/src/services/authService.ts`) using better-auth + bcrypt hashing strategy.
       AC: Passes T007,T008,T016 scenarios.
       Deps: T020
       Effort: M
       Links: contracts (auth), research.md (auth)
-- [ ] T025 User profile service (`backend/src/services/userService.ts`) update fields with validation.
+- [x] T025 User profile service (`backend/src/services/userService.ts`) update fields with validation.
       AC: Passes T009,T010.
       Deps: T020,T024
       Effort: S
       Links: contracts (user)
-- [ ] T026 Service management service (`backend/src/services/serviceService.ts`) create/list with role checks.
+- [x] T026 Service management service (`backend/src/services/serviceService.ts`) create/list with role checks.
       AC: Passes T011,T012,T017.
       Deps: T021,T024
       Effort: M
       Links: contracts (service), data-model.md
-- [ ] T027 Appointment workflow service (`backend/src/services/appointmentService.ts`) create request, list requests by user/role, update status with double-book prevention.
+- [x] T027 Appointment workflow service (`backend/src/services/appointmentService.ts`) create request, list requests by user/role, update status with double-book prevention.
       AC: Passes T013–T015,T018.
       Deps: T022,T023,T024,T026
       Effort: L
       Links: contracts (appointment), data-model.md (business rules)
-- [ ] T028 Express app setup (`backend/src/app.ts`) include JSON body parsing, cors, helmet, rate-limit, logging middleware stub.
+- [x] T028 Express app setup (`backend/src/app.ts`) include JSON body parsing, cors, helmet, rate-limit, logging middleware stub.
       AC: Imports routes only (no logic duplication); health route green.
       Deps: T024–T027
       Effort: S
       Links: plan.md (performance/security)
-- [ ] T029 Route layer + oRPC adapter (`backend/src/routes/*.ts`) mapping endpoints to services with Zod validation.
+- [x] T029 Route layer + oRPC adapter (`backend/src/routes/*.ts`) mapping endpoints to services with Zod validation.
       AC: All contract tests pass (except integration-specific flows).
       Deps: T028
       Effort: M
       Links: contracts/api-contracts.ts
-- [ ] T030 Error handling & response normalization (`backend/src/middleware/errorHandler.ts`).
+- [x] T030 Error handling & response normalization (`backend/src/middleware/errorHandler.ts`).
       AC: Known validation/auth errors standardized; tests updated to assert shape.
       Deps: T029
       Effort: S
@@ -195,7 +201,7 @@ Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
       Deps: T028
       Effort: S
       Links: plan.md (Observability)
-- [ ] T032 Auth middleware / token verification (`backend/src/middleware/auth.ts`).
+- [x] T032 Auth middleware / token verification (`backend/src/middleware/auth.ts`).
       AC: Protects authenticated routes, ties into better-auth issued tokens.
       Deps: T024
       Effort: M
@@ -352,4 +358,3 @@ S: 32 M: 19 L: 4 (Total tasks: 59)
 ---
 
 Generated September 12, 2025 from branch `001-build-an-web`.
-
