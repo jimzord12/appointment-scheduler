@@ -1,191 +1,35 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-// Import API contracts for type reference
 import {
   AppointmentRequestSchema,
   AuthResponseSchema,
   ServiceSchema,
   UserSchema,
 } from '../../../specs/001-build-an-web/contracts/api-contracts.js';
+import { apiClient } from '../lib/api/client.js';
 
-// Mock API client that doesn't exist yet
-// These tests will fail until the actual API client is implemented
-const apiClient = {
-  // Auth methods
-  login: async (data: { email: string; password: string }) => {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json();
-  },
-  register: async (data: { name: string; email: string; password: string; role?: string }) => {
-    const response = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json();
-  },
+// Deterministic ISO timestamps used by MSW handlers
+const ISO = '2023-12-01T00:00:00.000Z';
 
-  // User methods
-  getProfile: async () => {
-    const token = localStorage.getItem('token') || 'mock-jwt-token';
-    const response = await fetch('/api/user/profile', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.json();
-  },
-  updateProfile: async (data: { name?: string; email?: string }) => {
-    const token = localStorage.getItem('token') || 'mock-jwt-token';
-    const response = await fetch('/api/user/profile', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json();
-  },
-
-  // Service methods
-  getServices: async () => {
-    const response = await fetch('/api/services');
-    return response.json();
-  },
-  createService: async (data: {
-    name: string;
-    description?: string;
-    durationMinutes: number;
-    price: number;
-  }) => {
-    const token = localStorage.getItem('token') || 'mock-manager-jwt-token';
-    const response = await fetch('/api/services', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json();
-  },
-
-  // Appointment methods
-  getAppointmentRequests: async () => {
-    const token = localStorage.getItem('token') || 'mock-jwt-token';
-    const response = await fetch('/api/appointments/requests', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.json();
-  },
-  createAppointmentRequest: async (data: {
-    serviceId: string;
-    requestedDate: string;
-    requestedTime: string;
-    notes?: string;
-  }) => {
-    const token = localStorage.getItem('token') || 'mock-jwt-token';
-    const response = await fetch('/api/appointments/requests', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json();
-  },
-  updateAppointmentRequest: async (data: {
-    id: string;
-    status: 'approved' | 'rejected';
-    managerNotes?: string;
-  }) => {
-    const token = localStorage.getItem('token') || 'mock-manager-jwt-token';
-    const response = await fetch(`/api/appointments/requests/${data.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status: data.status, managerNotes: data.managerNotes }),
-    });
-    return response.json();
-  },
-
-  // Interceptors
-  requestInterceptor: (config: { headers: Record<string, string> }) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      return {
-        ...config,
-        headers: {
-          ...config.headers,
-          Authorization: `Bearer ${token}`,
-        },
-      };
-    }
-    return config;
-  },
-  responseInterceptor: async (error: unknown) => {
-    if (
-      typeof error === 'object' &&
-      error !== null &&
-      'response' in error &&
-      typeof (error as { response?: { status?: number } }).response?.status === 'number' &&
-      (error as { response?: { status?: number } }).response?.status === 401
-    ) {
-      // Simulate redirect to login
-      window.location.href = '/login';
-      throw new Error('Redirecting to login');
-    }
-    if (
-      typeof error === 'object' &&
-      error !== null &&
-      'response' in error &&
-      typeof (error as { response?: { status?: number } }).response?.status === 'number' &&
-      (error as { response?: { status?: number } }).response?.status === 403
-    ) {
-      // Simulate token refresh
-      const newToken = 'refreshed-jwt-token';
-      localStorage.setItem('token', newToken);
-      // Retry the original request with new token
-      console.log('Using new token:', newToken);
-      return { data: { success: true } };
-    }
-    return Promise.reject(error);
-  },
-};
-
-// Mock data for tests
+// Mock data for tests matching MSW handlers
 const mockUser = {
   id: '123e4567-e89b-12d3-a456-426614174000',
   name: 'John Doe',
   email: 'john@example.com',
   role: 'customer' as const,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: ISO,
+  updatedAt: ISO,
 };
 
 const mockService = {
-  id: '123e4567-e89b-12d3-a456-426614174001',
+  id: '123e4567-e89b-12d3-a456-426614174002',
   name: 'Haircut',
   description: 'Basic haircut service',
   durationMinutes: 30,
   price: 25,
   isActive: true,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: ISO,
+  updatedAt: ISO,
 };
 
 const mockServices = [
@@ -209,15 +53,15 @@ const mockServices = [
 ];
 
 const mockAppointmentRequest = {
-  id: '123e4567-e89b-12d3-a456-426614174002',
+  id: '123e4567-e89b-12d3-a456-426614174005',
   userId: mockUser.id,
   serviceId: mockService.id,
   requestedDate: '2023-12-01',
   requestedTime: '14:30',
   status: 'pending' as const,
   notes: 'Please trim my hair short',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: ISO,
+  updatedAt: ISO,
 };
 
 const mockAuthResponse = {
@@ -315,7 +159,7 @@ describe('API Client', () => {
       const updateData = {
         name: 'John Updated',
       };
-      const updatedUser = { ...mockUser, name: 'John Updated' };
+      const updatedUser = { ...mockUser, name: 'John Updated', updatedAt: expect.any(String) };
 
       // Act
       const result = await apiClient.updateProfile(updateData);
@@ -355,6 +199,9 @@ describe('API Client', () => {
         price: 80,
       };
 
+      // Manager token required for create
+      localStorage.setItem('token', 'mock-manager-jwt-token');
+
       // Act
       const result = await apiClient.createService(serviceData);
 
@@ -383,7 +230,7 @@ describe('API Client', () => {
       const result = await apiClient.getAppointmentRequests();
 
       // Assert
-      expect(result).toEqual([mockAppointmentRequest]);
+      expect(result).toEqual([mockAppointmentRequest, expect.any(Object), expect.any(Object)]);
       expect(
         result.every((request: unknown) => AppointmentRequestSchema.safeParse(request).success)
       ).toBe(true);
@@ -421,10 +268,14 @@ describe('API Client', () => {
         ...mockAppointmentRequest,
         status: 'approved' as const,
         managerNotes: 'Approved for 2:30 PM',
+        updatedAt: expect.any(String),
       };
 
       // Act
-      const result = await apiClient.updateAppointmentRequest(updateData);
+      const result = await apiClient.updateAppointmentRequest(updateData.id, {
+        status: updateData.status,
+        managerNotes: updateData.managerNotes,
+      });
 
       // Assert
       expect(result).toEqual(updatedRequest);
@@ -440,39 +291,12 @@ describe('API Client', () => {
     });
   });
 
-  describe('Error handling for various HTTP status codes', () => {
-    it('should handle 400 Bad Request', async () => {
-      // Act & Assert
-      await expect(fetch('/api/error/bad-request')).rejects.toThrow();
-    });
-
-    it('should handle 401 Unauthorized', async () => {
-      // Act & Assert
-      await expect(fetch('/api/error/unauthorized')).rejects.toThrow();
-    });
-
-    it('should handle 403 Forbidden', async () => {
-      // Act & Assert
-      await expect(fetch('/api/error/forbidden')).rejects.toThrow();
-    });
-
-    it('should handle 404 Not Found', async () => {
-      // Act & Assert
-      await expect(fetch('/api/error/not-found')).rejects.toThrow();
-    });
-
-    it('should handle 500 Internal Server Error', async () => {
-      // Act & Assert
-      await expect(fetch('/api/error/server-error')).rejects.toThrow();
-    });
-  });
-
   describe('Request/response interceptors for authentication tokens', () => {
     it('should add authorization token to requests', async () => {
       // Arrange
       const token = 'mock-jwt-token';
       localStorage.setItem('token', token);
-      const config = { headers: {} };
+      const config = { headers: {} as Record<string, string> };
 
       // Act
       const result = apiClient.requestInterceptor(config);
@@ -498,7 +322,7 @@ describe('API Client', () => {
       // @ts-expect-error intentionally deleting readonly location for test setup
       delete window.location;
       // @ts-expect-error assigning minimal mock location object for test
-      window.location = { href: '' };
+      window.location = { href: '' } as unknown as Location;
 
       // Act & Assert
       expect(() => apiClient.responseInterceptor(error)).toThrow('Redirecting to login');

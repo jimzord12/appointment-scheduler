@@ -15,8 +15,8 @@ const mockUser = {
   name: 'John Doe',
   email: 'john@example.com',
   role: 'customer' as const,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date('2023-12-01T00:00:00.000Z').toISOString(),
+  updatedAt: new Date('2023-12-01T00:00:00.000Z').toISOString(),
 };
 
 const mockManager = {
@@ -24,8 +24,8 @@ const mockManager = {
   name: 'Jane Manager',
   email: 'manager@example.com',
   role: 'manager' as const,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date('2023-12-01T00:00:00.000Z').toISOString(),
+  updatedAt: new Date('2023-12-01T00:00:00.000Z').toISOString(),
 };
 
 const mockService = {
@@ -35,8 +35,8 @@ const mockService = {
   durationMinutes: 30,
   price: 25,
   isActive: true,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date('2023-12-01T00:00:00.000Z').toISOString(),
+  updatedAt: new Date('2023-12-01T00:00:00.000Z').toISOString(),
 };
 
 const mockServices = [
@@ -67,8 +67,8 @@ const mockAppointmentRequest = {
   requestedTime: '14:30',
   status: 'pending' as const,
   notes: 'Please trim my hair short',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date('2023-12-01T00:00:00.000Z').toISOString(),
+  updatedAt: new Date('2023-12-01T00:00:00.000Z').toISOString(),
 };
 
 const mockAppointmentRequests = [
@@ -309,8 +309,8 @@ export const servicesHandlers = [
         ...mockService,
         id: '123e4567-e89b-12d3-a456-426614174' + Math.floor(Math.random() * 1000),
         ...validatedBody,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: mockService.createdAt,
+        updatedAt: mockService.updatedAt,
       };
 
       return HttpResponse.json(newService, { status: 201 });
@@ -396,8 +396,8 @@ export const appointmentHandlers = [
         id: '123e4567-e89b-12d3-a456-426614174' + Math.floor(Math.random() * 1000),
         userId: token === 'mock-jwt-token' ? mockUser.id : mockManager.id,
         ...validatedBody,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: mockAppointmentRequest.createdAt,
+        updatedAt: mockAppointmentRequest.updatedAt,
       };
 
       return HttpResponse.json(newRequest, { status: 201 });
@@ -475,7 +475,7 @@ export const appointmentHandlers = [
         ...mockAppointmentRequests[requestIndex],
         status: body.status,
         managerNotes: body.managerNotes || null,
-        updatedAt: new Date(),
+        updatedAt: mockAppointmentRequests[requestIndex].updatedAt,
       };
 
       return HttpResponse.json(updatedRequest, { status: 200 });
