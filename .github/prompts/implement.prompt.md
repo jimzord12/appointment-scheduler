@@ -26,5 +26,6 @@ Given the current feature branch, do this:
    - Update implementation plan progress
 8. Write implementation updates to IMPL_PLAN
 9. Report completion with implementation summary and readiness for testing
+10. Commit changes to the current branch BRANCH and add the Task's ID to the commit message
 
 Note: Follow the project's tech stack and architecture patterns. Ensure all code is properly typed and tested.
