@@ -91,6 +91,17 @@ export const loggingMiddleware = (config?: Partial<LoggingConfig>) => {
     const startTime = Date.now();
     const { method, originalUrl, headers, ip } = req;
 
+    // Determine or generate a request id for correlation
+    const headerRequestId = (headers['x-request-id'] || headers['X-Request-Id']) as
+      | string
+      | undefined;
+    const requestId =
+      headerRequestId && typeof headerRequestId === 'string' && headerRequestId.length > 0
+        ? headerRequestId
+        : `req_${Math.random().toString(36).slice(2, 10)}`;
+    // Attach requestId to response for downstream usage (e.g., error handler)
+    (res as any).locals = { ...(res as any).locals, requestId };
+
     // Check if path should be excluded from logging
     if (mergedConfig.excludePaths.includes(originalUrl)) {
       return next();
@@ -102,6 +113,8 @@ export const loggingMiddleware = (config?: Partial<LoggingConfig>) => {
       url: originalUrl,
       ip,
       userAgent: headers['user-agent'],
+      requestId,
+      userId: req.user?.id,
     };
 
     if (mergedConfig.logRequestBody && req.body) {
@@ -121,6 +134,8 @@ export const loggingMiddleware = (config?: Partial<LoggingConfig>) => {
         url: originalUrl,
         statusCode,
         responseTime,
+        requestId,
+        userId: req.user?.id,
       };
 
       if (mergedConfig.logResponseBody) {

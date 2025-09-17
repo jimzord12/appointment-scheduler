@@ -2,9 +2,9 @@
 
 ## Completion Summary
 
-- **33 tasks (55.9%) are completed** ✅
+- **34 tasks (57.6%) are completed** ✅
 - **0 tasks (0%) are partially completed** ⚠️
-- **26 tasks (44.1%) are not completed** ❌
+- **25 tasks (42.4%) are not completed** ❌
 
 **Input**: Design documents from `c:/Users/jimzord12/Documents/GitHub/appointment-scheduler/specs/001-build-an-web/`
 **Prerequisites**: `plan.md` (required), `research.md`, `data-model.md`, `contracts/`
@@ -196,7 +196,7 @@ Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
       Deps: T029
       Effort: S
       Links: research.md (error handling)
-- [ ] T031 Logging middleware structured JSON (`backend/src/middleware/logging.ts`).
+- [x] T031 Logging middleware structured JSON (`backend/src/middleware/logging.ts`).
       AC: Logs request id, timing, user id when present.
       Deps: T028
       Effort: S

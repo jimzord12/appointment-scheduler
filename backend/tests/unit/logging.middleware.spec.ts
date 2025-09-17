@@ -96,6 +96,10 @@ describe('Logging Middleware', () => {
     it('should log incoming requests', () => {
       const middleware = loggingMiddleware();
 
+      // Provide a stable request id header and a user id
+      (mockRequest.headers as any)['x-request-id'] = 'req-123';
+      (mockRequest as any).user = { id: 'user-abc', role: 'customer' };
+
       middleware(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
@@ -107,6 +111,8 @@ describe('Logging Middleware', () => {
       expect(parsedLog.message).toBe('Incoming request');
       expect(parsedLog.method).toBe('GET');
       expect(parsedLog.url).toBe('/test');
+      expect(parsedLog.requestId).toBe('req-123');
+      expect(parsedLog.userId).toBe('user-abc');
     });
 
     it('should log request body when configured', () => {
@@ -152,6 +158,8 @@ describe('Logging Middleware', () => {
       expect(parsedResponseLog.message).toBe('Request completed');
       expect(parsedResponseLog.statusCode).toBe(200);
       expect(parsedResponseLog.responseTime).toBeDefined();
+      // Response log should also carry correlation fields
+      expect(parsedResponseLog.requestId).toBeDefined();
     });
 
     it('should log warning responses for 4xx status codes', () => {
