@@ -284,6 +284,8 @@ _This checklist is updated during execution flow_
 - [x] T027: Appointment workflow service (create/list/update + double-book prevention in-memory)
 - [x] T004: Root linting & formatting configured (Prettier, EditorConfig, Husky, lint-staged). `pnpm lint` is green; pre-commit runs lint-staged and typecheck.
 - [x] T031: Logging middleware enhanced with requestId correlation and userId propagation; unit tests added and passing.
+- [x] T033: Frontend shared API client scaffolded at `frontend/src/lib/api/client.ts` with contract-backed parsing; tests added.
+- [x] T034: MSW handlers implemented under `frontend/src/mocks/handlers.ts` and server setup `frontend/src/mocks/server.ts`; fixed UUID generation for created resources to satisfy Zod `uuid()` schema; frontend API client tests are green.
 
 **Gate Status**:
 

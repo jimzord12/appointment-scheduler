@@ -304,10 +304,21 @@ export const servicesHandlers = [
       const body = await request.json();
       const validatedBody = CreateServiceSchema.parse(body);
 
-      // Return new service
+      // Return new service with a valid UUID v4-like id
+      const randomHex = () =>
+        Math.floor(Math.random() * 0xffffffff)
+          .toString(16)
+          .padStart(8, '0');
+      // Construct UUID: 8-4-4-4-12
+      const newId =
+        `${randomHex().slice(0, 8)}-${randomHex().slice(0, 4)}-4${randomHex().slice(0, 3)}-a${randomHex().slice(0, 3)}-${randomHex()}${randomHex().slice(0, 4)}`.slice(
+          0,
+          36
+        );
+
       const newService = {
         ...mockService,
-        id: '123e4567-e89b-12d3-a456-426614174' + Math.floor(Math.random() * 1000),
+        id: newId,
         ...validatedBody,
         createdAt: mockService.createdAt,
         updatedAt: mockService.updatedAt,
@@ -390,10 +401,20 @@ export const appointmentHandlers = [
       const body = await request.json();
       const validatedBody = CreateAppointmentRequestSchema.parse(body);
 
-      // Return new appointment request
+      // Return new appointment request with a valid UUID id
+      const randomHex = () =>
+        Math.floor(Math.random() * 0xffffffff)
+          .toString(16)
+          .padStart(8, '0');
+      const newId =
+        `${randomHex().slice(0, 8)}-${randomHex().slice(0, 4)}-4${randomHex().slice(0, 3)}-a${randomHex().slice(0, 3)}-${randomHex()}${randomHex().slice(0, 4)}`.slice(
+          0,
+          36
+        );
+
       const newRequest = {
         ...mockAppointmentRequest,
-        id: '123e4567-e89b-12d3-a456-426614174' + Math.floor(Math.random() * 1000),
+        id: newId,
         userId: token === 'mock-jwt-token' ? mockUser.id : mockManager.id,
         ...validatedBody,
         createdAt: mockAppointmentRequest.createdAt,
