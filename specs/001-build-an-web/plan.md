@@ -282,6 +282,8 @@ _This checklist is updated during execution flow_
 - [x] T025: User profile service (get/update leveraging auth store; to be refactored to DB)
 - [x] T026: Service management service (create/list with manager role enforcement)
 - [x] T027: Appointment workflow service (create/list/update + double-book prevention in-memory)
+- [x] T004: Root linting & formatting configured (Prettier, EditorConfig, Husky, lint-staged). `pnpm lint` is green; pre-commit runs lint-staged and typecheck.
+- [x] T031: Logging middleware enhanced with requestId correlation and userId propagation; unit tests added and passing.
 
 **Gate Status**:
 
