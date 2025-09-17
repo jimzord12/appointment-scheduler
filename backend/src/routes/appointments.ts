@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { z } from 'zod';
 
 import { requireAuth } from '../middleware/auth.js';
 import { validateBody } from '../middleware/validate.js';
@@ -37,12 +36,8 @@ appointmentsRouter.post(
 appointmentsRouter.patch(
   '/requests/:id',
   requireAuth,
-  validateBody(
-    z.object({
-      status: UpdateAppointmentRequestSchema.shape.status,
-      managerNotes: z.string().optional(),
-    })
-  ),
+  // Use the imported schema directly to avoid Zod version mixing between schema producers/consumers
+  validateBody(UpdateAppointmentRequestSchema),
   async (req, res, next) => {
     try {
       const data = await updateRequest(req.user!.id, { id: req.params.id, ...req.body });

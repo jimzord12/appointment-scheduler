@@ -292,4 +292,103 @@ _This checklist is updated during execution flow_
 
 ---
 
-_Based on Constitution v2.1.1 - See `/memory/constitution.md`_
+Follow-up tasks created: See `tasks.md` Phase 3.8 (T060–T075) for concrete actions derived from this review (contracts alignment, schema deduplication, conflict handling, security hardening, logging, DB init, documentation, and CI).
+
+## Code Review (2025-09-17)
+
+Input path: `c:\Github\appointment-scheduler\specs\001-build-an-web\plan.md`
+
+Scope: Backend implementation, tasks, research, data model, and API contracts at `c:\Github\appointment-scheduler\specs\001-build-an-web\contracts\api-contracts.ts`; backend sources under `c:\Github\appointment-scheduler\backend\src` and tests under `c:\Github\appointment-scheduler\backend\tests`.
+
+Summary: The backend feature is largely implemented with Express 5, Zod validation, structured logging, and in-memory services pending DB integration. Contract and integration tests exist and exercise the main flows. A critical runtime validation bug was identified and fixed during review. Several contract mismatches and schema duplications must be addressed before merge.
+
+### Review Checklist and Findings
+
+- Code quality and standards
+  - TypeScript strict mode enabled; NodeNext modules configured; clear folder structure for routes, middleware, services, and db schema.
+  - Logging middleware is structured JSON and already wired into the app; error handler normalizes Zod validation errors to 400.
+  - Suggest tightening types in `validateBody` (accept a `ZodTypeAny` rather than `any`) to preserve type safety.
+
+- Requirements adherence vs. spec/contracts
+  - Implemented endpoints match contracts: `POST /auth/register`, `POST /auth/login`, `GET/PATCH /user/profile`, `GET/POST /services`, `GET/POST/PATCH /appointments/requests`.
+  - Role enforcement present (manager-only service creation; auth-protected user/profile and appointment routes).
+  - Double-booking prevention implemented in service logic; however, integration test indicates the second approval returns 200 instead of 409 (see Action Items).
+
+- Security
+  - `helmet` and `cors` are enabled; recommend adding `express-rate-limit` with environment-configurable thresholds.
+  - JWT secret defaults to `dev-insecure-secret`. For production, require `JWT_SECRET` and fail fast if not set; keep permissive fallback only in test/dev.
+  - `DATABASE_URL` is required at `db/index.ts` import-time. Current services are in-memory, so DB is not yet exercised, but this can cause boot failures in some test environments; consider lazy initialization or guard when DB is unused during tests.
+
+- Tests: coverage and quality
+  - Contract tests and integration flows are present and comprehensive. Many were written to enforce RED state initially; now that endpoints are implemented, some assertions (e.g., using `Bearer fake`) no longer reflect the intended authenticated success path.
+  - Key mismatch: Zod schemas in `contracts/api-contracts.ts` use `z.date()` for transport fields (`createdAt`, `updatedAt`). JSON responses serialize to ISO strings, causing `safeParse` to fail. This explains several "expected false to be true" assertions despite correct endpoint behavior.
+  - Recommend: change output schemas to use `z.string().datetime()` for transport, or use `z.coerce.date()` consistently in both route validation and tests. Align one way and regenerate OpenAPI accordingly.
+
+- Performance
+  - In-memory stores and lightweight routes are fast (typical response time ~1–2ms in tests). No evident bottlenecks at this stage.
+  - Consider lazy DB connection to avoid pool creation overhead during tests.
+
+- Documentation
+  - Plan, research, data-model are in place. Quickstart likely needs updating to reflect current run/test commands and environment variables. No backend README/API docs yet.
+
+- Error handling
+  - Zod errors normalized to 400 with issues[]. Unauthorized/forbidden return `{ error: 'unauthorized' | 'forbidden' }`. Consistent enough for clients; ensure this shape is documented in contracts.
+
+- API contracts validation
+  - Path and fields align largely with spec; primary divergence is date/time transport types (`z.date()` vs JSON strings). See Action Items.
+
+- Accessibility
+  - Frontend not yet implemented; defer to later phases. Ensure a11y tests (planned T052) are included before merge of UI feature branches.
+
+### Critical Issues Found (addressed or pending)
+
+1. Zod version/schema mixing caused a 500 on `PATCH /appointments/requests/:id` due to mixing shapes at runtime.
+   - Fix applied in this review: use `UpdateAppointmentRequestSchema` directly in the router validation instead of reconstructing with a different Zod instance.
+   - File: `c:\Github\appointment-scheduler\backend\src\routes\appointments.ts`
+
+2. Contract transport types mismatch for dates
+   - Current contracts use `z.date()` for response fields which arrive as JSON strings; tests fail `safeParse` on these.
+   - Action required: switch to `z.string().datetime()` for transport (preferred), or adopt `z.coerce.date()` consistently in both API responses and tests.
+
+3. Duplicate Drizzle schema files for appointment requests
+   - Both `backend/src/db/schema/appointment_requests.ts` and `backend/src/db/schema/appointmentRequests.ts` exist with different column types/enums. This will cause migration conflicts and runtime confusion.
+   - Action required: keep a single source. Prefer the version that matches contracts (string date/time) or update contracts to match DB types; in all cases, remove the duplicate and regenerate migrations.
+
+4. Double-booking conflict returns 200 instead of 409 in integration test
+   - Service logic attempts conflict detection, but `T018 prevents double-book approval` expects 409 while actual was 200.
+   - Action required: add a focused unit/integration test for approving two distinct requests with identical `serviceId`, `requestedDate`, `requestedTime` and ensure the second approval throws a 409. Investigate data normalization (e.g., time string variability) if needed.
+
+### Additional Recommendations
+
+- Add `express-rate-limit` middleware with safe defaults and environment overrides.
+- Restrict CORS in production to known origins from env; keep `*` or broad origins only in dev.
+- Improve `validateBody` types: accept a `ZodTypeAny` and type `req.body` with `z.infer<typeof schema>` where feasible via generics.
+- Add request ID correlation in logging (e.g., `x-request-id` header or generated UUID) and include it in both request and error logs.
+- Make DB connection lazy or behind an explicit initializer to decouple from in-memory mode during early phases.
+- Update Quickstart and add backend API README with endpoints and auth/roles notes; generate OpenAPI via `zod-openapi` once contracts settle.
+
+### Tests and Status (snapshot)
+
+- Executed `pnpm --filter backend test`.
+  - Unit logging middleware: passing.
+  - Contract tests: some still failing due to auth placeholder tokens and date transport mismatch.
+  - Integration flows: core happy paths mostly working; double-book conflict behavior requires fix.
+
+### Readiness for Merge
+
+Not ready. Merge is blocked on:
+
+- Resolving contract date/time transport types and updating tests accordingly (Critical).
+- Removing duplicate Drizzle schema and aligning with the chosen contract (Critical).
+- Fixing double-booking conflict path to return 409 (High).
+- Adding rate-limiting and JWT secret prod enforcement (High).
+
+Once addressed, re-run full backend test suite and update docs; if green, the branch will be ready for merge.
+
+### Review Change Log (applied during review)
+
+- Fixed Zod validation bug by changing `appointmentsRouter.patch` to validate with `UpdateAppointmentRequestSchema` directly to avoid schema mixing and 500 errors.
+  - File: `backend/src/routes/appointments.ts`
+  - Impact: Integration test no longer fails with 500 on PATCH; now returns 200/409 per service logic.
+
+---

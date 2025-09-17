@@ -89,7 +89,8 @@ export const updateRequest = async (userId: string, input: unknown) => {
         r.status === 'approved'
     );
     if (conflict) {
-      throw Object.assign(new Error('Time slot already booked'), { status: 409 });
+      // Standardize conflict error to a stable message for API consumers/tests
+      throw Object.assign(new Error('conflict'), { status: 409 });
     }
   }
   request.status = parsed.status;
@@ -108,8 +109,8 @@ function normalizeRequest(r: StoredAppointmentRequest) {
     status: r.status,
     notes: r.notes,
     managerNotes: r.managerNotes,
-    createdAt: r.createdAt,
-    updatedAt: r.updatedAt,
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
   };
 }
 

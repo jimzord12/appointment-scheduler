@@ -2,9 +2,9 @@
 
 ## Completion Summary
 
-- **32 tasks (54.2%) are completed** ✅
+- **33 tasks (55.9%) are completed** ✅
 - **0 tasks (0%) are partially completed** ⚠️
-- **27 tasks (45.8%) are not completed** ❌
+- **26 tasks (44.1%) are not completed** ❌
 
 **Input**: Design documents from `c:/Users/jimzord12/Documents/GitHub/appointment-scheduler/specs/001-build-an-web/`
 **Prerequisites**: `plan.md` (required), `research.md`, `data-model.md`, `contracts/`
@@ -50,7 +50,7 @@ Includes: Acceptance Criteria (AC), Dependencies (Deps), Effort (S= <1h, M=1-2h,
       Deps: T001
       Effort: M
       Links: research.md (Frontend stack)
-- [ ] T004 [P] Configure root linting & formatting: `.eslintrc.*`, `.prettierrc`, `editorconfig`, add scripts and Husky + lint-staged hooks.
+- [x] T004 [P] Configure root linting & formatting: `.eslintrc.*`, `.prettierrc`, `editorconfig`, add scripts and Husky + lint-staged hooks.
       AC: `pnpm lint` passes; pre-commit runs lint+typecheck.
       Deps: T001
       Effort: M
@@ -313,6 +313,111 @@ Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
 - [ ] T059 Release prep: version bump, changelog draft, tag instructions.
       Deps: T057,T058
       Effort: S
+
+---
+
+## Phase 3.8: Review Follow-ups (Post-Review Tasks)
+
+These tasks are derived from the Code Review (2025-09-17) section in `plan.md`. They address contract mismatches, schema duplication, conflict handling, and security hardening to achieve merge readiness.
+
+- [ ] T060 Align contract transport types for dates/times (specs/contracts)
+      AC: Replace `z.date()` with `z.string().datetime()` for transport fields (`createdAt`, `updatedAt`, etc.), or adopt `z.coerce.date()` consistently; update any dependent schemas and OpenAPI generation.
+      Files: `specs/001-build-an-web/contracts/api-contracts.ts`
+      Deps: T007–T015 (tests exist)
+      Effort: M
+      Links: plan.md (Review → Critical Issues #2)
+
+- [ ] T061 Update backend tests to match transport types
+      AC: Contract tests parsing updated to new types; failing assertions due solely to type mismatch now pass or fail for functional reasons only.
+      Files: `backend/tests/contract/*.spec.ts`, `backend/tests/integration/*.spec.ts`
+      Deps: T060
+      Effort: S
+
+- [ ] T062 Remove duplicate Drizzle schema and unify
+      AC: Delete `backend/src/db/schema/appointmentRequests.ts` or `appointment_requests.ts` keeping a single canonical file; ensure enums and column types align with chosen contracts; generate fresh migration if needed.
+      Files: `backend/src/db/schema/appointment_requests.ts`, `backend/src/db/schema/appointmentRequests.ts`
+      Deps: T019–T023
+      Effort: M
+      Links: plan.md (Review → Critical Issues #3)
+
+- [ ] T063 Ensure double-booking returns 409
+      AC: When approving a request that conflicts with an existing approved slot (same `serviceId`, `requestedDate`, `requestedTime`), API returns 409 with `{ error: 'conflict' }` shape; add focused test.
+      Files: `backend/src/services/appointmentService.ts`, `backend/src/routes/appointments.ts`, `backend/tests/integration/appointments.doublebooking.spec.ts`
+      Deps: T027, T018
+      Effort: M
+      Links: plan.md (Review → Critical Issues #4)
+
+- [ ] T064 Add express-rate-limit with env overrides
+      AC: Rate limiting enabled with sane defaults; configuration via `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX` env vars; excluded in test env.
+      Files: `backend/src/app.ts`, `.env.example`
+      Deps: T028
+      Effort: S
+
+- [ ] T065 Enforce JWT secret in production
+      AC: App startup throws when `NODE_ENV=production` and `JWT_SECRET` is missing or default; tests updated to set a test secret.
+      Files: `backend/src/services/authService.ts`, `backend/src/app.ts`
+      Deps: T024, T028
+      Effort: S
+
+- [ ] T066 Tighten validateBody typing with generics
+      AC: `validateBody<T extends ZodTypeAny>(schema: T)` infers `z.infer<T>`; improved type safety across routes without breaking existing code.
+      Files: `backend/src/middleware/validate.ts`
+      Deps: T029
+      Effort: S
+
+- [ ] T067 Add request ID correlation to logging
+      AC: Middleware reads `x-request-id` or generates UUID v4; logs request/response with `requestId`; tests assert presence.
+      Files: `backend/src/middleware/logging.ts`, `backend/tests/integration/logging.spec.ts`
+      Deps: T031
+      Effort: S
+
+- [ ] T068 Lazy DB initialization for test/dev
+      AC: Guard `db` initialization so importing `app.ts` in tests doesn't require `DATABASE_URL`; only connect when actually needed or when env flag set.
+      Files: `backend/src/db/index.ts`, `backend/src/app.ts`
+      Deps: T019, T028
+      Effort: M
+
+- [ ] T069 Restrict CORS in production
+      AC: Allowlist origins via `CORS_ORIGINS` env in production; dev remains permissive; document behavior.
+      Files: `backend/src/app.ts`, `.env.example`, `backend/README.md`
+      Deps: T028
+      Effort: S
+
+- [ ] T070 Generate OpenAPI from Zod contracts
+      AC: Use `zod-openapi` to produce `openapi.json` matching contracts; add script `pnpm --filter backend openapi` and commit artifact or build step.
+      Files: `shared/` or `backend/` script location, `package.json` scripts
+      Deps: T060, T029
+      Effort: M
+
+- [ ] T071 Update quickstart with env + rate limit notes
+      AC: `specs/001-build-an-web/quickstart.md` documents required env vars (`JWT_SECRET`, `DATABASE_URL`, rate limit), how to run tests, and how to run the server.
+      Files: `specs/001-build-an-web/quickstart.md`
+      Deps: T064, T065, T068, T069
+      Effort: S
+
+- [ ] T072 Backend API README updates
+      AC: Endpoint list with auth/roles, error shapes for 401/403/409; link to generated OpenAPI.
+      Files: `backend/README.md`
+      Deps: T063, T070
+      Effort: S
+
+- [ ] T073 Regression test for PATCH schema validation
+      AC: Add a unit/contract test ensuring `PATCH /appointments/requests/:id` validation uses `UpdateAppointmentRequestSchema` directly and rejects extraneous fields.
+      Files: `backend/tests/contract/appointments.requests.patch.spec.ts`
+      Deps: T015
+      Effort: S
+
+- [ ] T074 Normalize time format handling
+      AC: Ensure `requestedTime` consistently uses `HH:MM` 24h format; add schema `.regex` if missing and update service normalization.
+      Files: `specs/001-build-an-web/contracts/api-contracts.ts`, `backend/src/services/appointmentService.ts`
+      Deps: T060, T027
+      Effort: S
+
+- [ ] T075 CI: Add backend test workflow badge and ensure green
+      AC: GitHub Actions workflow runs backend tests on PR; badge added to root README; ensure tasks from this section pass.
+      Files: `.github/workflows/ci.yml`, `README.md`
+      Deps: T058, T061–T074
+      Effort: M
 
 ## Dependencies Summary (Graph Excerpts)
 

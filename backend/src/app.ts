@@ -1,6 +1,7 @@
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
 import { errorHandler } from './middleware/errorHandler.js';
@@ -15,9 +16,34 @@ dotenv.config();
 
 export const createApp = (): Application => {
   const app = express();
+  // Environment validation
+  const isProd = process.env.NODE_ENV === 'production';
+  const jwtSecret = process.env.JWT_SECRET;
+  if (
+    isProd &&
+    (!jwtSecret || jwtSecret === 'dev-insecure-secret' || jwtSecret === 'change_me_dev_secret')
+  ) {
+    throw new Error('JWT_SECRET must be set to a strong secret in production');
+  }
   app.use(helmet());
   app.use(cors());
   app.use(express.json());
+
+  // Rate limiting (disabled in test via VITEST env)
+  if (!process.env.VITEST) {
+    const windowMs = process.env.RATE_LIMIT_WINDOW_MS
+      ? parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10)
+      : parseInt(process.env.RATE_LIMIT_WINDOW_MINUTES || '15', 10) * 60 * 1000;
+    const max = parseInt(process.env.RATE_LIMIT_MAX || '100', 10);
+    app.use(
+      rateLimit({
+        windowMs,
+        max,
+        standardHeaders: true,
+        legacyHeaders: false,
+      })
+    );
+  }
 
   // Logging middleware
   app.use(

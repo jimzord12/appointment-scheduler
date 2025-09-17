@@ -87,8 +87,8 @@ export function sanitizeUser(user: StoredUser) {
     name: user.name,
     email: user.email,
     role: user.role,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
   });
 }
 

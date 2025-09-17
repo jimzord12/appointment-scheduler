@@ -234,7 +234,7 @@ export const userHandlers = [
         );
       }
 
-      const body = (await request.json()) as Record<string, any>;
+      const body = (await request.json()) as Record<string, unknown>;
 
       // Validate input
       if (
@@ -262,7 +262,7 @@ export const userHandlers = [
       };
 
       return HttpResponse.json(updatedUser, { status: 200 });
-    } catch (error) {
+    } catch {
       return HttpResponse.json(
         { error: 'Internal Server Error', message: 'An unexpected error occurred' },
         { status: 500 }
@@ -439,10 +439,14 @@ export const appointmentHandlers = [
       }
 
       const requestId = params.id as string;
-      const body = (await request.json()) as Record<string, any>;
+      const body = (await request.json()) as Record<string, unknown>;
 
       // Validate input
-      if (!body.status || !['approved', 'rejected'].includes(body.status)) {
+      if (
+        !body.status ||
+        typeof body.status !== 'string' ||
+        !['approved', 'rejected'].includes(body.status)
+      ) {
         return HttpResponse.json(
           { error: 'Bad Request', message: 'Invalid status' },
           { status: 400 }
@@ -475,7 +479,7 @@ export const appointmentHandlers = [
       };
 
       return HttpResponse.json(updatedRequest, { status: 200 });
-    } catch (error) {
+    } catch {
       return HttpResponse.json(
         { error: 'Internal Server Error', message: 'An unexpected error occurred' },
         { status: 500 }

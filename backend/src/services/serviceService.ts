@@ -34,12 +34,24 @@ export const createService = async (userId: string, input: unknown) => {
     updatedAt: now,
   };
   servicesStore.push(service);
-  return ServiceSchema.parse(service);
+  return ServiceSchema.parse({
+    ...service,
+    createdAt: service.createdAt.toISOString(),
+    updatedAt: service.updatedAt.toISOString(),
+  });
 };
 
 export const listServices = async () => {
   // Return only active services for now; future: include filters or role-based inactive visibility
-  return servicesStore.filter(s => s.isActive).map(s => ServiceSchema.parse(s));
+  return servicesStore
+    .filter(s => s.isActive)
+    .map(s =>
+      ServiceSchema.parse({
+        ...s,
+        createdAt: s.createdAt.toISOString(),
+        updatedAt: s.updatedAt.toISOString(),
+      })
+    );
 };
 
 export function __resetServicesStore() {

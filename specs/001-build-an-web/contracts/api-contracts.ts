@@ -22,8 +22,9 @@ export const UserSchema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email(),
   role: z.enum(['customer', 'manager']),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  // Transport as ISO datetime strings
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
 });
 
 export const CreateUserSchema = z.object({
@@ -46,8 +47,8 @@ export const ServiceSchema = z.object({
   durationMinutes: z.number().int().min(15).max(480),
   price: z.number().min(0),
   isActive: z.boolean(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
 });
 
 export const CreateServiceSchema = z.object({
@@ -63,12 +64,12 @@ export const AppointmentRequestSchema = z.object({
   userId: z.string().uuid(),
   serviceId: z.string().uuid(),
   requestedDate: isoDateString, // ISO date string (validated)
-  requestedTime: z.string(), // HH:MM format
+  requestedTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/), // HH:MM 24h
   status: z.enum(['pending', 'approved', 'rejected']),
   notes: z.string().optional(),
   managerNotes: z.string().optional(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
 });
 
 export const CreateAppointmentRequestSchema = z.object({

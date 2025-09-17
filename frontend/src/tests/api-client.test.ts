@@ -137,13 +137,25 @@ const apiClient = {
     }
     return config;
   },
-  responseInterceptor: async (error: any) => {
-    if (error.response?.status === 401) {
+  responseInterceptor: async (error: unknown) => {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'response' in error &&
+      typeof (error as { response?: { status?: number } }).response?.status === 'number' &&
+      (error as { response?: { status?: number } }).response?.status === 401
+    ) {
       // Simulate redirect to login
       window.location.href = '/login';
       throw new Error('Redirecting to login');
     }
-    if (error.response?.status === 403) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'response' in error &&
+      typeof (error as { response?: { status?: number } }).response?.status === 'number' &&
+      (error as { response?: { status?: number } }).response?.status === 403
+    ) {
       // Simulate token refresh
       const newToken = 'refreshed-jwt-token';
       localStorage.setItem('token', newToken);
@@ -329,7 +341,9 @@ describe('API Client', () => {
 
       // Assert
       expect(result).toEqual(mockServices);
-      expect(result.every((service: any) => ServiceSchema.safeParse(service).success)).toBe(true);
+      expect(result.every((service: unknown) => ServiceSchema.safeParse(service).success)).toBe(
+        true
+      );
     });
 
     it('should create a new service', async () => {
@@ -371,7 +385,7 @@ describe('API Client', () => {
       // Assert
       expect(result).toEqual([mockAppointmentRequest]);
       expect(
-        result.every((request: any) => AppointmentRequestSchema.safeParse(request).success)
+        result.every((request: unknown) => AppointmentRequestSchema.safeParse(request).success)
       ).toBe(true);
     });
 
@@ -481,9 +495,9 @@ describe('API Client', () => {
 
       // Mock window.location.href
       const originalLocation = window.location;
-      // @ts-ignore
+      // @ts-expect-error intentionally deleting readonly location for test setup
       delete window.location;
-      // @ts-ignore
+      // @ts-expect-error assigning minimal mock location object for test
       window.location = { href: '' };
 
       // Act & Assert
@@ -491,7 +505,7 @@ describe('API Client', () => {
       expect(window.location.href).toBe('/login');
 
       // Restore window.location
-      // @ts-ignore
+      // @ts-expect-error restoring original readonly location object
       window.location = originalLocation;
     });
 
