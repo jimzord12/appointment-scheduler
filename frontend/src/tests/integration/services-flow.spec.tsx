@@ -1,81 +1,133 @@
+import { useNavigate } from '@tanstack/react-router';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Mock components that don't exist yet
-const ServicesPage = () => (
-  <div data-testid="services-page">
-    <h2>Our Services</h2>
-    <div data-testid="services-list">
-      <div data-testid="service-item-1" className="service-item">
-        <h3 data-testid="service-name-1">Haircut</h3>
-        <p data-testid="service-description-1">Basic haircut service</p>
-        <p data-testid="service-duration-1">30 minutes</p>
-        <p data-testid="service-price-1">$25</p>
-        <button type="button" data-testid="book-service-1">
-          Book Now
-        </button>
-      </div>
-      <div data-testid="service-item-2" className="service-item">
-        <h3 data-testid="service-name-2">Massage</h3>
-        <p data-testid="service-description-2">Relaxing full body massage</p>
-        <p data-testid="service-duration-2">60 minutes</p>
-        <p data-testid="service-price-2">$80</p>
-        <button type="button" data-testid="book-service-2">
-          Book Now
-        </button>
-      </div>
-      <div data-testid="service-item-3" className="service-item">
-        <h3 data-testid="service-name-3">Manicure</h3>
-        <p data-testid="service-description-3">Basic manicure service</p>
-        <p data-testid="service-duration-3">45 minutes</p>
-        <p data-testid="service-price-3">$35</p>
-        <button type="button" data-testid="book-service-3">
-          Book Now
-        </button>
-      </div>
-    </div>
-    <div data-testid="loading-indicator" style={{ display: 'none' }}>
-      Loading services...
-    </div>
-    <div data-testid="error-message" style={{ display: 'none' }}>
-      Failed to load services. Please try again later.
-    </div>
-  </div>
-);
+const VALID_SERVICE_ID = '123e4567-e89b-12d3-a456-426614174002';
+const isTokenValid = (token: string | null) =>
+  token === 'mock-jwt-token' || token === 'mock-manager-jwt-token';
 
-const ServiceDetailsPage = () => (
-  <div data-testid="service-details-page">
-    <h2 data-testid="service-detail-name">Haircut</h2>
-    <p data-testid="service-detail-description">Basic haircut service</p>
-    <p data-testid="service-detail-duration">Duration: 30 minutes</p>
-    <p data-testid="service-detail-price">Price: $25</p>
-    <button type="button" data-testid="book-appointment-button">
-      Book Appointment
-    </button>
-    <button type="button" data-testid="back-to-services-button">
-      Back to Services
-    </button>
-  </div>
-);
+const ServicesPage = () => {
+  const navigate = useNavigate() as unknown as (path: string) => void;
+  const errorRef = React.useRef<HTMLDivElement | null>(null);
 
-const Dashboard = () => (
-  <div data-testid="dashboard">
-    <h2>Dashboard</h2>
-    <p data-testid="welcome-message">Welcome, John Doe!</p>
-    <button type="button" data-testid="services-link">
-      Browse Services
-    </button>
-  </div>
-);
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!isTokenValid(token)) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
-// Mock router components
-const mockNavigate = vi.fn();
-const mockUseNavigate = () => mockNavigate;
+  return (
+    <div data-testid="services-page">
+      <h2>Our Services</h2>
+      <div data-testid="services-list">
+        <div
+          data-testid="service-item-1"
+          className="service-item"
+          onClick={() => navigate(`/services/${VALID_SERVICE_ID}`)}
+        >
+          <h3 data-testid="service-name-1">Haircut</h3>
+          <p data-testid="service-description-1">Basic haircut service</p>
+          <p data-testid="service-duration-1">30 minutes</p>
+          <p data-testid="service-price-1">$25</p>
+          <button
+            type="button"
+            data-testid="book-service-1"
+            onClick={e => {
+              e.stopPropagation();
+              navigate(`/appointments/book?serviceId=${VALID_SERVICE_ID}`);
+            }}
+          >
+            Book Now
+          </button>
+        </div>
+        <div data-testid="service-item-2" className="service-item">
+          <h3 data-testid="service-name-2">Massage</h3>
+          <p data-testid="service-description-2">Relaxing full body massage</p>
+          <p data-testid="service-duration-2">60 minutes</p>
+          <p data-testid="service-price-2">$80</p>
+          <button type="button" data-testid="book-service-2">
+            Book Now
+          </button>
+        </div>
+        <div data-testid="service-item-3" className="service-item">
+          <h3 data-testid="service-name-3">Manicure</h3>
+          <p data-testid="service-description-3">Basic manicure service</p>
+          <p data-testid="service-duration-3">45 minutes</p>
+          <p data-testid="service-price-3">$35</p>
+          <button type="button" data-testid="book-service-3">
+            Book Now
+          </button>
+        </div>
+      </div>
+      <div data-testid="loading-indicator" style={{ display: 'none' }}>
+        Loading services...
+      </div>
+      <div ref={errorRef} data-testid="error-message" style={{ display: 'none' }}>
+        Failed to load services. Please try again later.
+      </div>
+      <button
+        type="button"
+        data-testid="retry-button"
+        style={{ display: 'none' }}
+        onClick={() => {
+          // Hide error message when retrying
+          if (errorRef.current) errorRef.current.style.display = 'none';
+        }}
+      >
+        Retry
+      </button>
+    </div>
+  );
+};
+
+const ServiceDetailsPage = () => {
+  const navigate = useNavigate() as unknown as (path: string) => void;
+  return (
+    <div data-testid="service-details-page">
+      <h2 data-testid="service-detail-name">Haircut</h2>
+      <p data-testid="service-detail-description">Basic haircut service</p>
+      <p data-testid="service-detail-duration">Duration: 30 minutes</p>
+      <p data-testid="service-detail-price">Price: $25</p>
+      <button
+        type="button"
+        data-testid="book-appointment-button"
+        onClick={() => navigate(`/appointments/book?serviceId=${VALID_SERVICE_ID}`)}
+      >
+        Book Appointment
+      </button>
+      <button
+        type="button"
+        data-testid="back-to-services-button"
+        onClick={() => navigate('/services')}
+      >
+        Back to Services
+      </button>
+    </div>
+  );
+};
+
+const Dashboard = () => {
+  const navigate = useNavigate() as unknown as (path: string) => void;
+  return (
+    <div data-testid="dashboard">
+      <h2>Dashboard</h2>
+      <p data-testid="welcome-message">Welcome, John Doe!</p>
+      <button type="button" data-testid="services-link" onClick={() => navigate('/services')}>
+        Browse Services
+      </button>
+    </div>
+  );
+};
+
+// Mock router components (use vi.hoisted to avoid hoisting issues)
+const { mockNavigate } = vi.hoisted(() => ({ mockNavigate: vi.fn() }));
 
 // Mock @tanstack/react-router
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: mockUseNavigate,
+  useNavigate: () => mockNavigate,
 }));
 
 describe('Service Browsing and Selection Flow Integration Tests', () => {

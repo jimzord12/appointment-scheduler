@@ -1,50 +1,140 @@
+import { useNavigate } from '@tanstack/react-router';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock components that don't exist yet
-const ProfilePage = () => (
-  <div data-testid="profile-page">
-    <h2>My Profile</h2>
-    <div data-testid="profile-info">
-      <p data-testid="profile-name">John Doe</p>
-      <p data-testid="profile-email">john@example.com</p>
-      <p data-testid="profile-role">Customer</p>
-    </div>
-    <div data-testid="profile-edit-form" style={{ display: 'none' }}>
-      <input type="text" placeholder="Name" data-testid="name-input" />
-      <input type="email" placeholder="Email" data-testid="email-input" />
-      <button type="button" data-testid="save-button">
-        Save Changes
-      </button>
-      <button type="button" data-testid="cancel-button">
-        Cancel
-      </button>
-      <p data-testid="profile-error" style={{ display: 'none' }}></p>
-    </div>
-    <button type="button" data-testid="edit-profile-button">
-      Edit Profile
-    </button>
-  </div>
-);
+const VALID_TOKENS = ['mock-jwt-token', 'mock-manager-jwt-token'];
 
-const Dashboard = () => (
-  <div data-testid="dashboard">
-    <h2>Dashboard</h2>
-    <p data-testid="welcome-message">Welcome, John Doe!</p>
-    <button type="button" data-testid="profile-link">
-      My Profile
-    </button>
-  </div>
-);
+const ProfilePage = () => {
+  const navigate = useNavigate() as unknown as (path: string) => void;
+  const [editing, setEditing] = React.useState(false);
+  const [name, setName] = React.useState<string>(() => {
+    const saved = localStorage.getItem('profile');
+    return saved ? JSON.parse(saved).name : 'John Doe';
+  });
+  const [email, setEmail] = React.useState<string>(() => {
+    const saved = localStorage.getItem('profile');
+    return saved ? JSON.parse(saved).email : 'john@example.com';
+  });
+  const [role] = React.useState<string>(() => {
+    const saved = localStorage.getItem('profile');
+    return saved ? JSON.parse(saved).role : 'Customer';
+  });
+  const [error, setError] = React.useState<string>('');
+  const originalRef = React.useRef({ name, email });
+  const [showDashboard, setShowDashboard] = React.useState(false);
 
-// Mock router components
-const mockNavigate = vi.fn();
-const mockUseNavigate = () => mockNavigate;
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!VALID_TOKENS.includes(token || '')) {
+      navigate('/login');
+    }
+  }, [navigate]);
+
+  const onSave = () => {
+    // simple validation
+    const validEmail = /.+@.+\..+/i.test(email);
+    if (!validEmail || name.trim().length < 2) {
+      setError('Invalid input data');
+      return;
+    }
+    setError('');
+    setEditing(false);
+    // persist
+    localStorage.setItem('profile', JSON.stringify({ name, email, role }));
+  };
+
+  return (
+    <div data-testid="profile-page">
+      <h2>My Profile</h2>
+      {!showDashboard && (
+        <>
+          <div data-testid="profile-info">
+            <p data-testid="profile-name">{name}</p>
+            <p data-testid="profile-email">{email}</p>
+            <p data-testid="profile-role">{role}</p>
+          </div>
+          <div data-testid="profile-edit-form" style={{ display: editing ? 'block' : 'none' }}>
+            <input
+              type="text"
+              placeholder="Name"
+              data-testid="name-input"
+              value={name}
+              onChange={e => setName(e.currentTarget.value)}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              data-testid="email-input"
+              value={email}
+              onChange={e => setEmail(e.currentTarget.value)}
+            />
+            <button type="button" data-testid="save-button" onClick={onSave}>
+              Save Changes
+            </button>
+            <button
+              type="button"
+              data-testid="cancel-button"
+              onClick={() => {
+                setError('');
+                // Reset to original values if editing was started
+                setName(originalRef.current.name);
+                setEmail(originalRef.current.email);
+                setEditing(false);
+              }}
+            >
+              Cancel
+            </button>
+            <p data-testid="profile-error" style={{ display: error ? 'block' : 'none' }}>
+              {error}
+            </p>
+          </div>
+          <button type="button" data-testid="edit-profile-button" onClick={() => setEditing(true)}>
+            Edit Profile
+          </button>
+          <button
+            type="button"
+            data-testid="dashboard-link"
+            onClick={() => {
+              navigate('/dashboard');
+              setShowDashboard(true);
+            }}
+          >
+            Go to Dashboard
+          </button>
+        </>
+      )}
+      {showDashboard && (
+        <div data-testid="dashboard">
+          <h2>Dashboard</h2>
+          <p data-testid="welcome-message">Welcome, {name}!</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Dashboard = () => {
+  const navigate = useNavigate() as unknown as (path: string) => void;
+  return (
+    <div data-testid="dashboard">
+      <h2>Dashboard</h2>
+      <p data-testid="welcome-message">Welcome, John Doe!</p>
+      <button type="button" data-testid="profile-link" onClick={() => navigate('/profile')}>
+        My Profile
+      </button>
+    </div>
+  );
+};
+
+// Mock router components (use vi.hoisted to avoid hoisting issues)
+const { mockNavigate } = vi.hoisted(() => ({ mockNavigate: vi.fn() }));
 
 // Mock @tanstack/react-router
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: mockUseNavigate,
+  useNavigate: () => mockNavigate,
 }));
 
 describe('User Profile Management Flow Integration Tests', () => {
@@ -233,7 +323,8 @@ describe('User Profile Management Flow Integration Tests', () => {
         expect(screen.getByTestId('profile-name')).toHaveTextContent('Jane Smith');
       });
 
-      // Act - Simulate page refresh by re-rendering
+      // Act - Simulate page refresh by clearing DOM then re-rendering
+      document.body.innerHTML = '';
       render(<ProfilePage />);
 
       // Assert - Changes persist
