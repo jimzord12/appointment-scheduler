@@ -114,6 +114,18 @@ RATE_LIMIT_MAX=60
 
 When the limit is exceeded, the API responds with HTTP 429 and body `{ "error": "rate_limit" }`.
 
+6. JWT secret and CORS in production
+
+- In production (`NODE_ENV=production`), the app will fail fast unless `JWT_SECRET` is set to a non-default strong value.
+- CORS is permissive in dev/test. In production, set `ALLOWED_ORIGINS` (comma-separated) to explicitly allow origins:
+
+```bash
+# .env (backend)
+NODE_ENV=production
+JWT_SECRET=your-strong-secret
+ALLOWED_ORIGINS=https://admin.example.com,https://app.example.com
+```
+
 ### Frontend Setup
 
 1. The frontend is configured in the monorepo

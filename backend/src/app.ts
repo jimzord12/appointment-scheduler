@@ -17,7 +17,28 @@ export const createApp = (): Application => {
   // Environment validation
   assertValidJwtSecret();
   app.use(helmet());
-  app.use(cors());
+  // CORS configuration: permissive in dev/test, allowlist in production via ALLOWED_ORIGINS
+  const isProd = process.env.NODE_ENV === 'production';
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+  if (isProd) {
+    app.use(
+      cors({
+        origin: (origin, cb) => {
+          // Allow same-origin or server-to-server (no origin)
+          if (!origin) return cb(null, true);
+          if (allowedOrigins.includes(origin)) return cb(null, true);
+          // Disable CORS for this request without throwing; browser will block
+          return cb(null, false);
+        },
+        credentials: true,
+      })
+    );
+  } else {
+    app.use(cors());
+  }
   app.use(express.json());
 
   // Rate limiting (disabled in test via VITEST env unless overridden)
