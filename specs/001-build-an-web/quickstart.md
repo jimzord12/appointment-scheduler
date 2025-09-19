@@ -99,6 +99,21 @@ pnpm -C backend db:migrate
 
 Now starting the server or running tests will use the DB for appointment requests.
 
+5. Rate limiting configuration
+
+- The backend includes `express-rate-limit` with sane defaults.
+- Defaults (in non-test env): `RATE_LIMIT_WINDOW_MINUTES=15`, `RATE_LIMIT_MAX=100`.
+- You can override with:
+
+```bash
+# .env (backend)
+RATE_LIMIT_ENABLED=1        # force-enable in tests or disable with 0 in dev
+RATE_LIMIT_WINDOW_MS=60000  # or set RATE_LIMIT_WINDOW_MINUTES=1
+RATE_LIMIT_MAX=60
+```
+
+When the limit is exceeded, the API responds with HTTP 429 and body `{ "error": "rate_limit" }`.
+
 ### Frontend Setup
 
 1. The frontend is configured in the monorepo

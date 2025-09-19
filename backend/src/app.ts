@@ -26,8 +26,12 @@ export const createApp = (): Application => {
   app.use(cors());
   app.use(express.json());
 
-  // Rate limiting (disabled in test via VITEST env)
-  if (!process.env.VITEST) {
+  // Rate limiting (disabled in test via VITEST env unless overridden)
+  const rateLimitEnabledEnv = process.env.RATE_LIMIT_ENABLED;
+  const isRateLimitEnabled = rateLimitEnabledEnv
+    ? rateLimitEnabledEnv === '1' || rateLimitEnabledEnv.toLowerCase() === 'true'
+    : !process.env.VITEST;
+  if (isRateLimitEnabled) {
     const windowMs = process.env.RATE_LIMIT_WINDOW_MS
       ? parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10)
       : parseInt(process.env.RATE_LIMIT_WINDOW_MINUTES || '15', 10) * 60 * 1000;
@@ -38,6 +42,10 @@ export const createApp = (): Application => {
         max,
         standardHeaders: true,
         legacyHeaders: false,
+        handler: (req, res /*, next*/) => {
+          // Uniform JSON error shape per spec
+          res.status(429).json({ error: 'rate_limit' });
+        },
       })
     );
   }
