@@ -7,5 +7,5 @@ const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 const instance = app ?? createApp();
 
 instance.listen(PORT, () => {
-  console.log(`Backend server running on port ${PORT}`);
+  console.log(`🚀 Backend server running on port ${PORT}`);
 });
