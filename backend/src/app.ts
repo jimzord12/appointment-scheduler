@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import { errorHandler } from './middleware/errorHandler.js';
 import { loggingMiddleware, LogLevel } from './middleware/logging.js';
 import apiRouter from './routes/index.ts';
+import { assertValidJwtSecret } from './utils/security.js';
 
 // Load environment variables once here (idempotent if called multiple times in tests)
 dotenv.config();
@@ -14,14 +15,7 @@ dotenv.config();
 export const createApp = (): Application => {
   const app = express();
   // Environment validation
-  const isProd = process.env.NODE_ENV === 'production';
-  const jwtSecret = process.env.JWT_SECRET;
-  if (
-    isProd &&
-    (!jwtSecret || jwtSecret === 'dev-insecure-secret' || jwtSecret === 'change_me_dev_secret')
-  ) {
-    throw new Error('JWT_SECRET must be set to a strong secret in production');
-  }
+  assertValidJwtSecret();
   app.use(helmet());
   app.use(cors());
   app.use(express.json());

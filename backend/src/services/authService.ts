@@ -8,6 +8,7 @@ import {
   LoginSchema,
   UserSchema,
 } from '../../src/schemas/index.js';
+import { getJwtSecret } from '../utils/jwt.js';
 
 import * as usersRepo from './repos/usersRepo.js';
 
@@ -25,7 +26,7 @@ interface StoredUser {
 const users: StoredUser[] = [];
 const isDbEnabled = () => process.env.USE_DB_USERS === '1' && !!process.env.DATABASE_URL;
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-insecure-secret';
+const JWT_SECRET = getJwtSecret();
 const TOKEN_EXPIRY = '1h';
 
 export const register = async (input: z.infer<typeof CreateUserSchema>) => {
