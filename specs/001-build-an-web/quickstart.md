@@ -77,6 +77,28 @@ npm run dev:backend
 
 The backend will be available at `http://localhost:3001`
 
+4. Optional: Enable DB-backed repositories (appointments, services, users)
+
+- By default, appointment requests use an in-memory store so you can run tests without Postgres.
+- To exercise the Postgres/Drizzle path for appointment requests, set the env toggle and ensure your DB is ready:
+
+```bash
+# .env (backend)
+DATABASE_URL=postgres://user:password@localhost:5432/appointments
+USE_DB_APPOINTMENTS=1
+USE_DB_SERVICES=1
+USE_DB_USERS=1
+```
+
+Then run migrations:
+
+```bash
+pnpm -C backend db:generate
+pnpm -C backend db:migrate
+```
+
+Now starting the server or running tests will use the DB for appointment requests.
+
 ### Frontend Setup
 
 1. The frontend is configured in the monorepo

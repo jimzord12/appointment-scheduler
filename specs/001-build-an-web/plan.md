@@ -260,9 +260,9 @@ _This checklist is updated during execution flow_
 [x] Phase 0: Research complete (/plan command)
 [x] Phase 1: Design complete (/plan command)
 [x] Phase 2: Task planning complete (/tasks command executed; tasks.md created and maintained)
-[x] Phase 3: Tasks generated (/tasks command)
-[x] Phase 4: Implementation in progress
-[x] Phase 5: Validation passed
+[x] Phase 3: Tasks generated (/tasks command on 2025-09-19)
+[ ] Phase 4: Implementation in progress
+[ ] Phase 5: Validation passed
 
 **Implementation Progress**:
 
@@ -304,7 +304,7 @@ _This checklist is updated during execution flow_
 
 ---
 
-Follow-up tasks created: See `tasks.md` Phase 3.8 (T060–T075) for concrete actions derived from this review (contracts alignment, schema deduplication, conflict handling, security hardening, logging, DB init, documentation, and CI).
+Follow-up tasks created: See `c:\\Github\\appointment-scheduler\\specs\\001-build-an-web\\tasks.md` for concrete actions derived from this review (contracts alignment, schema deduplication, conflict handling, security hardening, logging, DB init, documentation, and CI).
 
 ## Code Review (2025-09-17)
 

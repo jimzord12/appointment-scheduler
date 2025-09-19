@@ -6,16 +6,25 @@ dotenv.config();
 
 const { Pool } = pg;
 
-// Environment variable: DATABASE_URL must be provided for Postgres connection
-// For local dev with SQLite (future), we can branch logic, but initial implementation uses Postgres per spec.
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  // Fail fast to highlight misconfiguration early (tests can set env)
-  throw new Error('DATABASE_URL environment variable is required');
+let cachedDb: ReturnType<typeof drizzle> | null = null;
+
+function initDb() {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error('DATABASE_URL environment variable is required to use the database');
+  }
+  const pool = new Pool({ connectionString });
+  return drizzle(pool, { logger: false });
 }
 
-const pool = new Pool({ connectionString });
-
-export const db = drizzle(pool, { logger: false });
+export const db: ReturnType<typeof drizzle> = new Proxy({} as any, {
+  get(_target, prop) {
+    if (!cachedDb) {
+      cachedDb = initDb();
+    }
+    // @ts-expect-error dynamic proxy passthrough
+    return cachedDb[prop];
+  },
+});
 
 export type DbClient = typeof db;

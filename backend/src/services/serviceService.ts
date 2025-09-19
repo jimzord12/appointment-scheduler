@@ -1,6 +1,7 @@
 import { CreateServiceSchema, ServiceSchema } from '../../src/schemas/index.js';
 
 import { __findUserById } from './authService.js';
+import * as servicesRepo from './repos/servicesRepo.js';
 
 interface StoredService {
   id: string;
@@ -22,42 +23,50 @@ export const createService = async (userId: string, input: unknown) => {
   }
   const parsed = CreateServiceSchema.parse(input);
   // Basic constraints already validated by schema; add any business rules here if needed
-  const now = new Date();
-  const service: StoredService = {
-    id: crypto.randomUUID(),
+  const created = await servicesRepo.create({
     name: parsed.name,
     description: parsed.description,
     durationMinutes: parsed.durationMinutes,
     price: parsed.price,
-    isActive: true,
-    createdAt: now,
-    updatedAt: now,
-  };
-  servicesStore.push(service);
-  return ServiceSchema.parse({
-    ...service,
-    createdAt: service.createdAt.toISOString(),
-    updatedAt: service.updatedAt.toISOString(),
   });
+  // Mirror into local store for synchronous lookup compatibility
+  servicesStore.push({
+    id: created.id,
+    name: created.name,
+    description: created.description ?? undefined,
+    durationMinutes: created.durationMinutes,
+    price: typeof created.price === 'string' ? Number(created.price) : created.price,
+    isActive: created.isActive,
+    createdAt: created.createdAt,
+    updatedAt: created.updatedAt,
+  });
+  return ServiceSchema.parse(normalizeService(created));
 };
 
 export const listServices = async () => {
   // Return only active services for now; future: include filters or role-based inactive visibility
-  return servicesStore
-    .filter(s => s.isActive)
-    .map(s =>
-      ServiceSchema.parse({
-        ...s,
-        createdAt: s.createdAt.toISOString(),
-        updatedAt: s.updatedAt.toISOString(),
-      })
-    );
+  const rows = await servicesRepo.listActive();
+  return rows.map(normalizeService).map(s => ServiceSchema.parse(s));
 };
 
 export function __resetServicesStore() {
   servicesStore.splice(0, servicesStore.length);
+  servicesRepo.__resetMemory();
 }
 
 export function __findServiceById(id: string) {
   return servicesStore.find(s => s.id === id) || null;
+}
+
+function normalizeService(r: servicesRepo.ServiceRecord) {
+  return {
+    id: r.id,
+    name: r.name,
+    description: r.description ?? undefined,
+    durationMinutes: r.durationMinutes,
+    price: typeof r.price === 'string' ? Number(r.price) : r.price,
+    isActive: r.isActive,
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  };
 }

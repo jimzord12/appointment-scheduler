@@ -1,6 +1,6 @@
 # Drizzle Schema Directory
 
-Place table schema definition files here (e.g., `users.ts`, `services.ts`, `appointmentRequests.ts`, `appointments.ts`).
+Place table schema definition files here (e.g., `users.ts`, `services.ts`, `appointment_requests.ts`, `appointments.ts`).
 
 Each schema file should:
 

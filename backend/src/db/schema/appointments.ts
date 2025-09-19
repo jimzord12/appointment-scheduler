@@ -1,6 +1,6 @@
 import { pgTable, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
-import { appointmentRequests } from './appointmentRequests.js';
+import { appointmentRequests } from './appointment_requests.js';
 
 export const appointments = pgTable(
   'appointments',

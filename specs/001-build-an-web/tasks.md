@@ -1,3 +1,258 @@
+# Tasks: 001-build-an-web — Appointment Management Web App
+
+Input: `c:\Github\appointment-scheduler\specs\001-build-an-web\plan.md`
+Related specs:
+
+- Spec: `c:\Github\appointment-scheduler\specs\001-build-an-web\spec.md`
+- Research: `c:\Github\appointment-scheduler\specs\001-build-an-web\research.md`
+- Data model: `c:\Github\appointment-scheduler\specs\001-build-an-web\data-model.md`
+- Contracts: `c:\Github\appointment-scheduler\specs\001-build-an-web\contracts\api-contracts.ts`
+
+Execution notes
+
+- Scope: Remaining implementation and hardening for the feature branch `001-build-an-web`.
+- Method: TDD — author/adjust tests first (RED) then implement (GREEN) and refactor.
+- Path style: All paths are absolute (Windows) and target the current repository structure.
+
+Format: [ID] [P?] Title
+
+- [P] means can run in parallel (distinct files/areas, no dependency).
+- Each task lists Description, Acceptance Criteria (AC), Dependencies (Deps), Estimate (Est), and Links.
+
+Legend for Estimates
+
+- XS ≈ 0.5h, S ≈ 1–2h, M ≈ 3–5h, L ≈ 1–2 days
+
+---
+
+## Backend Tasks
+
+T076 Remove duplicate Drizzle schema for appointment requests
+
+- Description: Remove `c:\Github\appointment-scheduler\backend\src\db\schema\appointmentRequests.ts` in favor of `c:\Github\appointment-scheduler\backend\src\db\schema\appointment_requests.ts` and align field types with transport (string dates, HH:mm times) where appropriate; regenerate migrations if needed.
+- AC:
+  - Only one schema file remains for appointment requests.
+  - Drizzle compiles with no schema conflicts.
+  - Tests referencing the model pass type-check.
+- Deps: None
+- Est: S
+- Links: data-model, contracts
+
+T077 Wire Drizzle DB for AppointmentRequest and Appointment services (replace in-memory)
+
+- Description: Refactor `c:\Github\appointment-scheduler\backend\src\services\appointmentService.ts` to use Drizzle queries against `appointment_requests` and `appointments` tables, preserving business rules (pending→approved/rejected, no double-booking).
+- AC:
+  - Contract tests under `c:\Github\appointment-scheduler\backend\tests\contract\appointments.*` pass using DB-backed logic.
+  - Integration tests `appointments.flow.spec.ts` and `appointments.doublebooking.spec.ts` pass and enforce 409 on conflict.
+- Deps: T076
+- Est: M
+- Links: data-model, contracts
+
+T078 Add rate limiting middleware with environment controls
+
+- Description: Add `express-rate-limit` in `c:\Github\appointment-scheduler\backend\src\app.ts` with sane defaults; make thresholds configurable via env.
+- AC:
+  - Default dev limits permissive; production limits configurable.
+  - Requests beyond limit return 429 with `{ error: 'rate_limit' }`.
+  - Add unit/integration test for rate limit behavior (can be feature-flagged in test).
+- Deps: None
+- Est: S
+- Links: research.md, app.ts
+
+T079 Enforce JWT secret in production and improve config safety
+
+- Description: In `c:\Github\appointment-scheduler\backend\src\services\authService.ts` and config bootstrap, require `JWT_SECRET` in production; keep safe fallback only in dev/test.
+- AC:
+  - App start fails fast with clear error if `NODE_ENV=production` and `JWT_SECRET` missing.
+  - All tests pass in dev/test without additional setup.
+- Deps: None
+- Est: S
+- Links: research.md
+
+T080 Restrict CORS in production
+
+- Description: Configure CORS in `c:\Github\appointment-scheduler\backend\src\app.ts` to allow all in dev/test and restrict to `ALLOWED_ORIGINS` in prod.
+- AC:
+  - Dev/test behavior unchanged.
+  - Prod blocks unauthorized origins; returns proper CORS headers for allowed ones.
+- Deps: None
+- Est: S
+- Links: research.md, app.ts
+
+T081 Add request ID correlation to logging
+
+- Description: Enhance `c:\Github\appointment-scheduler\backend\src\middleware\logging.ts` to attach a per-request ID (from `x-request-id` or generated) and propagate to logs and error handler.
+- AC:
+  - All logs for a request include `requestId`.
+  - Unit test updated/added under `backend/tests/unit/logging.middleware.spec.ts`.
+- Deps: None
+- Est: S
+- Links: research.md
+
+T082 Generate OpenAPI spec from Zod contracts
+
+- Description: Use `zod-openapi` to generate `openapi.json` from `c:\Github\appointment-scheduler\specs\001-build-an-web\contracts\api-contracts.ts`; publish artifact under `c:\Github\appointment-scheduler\backend\dist\openapi.json` and document generation script in root `package.json` or backend `package.json`.
+- AC:
+  - Script `pnpm openapi:generate` produces a valid OpenAPI file.
+  - Basic smoke validation passes (e.g., swagger-parser or openapi-schema-validator).
+- Deps: Contracts stable
+- Est: M
+- Links: contracts
+
+T083 Migrate User/Service services to DB (phase 1)
+
+- Description: Refactor `authService.ts`, `userService.ts`, and `serviceService.ts` to use Drizzle for persistence (users, services) with existing validation and role enforcement.
+- AC:
+  - Contract tests for auth, user profile, and services pass using DB-backed persistence.
+  - Seeding utility for creating a manager user for tests updated if necessary.
+- Deps: T076
+- Est: M
+- Links: data-model, contracts
+
+T084 Lazy DB initialization for non-DB test scenarios
+
+- Description: Guard DB connection so that suites not exercising DB don’t fail at import-time.
+- AC:
+  - All current tests run without requiring a live DB unless needed.
+  - Clear error surfaces if a DB call is made without initialization.
+- Deps: None
+- Est: S
+- Links: backend/src/db/index.ts
+
+## Frontend Tasks
+
+T085 Implement authentication pages with React Hook Form + Zod
+
+- Description: Create Login and Register pages, wire to `frontend/src/lib/api/client.ts` with contract-backed parsing; manage auth state in a Zustand store.
+- AC:
+  - Happy path login/register flows succeed; invalid inputs show errors client-side and server-side.
+  - Tests under `frontend/src/tests/integration/auth-flow.spec.tsx` pass.
+- Deps: None
+- Est: M
+- Links: spec.md, contracts
+
+T086 Services list and create (manager-only UI)
+
+- Description: Implement Services page showing list from API and a create form gated by role; use shadcn components.
+- AC:
+  - Managers can create a service; customers see read-only list.
+  - Tests cover role gating and error states.
+- Deps: T085 (auth state)
+- Est: M
+- Links: spec.md, contracts
+
+T087 Appointment request form and list
+
+- Description: Build page to create appointment requests (service select, date, time, notes) and view own requests; validation via Zod.
+- AC:
+  - Creating a request shows in list; server validation errors surface.
+  - Tests cover form validation and success path.
+- Deps: T085, T086
+- Est: M
+- Links: spec.md, contracts
+
+T088 Manager approval workflow UI
+
+- Description: Manager can view pending requests and approve/reject; handle conflict errors (409) with user-friendly messaging.
+- AC:
+  - Approve/reject updates list status; conflict shows proper banner.
+  - Tests simulate 409 and verify UI response.
+- Deps: T087; Backend T077
+- Est: M
+- Links: spec.md
+
+T089 Routing with TanStack Router and protected routes
+
+- Description: Configure routes, nested layouts, and auth-protected segments; redirect unauthenticated users to login.
+- AC:
+  - Deep links work; protected routes enforce auth.
+  - Router tests cover basic navigation/guards.
+- Deps: T085
+- Est: S
+- Links: frontend/src/router
+
+T090 Loading/Error UX and a11y pass
+
+- Description: Ensure skeletons/spinners for API calls, accessible labels, and keyboard navigation; fix remaining act() warnings.
+- AC:
+  - No axe-core violations in key pages.
+  - Tests adjusted to remove act() warnings where feasible.
+- Deps: T085–T089
+- Est: M
+- Links: research.md
+
+## Integration, Testing, and DevOps
+
+T091 Update and stabilize contract tests for final transport types
+
+- Description: Ensure contract tests parse string date/time per contracts; remove any lingering `z.date()` expectations.
+- AC:
+  - All contract tests in `c:\Github\appointment-scheduler\backend\tests\contract\` pass against current contracts.
+- Deps: Contracts stable; Backend T077/T083 as needed
+- Est: S
+- Links: contracts
+
+T092 End-to-end happy path across FE/BE with MSW off
+
+- Description: Add a smoke E2E test that runs real backend (test mode) and frontend against it (no MSW), covering login → create service → request → approve.
+- AC:
+  - Scripted E2E test passes locally in CI-like environment.
+- Deps: T077, T083, T085–T088
+- Est: L
+- Links: quickstart.md
+
+T093 Quickstart and backend API README updates
+
+- Description: Update `c:\Github\appointment-scheduler\specs\001-build-an-web\quickstart.md` and add/update backend API README with endpoints, auth, env, and OpenAPI generate instructions.
+- AC:
+  - Docs reflect current commands and env variables.
+- Deps: T082
+- Est: S
+- Links: quickstart.md
+
+T094 CI pipeline: lint, typecheck, test, OpenAPI artifact
+
+- Description: Add/adjust CI to run lint, typecheck, tests for backend/frontend, and publish `openapi.json` as artifact.
+- AC:
+  - CI green on main and PRs; OpenAPI artifact uploaded.
+- Deps: T082
+- Est: M
+- Links: repo root CI config (to be added if missing)
+
+T095 Seed and local dev database automation
+
+- Description: Provide `pnpm db:dev:up` and `pnpm db:seed` scripts; optionally Docker Compose for Postgres; ensure the backend can boot locally with minimal steps.
+- AC:
+  - Developer can bring up DB and seed with a single command sequence.
+- Deps: T077, T083
+- Est: M
+- Links: backend/drizzle/config.ts, db/index.ts
+
+---
+
+Dependencies summary
+
+- Backend: T076 → T077 → (T083), and T082 after contracts finalize; T078–T081, T084 independent.
+- Frontend: T085 → T086 → T087 → T088; T089 depends on T085; T090 after others.
+- Integration: T091 after contract stabilization; T092 after BE/FE core; T093 after T082; T094 after T082; T095 after DB-backed services.
+
+Traceability
+
+- Derived from: spec.md user stories (auth, services, appointment request/approval), data-model entities, and API contracts. Each task maps to concrete endpoints or UI stories to ensure end-to-end coverage.
+
+Parallelization examples
+
+- In parallel: T078, T079, T080, T081, T084 (distinct files/concerns).
+- In parallel: T085 and T089 once auth store shape is decided.
+
+---
+
+Readiness
+
+- Completing T076–T083 and T091 will make backend feature-complete and contract-aligned.
+- Completing T085–T088 will make the primary UI flows usable.
+- T092–T095 harden the system for CI and team onboarding.
+
 # Tasks: Appointment Management Web Application
 
 ## Completion Summary
