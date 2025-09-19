@@ -5,7 +5,7 @@ import { validateBody } from '../middleware/validate.js';
 import { CreateServiceSchema } from '../schemas/index.js';
 import { createService, listServices } from '../services/serviceService.js';
 
-export const servicesRouter = Router();
+const servicesRouter = Router();
 
 servicesRouter.get('/', optionalAuth, async (_req, res, next) => {
   try {
@@ -30,3 +30,5 @@ servicesRouter.post(
     }
   }
 );
+
+export default servicesRouter;

@@ -2,11 +2,11 @@
 
 ## Completion Summary
 
-- **34 tasks (57.6%) are completed** ✅
+- **37 tasks (62.7%) are completed** ✅
 - **0 tasks (0%) are partially completed** ⚠️
-- **25 tasks (42.4%) are not completed** ❌
+- **22 tasks (37.3%) are not completed** ❌
 
-**Input**: Design documents from `c:/Users/jimzord12/Documents/GitHub/appointment-scheduler/specs/001-build-an-web/`
+**Input**: Design documents from `c:/Github/appointment-scheduler/specs/001-build-an-web/`
 **Prerequisites**: `plan.md` (required), `research.md`, `data-model.md`, `contracts/`
 
 Project structure: Web application (frontend + backend) per implementation plan (React 19 + Vite 7 frontend, Express 5 backend, shared types). Source code will adopt Option 2 structure described in `plan.md`.
@@ -209,11 +209,11 @@ Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
 
 ## Phase 3.4: Frontend Tests First (Schemas & API Layer)
 
-- [ ] T033 Frontend shared API client scaffolding (`frontend/src/lib/api/client.ts`) using oRPC client patterns (placeholder endpoints; tests failing).
+- [x] T033 Frontend shared API client scaffolding (`frontend/src/lib/api/client.ts`) using oRPC client patterns (placeholder endpoints; tests failing).
       Deps: T003
       Effort: S
       Links: contracts/api-contracts.ts
-- [ ] T034 [P] MSW handlers draft for auth/services/appointments endpoints (`frontend/tests/msw/handlers.ts`) mirroring contracts; return 501 initially.
+- [x] T034 [P] MSW handlers draft for auth/services/appointments endpoints (`frontend/src/mocks/handlers.ts`) mirroring contracts; return 501 initially.
       Deps: T033
       Effort: S
       Links: contracts
@@ -274,7 +274,7 @@ Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
 - [ ] T047 Security hardening verification: rate limits, CORS, helmet config test (`backend/tests/integration/security.spec.ts`).
       Deps: T028,T030,T032
       Effort: S
-- [ ] T048 Double-booking enforcement test (`backend/tests/integration/appointments.doublebooking.spec.ts`) ensures second overlapping approval fails.
+- [x] T048 Double-booking enforcement test (`backend/tests/integration/appointments.doublebooking.spec.ts`) ensures second overlapping approval fails.
       Deps: T027,T018
       Effort: S
 - [ ] T049 Performance test backend (<2s worst case endpoints, typical <500ms) (`backend/tests/perf/perf.spec.ts`).
@@ -320,27 +320,27 @@ Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
 
 These tasks are derived from the Code Review (2025-09-17) section in `plan.md`. They address contract mismatches, schema duplication, conflict handling, and security hardening to achieve merge readiness.
 
-- [ ] T060 Align contract transport types for dates/times (specs/contracts)
+- [x] T060 Align contract transport types for dates/times (specs/contracts)
       AC: Replace `z.date()` with `z.string().datetime()` for transport fields (`createdAt`, `updatedAt`, etc.), or adopt `z.coerce.date()` consistently; update any dependent schemas and OpenAPI generation.
       Files: `specs/001-build-an-web/contracts/api-contracts.ts`
       Deps: T007–T015 (tests exist)
       Effort: M
       Links: plan.md (Review → Critical Issues #2)
 
-- [ ] T061 Update backend tests to match transport types
+- [x] T061 Update backend tests to match transport types
       AC: Contract tests parsing updated to new types; failing assertions due solely to type mismatch now pass or fail for functional reasons only.
       Files: `backend/tests/contract/*.spec.ts`, `backend/tests/integration/*.spec.ts`
       Deps: T060
       Effort: S
 
-- [ ] T062 Remove duplicate Drizzle schema and unify
+- [x] T062 Remove duplicate Drizzle schema and unify
       AC: Delete `backend/src/db/schema/appointmentRequests.ts` or `appointment_requests.ts` keeping a single canonical file; ensure enums and column types align with chosen contracts; generate fresh migration if needed.
       Files: `backend/src/db/schema/appointment_requests.ts`, `backend/src/db/schema/appointmentRequests.ts`
       Deps: T019–T023
       Effort: M
       Links: plan.md (Review → Critical Issues #3)
 
-- [ ] T063 Ensure double-booking returns 409
+- [x] T063 Ensure double-booking returns 409
       AC: When approving a request that conflicts with an existing approved slot (same `serviceId`, `requestedDate`, `requestedTime`), API returns 409 with `{ error: 'conflict' }` shape; add focused test.
       Files: `backend/src/services/appointmentService.ts`, `backend/src/routes/appointments.ts`, `backend/tests/integration/appointments.doublebooking.spec.ts`
       Deps: T027, T018
@@ -462,4 +462,4 @@ S: 32 M: 19 L: 4 (Total tasks: 59)
 
 ---
 
-Generated September 12, 2025 from branch `001-build-an-web`.
+Generated September 12, 2025 from branch `001-build-an-web`. Status sync updated September 19, 2025.

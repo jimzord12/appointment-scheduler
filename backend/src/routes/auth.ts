@@ -4,7 +4,7 @@ import { validateBody } from '../middleware/validate.js';
 import { CreateUserSchema, LoginSchema } from '../schemas/index.js';
 import { login, register } from '../services/authService.js';
 
-export const authRouter = Router();
+const authRouter = Router();
 
 authRouter.post('/register', validateBody(CreateUserSchema), async (req, res, next) => {
   try {
@@ -23,3 +23,5 @@ authRouter.post('/login', validateBody(LoginSchema), async (req, res, next) => {
     next(err);
   }
 });
+
+export default authRouter;

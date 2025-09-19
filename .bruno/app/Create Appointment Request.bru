@@ -1,0 +1,24 @@
+meta {
+  name: Create Appointment Request
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/appointments/requests
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "serviceId": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+    "requestedDate": "2025-10-15",
+    "requestedTime": "14:30",
+    "notes": "Prefer afternoon; please confirm availability."
+  }
+}
+
+settings {
+  encodeUrl: true
+}

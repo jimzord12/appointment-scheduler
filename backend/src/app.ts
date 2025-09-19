@@ -1,15 +1,12 @@
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
 import { errorHandler } from './middleware/errorHandler.js';
 import { loggingMiddleware, LogLevel } from './middleware/logging.js';
-import { appointmentsRouter } from './routes/appointments.js';
-import { authRouter } from './routes/auth.js';
-import { servicesRouter } from './routes/services.js';
-import { userRouter } from './routes/user.js';
+import apiRouter from './routes/index.ts';
 
 // Load environment variables once here (idempotent if called multiple times in tests)
 dotenv.config();
@@ -56,15 +53,12 @@ export const createApp = (): Application => {
   );
 
   // Health endpoint (no auth)
-  app.get('/health', (_req: Request, res: Response) => {
+  app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'ok' });
   });
 
   // Routers
-  app.use('/auth', authRouter);
-  app.use('/user', userRouter);
-  app.use('/services', servicesRouter);
-  app.use('/appointments', appointmentsRouter);
+  app.use('/', apiRouter);
 
   // Error handler
   app.use(errorHandler);

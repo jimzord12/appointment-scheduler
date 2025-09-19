@@ -4,7 +4,7 @@ import { requireAuth } from '../middleware/auth.js';
 import { validateBody } from '../middleware/validate.js';
 import { getProfile, updateProfile, UpdateProfileInput } from '../services/userService.js';
 
-export const userRouter = Router();
+const userRouter = Router();
 
 userRouter.get('/profile', requireAuth, async (req, res, next) => {
   try {
@@ -28,3 +28,5 @@ userRouter.patch(
     }
   }
 );
+
+export default userRouter;

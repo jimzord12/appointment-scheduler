@@ -1,19 +1,21 @@
-import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
 
-import app from '../../src/app';
 import { AuthResponseSchema, LoginSchema } from '../../src/schemas';
+import { makeServer, registerUser } from '../utils/testClient';
 
 // T008: Contract test for POST /auth/login (expected to FAIL initially)
 
-const server = agent(app);
+const server = makeServer();
 
 describe('POST /auth/login (contract)', () => {
   const endpoint = '/auth/login';
-  it('returns 200 with AuthResponseSchema shape when valid credentials supplied (expected FAIL)', async () => {
-    const res = await server
-      .post(endpoint)
-      .send({ email: 'test@example.com', password: 'password123' });
+  it('returns 200 with AuthResponseSchema shape when valid credentials supplied', async () => {
+    // Arrange: register a user first
+    const email = `login_${Math.random().toString(36).slice(2)}@example.com`;
+    await registerUser(server, { name: 'Login User', email, password: 'password123' });
+
+    // Act: login with correct credentials
+    const res = await server.post(endpoint).send({ email, password: 'password123' });
     expect(res.status).toBe(200); // fails now
     const parsed = AuthResponseSchema.safeParse(res.body);
     expect(parsed.success).toBe(true);

@@ -1,27 +1,32 @@
-import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
 
-import app from '../../src/app';
 import { UserSchema } from '../../src/schemas';
+import { makeServer, registerUser } from '../utils/testClient';
 
-// T010: Contract test for PATCH /user/profile (expected to fail until implemented)\
-
-const server = agent(app);
+// Contract test for PATCH /user/profile
 
 describe('PATCH /user/profile (contract)', () => {
+  const server = makeServer();
   const endpoint = '/user/profile';
-  it('updates profile returning 200 and updated user (expected FAIL)', async () => {
+
+  it('updates profile returning 200 and updated user', async () => {
+    const { token } = await registerUser(server, {
+      name: 'Frank',
+      email: `frank_${Math.random().toString(36).slice(2)}@example.com`,
+      password: 'password123',
+      role: 'customer',
+    });
     const res = await server
       .patch(endpoint)
-      .set('Authorization', 'Bearer fake')
+      .set('Authorization', `Bearer ${token}`)
       .send({ name: 'New Name' });
-    expect(res.status).toBe(200); // fails now
+    expect(res.status).toBe(200);
     const parsed = UserSchema.safeParse(res.body);
     expect(parsed.success).toBe(true);
   });
 
   it('rejects unauthorized update', async () => {
     const res = await server.patch(endpoint).send({ name: 'New Name' });
-    expect(res.status).toBe(401); // fails now (likely 404)
+    expect(res.status).toBe(401);
   });
 });

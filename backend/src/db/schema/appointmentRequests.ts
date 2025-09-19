@@ -1,9 +1,14 @@
-import { date, index, pgEnum, pgTable, text, time, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { index, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 import { services } from './services.js';
 import { users } from './users.js';
 
-export const requestStatusEnum = pgEnum('request_status', ['pending', 'approved', 'rejected']);
+// Standardize enum name and values per data model/contracts
+export const appointmentRequestStatusEnum = pgEnum('appointment_request_status', [
+  'pending',
+  'approved',
+  'rejected',
+]);
 
 export const appointmentRequests = pgTable(
   'appointment_requests',
@@ -15,9 +20,10 @@ export const appointmentRequests = pgTable(
     serviceId: uuid('service_id')
       .notNull()
       .references(() => services.id, { onDelete: 'cascade' }),
-    requestedDate: date('requested_date', { mode: 'date' }).notNull(),
-    requestedTime: time('requested_time').notNull(), // store as time; business hours validation at service layer
-    status: requestStatusEnum('status').notNull().default('pending'),
+    // Transport uses string types; store as text for portability (validation at service layer)
+    requestedDate: text('requested_date').notNull(), // ISO date string (YYYY-MM-DD)
+    requestedTime: text('requested_time').notNull(), // HH:MM format
+    status: appointmentRequestStatusEnum('status').notNull().default('pending'),
     notes: text('notes'),
     managerNotes: text('manager_notes'),
     createdAt: timestamp('created_at', { mode: 'date', withTimezone: false })

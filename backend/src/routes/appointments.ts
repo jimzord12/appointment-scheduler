@@ -8,7 +8,7 @@ import {
 } from '../schemas/index.js';
 import { createRequest, listRequests, updateRequest } from '../services/appointmentService.js';
 
-export const appointmentsRouter = Router();
+const appointmentsRouter = Router();
 
 appointmentsRouter.get('/requests', requireAuth, async (req, res, next) => {
   try {
@@ -47,3 +47,5 @@ appointmentsRouter.patch(
     }
   }
 );
+
+export default appointmentsRouter;
