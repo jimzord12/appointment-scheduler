@@ -2,9 +2,9 @@
 
 ## Completion Summary
 
-- **37 tasks (62.7%) are completed** ✅
+- **40 tasks (67.8%) are completed** ✅
 - **0 tasks (0%) are partially completed** ⚠️
-- **22 tasks (37.3%) are not completed** ❌
+- **19 tasks (32.2%) are not completed** ❌
 
 **Input**: Design documents from `c:/Github/appointment-scheduler/specs/001-build-an-web/`
 **Prerequisites**: `plan.md` (required), `research.md`, `data-model.md`, `contracts/`
@@ -217,15 +217,15 @@ Paths (tests): `backend/tests/contract/`, `backend/tests/integration/`
       Deps: T033
       Effort: S
       Links: contracts
-- [ ] T035 Integration test: auth flow UI (`frontend/tests/integration/auth.flow.spec.ts`) register → login → profile fetch (failing).
+- [x] T035 Integration test: auth flow UI (`frontend/tests/integration/auth.flow.spec.ts`) register → login → profile fetch (GREEN).
       Deps: T033,T034
       Effort: M
       Links: authProcedures.\*
-- [ ] T036 Integration test: service list & create (manager) UI (`frontend/tests/integration/services.flow.spec.ts`).
+- [x] T036 Integration test: service list & create (manager) UI (`frontend/tests/integration/services.flow.spec.ts`).
       Deps: T033,T034
       Effort: M
       Links: serviceProcedures.\*
-- [ ] T037 Integration test: appointment request lifecycle UI (`frontend/tests/integration/appointments.flow.spec.ts`).
+- [x] T037 Integration test: appointment request lifecycle UI (`frontend/tests/integration/appointments.flow.spec.ts`).
       Deps: T033,T034
       Effort: L
       Links: appointmentProcedures.\*

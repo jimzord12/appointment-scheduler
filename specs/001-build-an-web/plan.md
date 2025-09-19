@@ -286,7 +286,7 @@ _This checklist is updated during execution flow_
 - [x] T031: Logging middleware enhanced with requestId correlation and userId propagation; unit tests added and passing.
 - [x] T033: Frontend shared API client scaffolded at `frontend/src/lib/api/client.ts` with contract-backed parsing; tests added.
 - [x] T034: MSW handlers implemented under `frontend/src/mocks/handlers.ts` and server setup `frontend/src/mocks/server.ts`; fixed UUID generation for created resources to satisfy Zod `uuid()` schema; frontend API client tests are green.
-- [x] T035–T037: Frontend integration specs for auth/services/appointments are authored and currently RED by design. Enabled discovery by updating `frontend/vitest.config.ts` include to `src/**/*.{test,spec}.{ts,tsx}` and added a JSDOM-safe polyfill for `HTMLFormElement.requestSubmit` in `frontend/src/setupTests.ts` to avoid environment warnings. Next step: implement minimal routing/components/state to drive these to GREEN.
+- [x] T035–T037: Frontend integration flows for auth/services/appointments are GREEN. Discovery enabled via `frontend/vitest.config.ts` include (`src/**/*.{test,spec}.{ts,tsx}`) and `HTMLFormElement.requestSubmit` polyfill added in `frontend/src/setupTests.ts`. Note: a few non-blocking React `act()` warnings remain in error-handling specs; follow-up hardening deferred.
       // Phase 3.8 (Review Follow-ups)
 - [x] T060: Contracts updated to use `z.string().datetime()` for transport date/time fields; aligned with JSON responses.
       // Review Follow-ups executed and validated
