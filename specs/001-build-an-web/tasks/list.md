@@ -111,6 +111,7 @@ Frontend
 - [ ] T087 Appointment request form & list
 - [ ] T088 Manager approval workflow UI
 - [ ] T089 Routing + protected routes
+- [x] T089 Routing + protected routes
 - [ ] T090 Loading/Error UX + a11y pass
 
 Integration, Testing, DevOps

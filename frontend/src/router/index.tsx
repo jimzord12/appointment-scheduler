@@ -6,13 +6,14 @@ import {
   Outlet,
   RouterProvider,
   useNavigate,
+  redirect,
 } from '@tanstack/react-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiClient } from '../lib/api/client.js';
-import { getRole } from '../lib/auth.js';
+import { getRole, hasManagerRole, isAuthenticated } from '../lib/auth.js';
 
 // Simple auth helper
 // Role helper imported from lib/auth
@@ -428,36 +429,58 @@ const indexRoute = createRoute({ getParentRoute: () => rootRoute, path: '/', com
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/dashboard',
+  beforeLoad: () => {
+    if (!isAuthenticated()) throw redirect({ to: '/login' });
+  },
   component: DashboardPage,
 });
 const servicesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/services',
+  beforeLoad: () => {
+    if (!isAuthenticated()) throw redirect({ to: '/login' });
+  },
   component: ServicesPage,
 });
 const serviceDetailsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/services/$id',
+  beforeLoad: () => {
+    if (!isAuthenticated()) throw redirect({ to: '/login' });
+  },
   component: ServiceDetailsPage,
 });
 const appointmentsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/appointments',
+  beforeLoad: () => {
+    if (!isAuthenticated()) throw redirect({ to: '/login' });
+  },
   component: AppointmentsPage,
 });
 const bookAppointmentRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/appointments/book',
+  beforeLoad: () => {
+    if (!isAuthenticated()) throw redirect({ to: '/login' });
+  },
   component: BookAppointmentPage,
 });
 const profileRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/profile',
+  beforeLoad: () => {
+    if (!isAuthenticated()) throw redirect({ to: '/login' });
+  },
   component: ProfilePage,
 });
 const managerAppointmentsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/manager/appointments',
+  beforeLoad: () => {
+    if (!isAuthenticated()) throw redirect({ to: '/login' });
+    if (!hasManagerRole()) throw redirect({ to: '/dashboard' });
+  },
   component: ManagerAppointmentsPage,
 });
 const loginRoute = createRoute({
