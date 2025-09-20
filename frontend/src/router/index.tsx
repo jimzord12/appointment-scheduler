@@ -303,9 +303,7 @@ function BookAppointmentPage() {
         {selectedService ? (
           <>
             <p data-testid="selected-service-duration">{selectedService.durationMinutes} minutes</p>
-            <p data-testid="selected-service-price">
-              ${'{'}selectedService.price{'}'}
-            </p>
+            <p data-testid="selected-service-price">${selectedService.price}</p>
           </>
         ) : (
           <>
@@ -466,15 +464,91 @@ function ProfilePage() {
 
 function ManagerAppointmentsPage() {
   const navigate = useNavigate();
+  const qc = useQueryClient();
   React.useEffect(() => {
     if (getRole() !== 'manager') {
       navigate({ to: '/dashboard' });
     }
   }, [navigate]);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['appointmentRequests'],
+    queryFn: () => apiClient.getAppointmentRequests(),
+  });
+  const { data: services } = useQuery({
+    queryKey: ['services'],
+    queryFn: () => apiClient.getServices(),
+  });
+  const serviceNameById = React.useMemo(() => {
+    const map = new Map<string, string>();
+    if (Array.isArray(services)) for (const s of services) map.set(s.id, s.name);
+    return map;
+  }, [services]);
+
+  const items = Array.isArray(data) ? data : [];
+
+  const updateMutation = useMutation({
+    mutationFn: (input: { id: string; status: 'approved' | 'rejected'; managerNotes?: string }) =>
+      apiClient.updateAppointmentRequest(input.id, {
+        id: input.id,
+        status: input.status,
+        managerNotes: input.managerNotes,
+      }),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ['appointmentRequests'] });
+    },
+  });
+
   return (
     <div data-testid="manager-appointments-page">
       <h2>Manager Appointments</h2>
-      <div data-testid="manager-appointments-list">No items</div>
+
+      <div data-testid="loading-indicator" style={{ display: isLoading ? 'block' : 'none' }}>
+        Loading appointments...
+      </div>
+      <div data-testid="error-message" style={{ display: isError ? 'block' : 'none' }}>
+        Failed to load appointments. Please try again later.
+      </div>
+
+      <div
+        data-testid="appointments-list"
+        style={{ display: isLoading || isError ? 'none' : 'block' }}
+      >
+        {items.map((req, idx) => (
+          <div key={req.id} data-testid={`appointment-item-${idx + 1}`} className="appointment-item">
+            <h3 data-testid={`appointment-service-${idx + 1}`}>
+              {serviceNameById.get(req.serviceId) ?? 'Service'}
+            </h3>
+            {/* Customer name not available without extra fetch; could be added later */}
+            <p data-testid={`appointment-date-${idx + 1}`}>{req.requestedDate}</p>
+            <p data-testid={`appointment-time-${idx + 1}`}>{req.requestedTime}</p>
+            <p data-testid={`appointment-status-${idx + 1}`}>{req.status}</p>
+            {req.managerNotes ? (
+              <p data-testid={`appointment-manager-notes-${idx + 1}`}>{req.managerNotes}</p>
+            ) : null}
+            {req.status === 'pending' ? (
+              <div data-testid={`appointment-actions-${idx + 1}`}>
+                <button
+                  type="button"
+                  data-testid={`approve-appointment-${idx + 1}`}
+                  disabled={updateMutation.isPending}
+                  onClick={() => updateMutation.mutate({ id: req.id, status: 'approved' })}
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  data-testid={`reject-appointment-${idx + 1}`}
+                  disabled={updateMutation.isPending}
+                  onClick={() => updateMutation.mutate({ id: req.id, status: 'rejected' })}
+                >
+                  Reject
+                </button>
+              </div>
+            ) : null}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
