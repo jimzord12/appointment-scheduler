@@ -1,30 +1,58 @@
-# Generate implementation tasks for the current feature branch
+---
+description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
+---
 
-Generate detailed implementation tasks for the feature on the current branch.
+Given the context provided as an argument, do this:
 
-This is the third step in the Spec-Driven Development lifecycle.
+1. Run `.specify/scripts/bash/check-task-prerequisites.sh --json` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute.
+2. Load and analyze available design documents:
+   - Always read plan.md for tech stack and libraries
+   - IF EXISTS: Read data-model.md for entities
+   - IF EXISTS: Read contracts/ for API endpoints
+   - IF EXISTS: Read research.md for technical decisions
+   - IF EXISTS: Read quickstart.md for test scenarios
 
-Given the current feature branch, do this:
+   Note: Not all projects have all documents. For example:
+   - CLI tools might not have contracts/
+   - Simple libraries might not need data-model.md
+   - Generate tasks based on what's available
 
-1. Run the script `scripts/setup-tasks.sh --json` from repo root and parse its JSON output for IMPL_PLAN, TASKS, SPECS_DIR, BRANCH. All file paths must be absolute.
-2. Read and analyze the implementation plan from IMPL_PLAN
-3. Read the research.md, data-model.md, and contracts from SPECS_DIR
-4. Execute the task generation template loaded from `/templates/tasks-template.md`
-5. Set Input path to IMPL_PLAN
-6. Run the Task Generation Flow:
-   - Load implementation plan from Input path
-   - Analyze technical context and requirements
-   - Break down into logical task groups (backend, frontend, integration)
-   - Generate individual tasks with:
-     - Clear descriptions
-     - Acceptance criteria
-     - Dependencies
-     - Estimated effort
-     - Links to relevant specs
-   - Follow TDD principles (tests before implementation)
-   - Ensure tasks are traceable to original requirements
-7. Write the tasks to TASKS file
-8. Update Progress Tracking in IMPL_PLAN
-9. Report completion with tasks file path and readiness for implementation
+3. Generate tasks following the template:
+   - Use `.specify/templates/tasks-template.md` as the base
+   - Replace example tasks with actual tasks based on:
+     - **Setup tasks**: Project init, dependencies, linting
+     - **Test tasks [P]**: One per contract, one per integration scenario
+     - **Core tasks**: One per entity, service, CLI command, endpoint
+     - **Integration tasks**: DB connections, middleware, logging
+     - **Polish tasks [P]**: Unit tests, performance, docs
 
-Note: Tasks should be organized by component/feature with clear dependencies and acceptance criteria.
+4. Task generation rules:
+   - Each contract file → contract test task marked [P]
+   - Each entity in data-model → model creation task marked [P]
+   - Each endpoint → implementation task (not parallel if shared files)
+   - Each user story → integration test marked [P]
+   - Different files = can be parallel [P]
+   - Same file = sequential (no [P])
+
+5. Order tasks by dependencies:
+   - Setup before everything
+   - Tests before implementation (TDD)
+   - Models before services
+   - Services before endpoints
+   - Core before integration
+   - Everything before polish
+
+6. Include parallel execution examples:
+   - Group [P] tasks that can run together
+   - Show actual Task agent commands
+
+7. Create FEATURE_DIR/tasks.md with:
+   - Correct feature name from implementation plan
+   - Numbered tasks (T001, T002, etc.)
+   - Clear file paths for each task
+   - Dependency notes
+   - Parallel execution guidance
+
+Context for task generation: $ARGUMENTS
+
+The tasks.md should be immediately executable - each task must be specific enough that an LLM can complete it without additional context.

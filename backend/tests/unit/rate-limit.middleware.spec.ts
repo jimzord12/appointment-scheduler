@@ -1,5 +1,5 @@
 import { agent } from 'supertest';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 // Important: set env before importing app
 process.env.RATE_LIMIT_ENABLED = '1';
