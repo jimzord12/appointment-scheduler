@@ -90,6 +90,8 @@ function ServicesPage() {
     data: services,
     isLoading,
     isError,
+    isFetching,
+    refetch,
   } = useQuery({
     queryKey: ['services'],
     queryFn: () => apiClient.getServices(),
@@ -118,7 +120,7 @@ function ServicesPage() {
   });
 
   return (
-    <div data-testid="services-page">
+    <div data-testid="services-page" aria-busy={isLoading || isFetching}>
       <h2>Our Services</h2>
 
       {showManagerForm && (
@@ -188,7 +190,8 @@ function ServicesPage() {
         data-testid="loading-indicator"
         role="status"
         aria-live="polite"
-        style={{ display: isLoading ? 'block' : 'none' }}
+        aria-hidden={!(isLoading || isFetching)}
+        style={{ display: isLoading || isFetching ? 'block' : 'none' }}
       >
         Loading services...
       </div>
@@ -196,12 +199,26 @@ function ServicesPage() {
         data-testid="error-message"
         role="alert"
         aria-live="assertive"
+        aria-hidden={!isError}
         style={{ display: isError ? 'block' : 'none' }}
       >
         Failed to load services. Please try again later.
       </div>
+      <button
+        type="button"
+        data-testid="retry-button"
+        aria-label="Retry loading services"
+        style={{ display: isError ? 'inline-block' : 'none', marginBottom: '1rem' }}
+        onClick={() => void refetch()}
+      >
+        Retry
+      </button>
 
-      <div data-testid="services-list" style={{ display: isLoading || isError ? 'none' : 'block' }}>
+      <div
+        data-testid="services-list"
+        style={{ display: isLoading || isFetching || isError ? 'none' : 'block' }}
+        aria-hidden={isLoading || isFetching || isError}
+      >
         {Array.isArray(services) &&
           services.map((s, idx) => (
             <div
@@ -417,7 +434,7 @@ function BookAppointmentPage() {
 
 function AppointmentsPage() {
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ['appointmentRequests'],
     queryFn: () => apiClient.getAppointmentRequests(),
   });
@@ -437,14 +454,15 @@ function AppointmentsPage() {
   const showEmpty = !isLoading && !isError && items.length === 0;
 
   return (
-    <div data-testid="appointments-page">
+    <div data-testid="appointments-page" aria-busy={isLoading || isFetching}>
       <h2>My Appointments</h2>
 
       <div
         data-testid="loading-indicator"
         role="status"
         aria-live="polite"
-        style={{ display: isLoading ? 'block' : 'none' }}
+        aria-hidden={!(isLoading || isFetching)}
+        style={{ display: isLoading || isFetching ? 'block' : 'none' }}
       >
         Loading appointments...
       </div>
@@ -452,14 +470,25 @@ function AppointmentsPage() {
         data-testid="error-message"
         role="alert"
         aria-live="assertive"
+        aria-hidden={!isError}
         style={{ display: isError ? 'block' : 'none' }}
       >
         Failed to load appointments. Please try again later.
       </div>
+      <button
+        type="button"
+        data-testid="retry-button"
+        aria-label="Retry loading appointments"
+        style={{ display: isError ? 'inline-block' : 'none' }}
+        onClick={() => void refetch()}
+      >
+        Retry
+      </button>
       <div
         data-testid="empty-state"
         role="status"
         aria-live="polite"
+        aria-hidden={!showEmpty}
         style={{ display: showEmpty ? 'block' : 'none' }}
       >
         You don't have any appointments yet.
@@ -467,7 +496,8 @@ function AppointmentsPage() {
 
       <div
         data-testid="appointments-list"
-        style={{ display: isLoading || isError || showEmpty ? 'none' : 'block' }}
+        style={{ display: isLoading || isFetching || isError || showEmpty ? 'none' : 'block' }}
+        aria-hidden={isLoading || isFetching || isError || showEmpty}
       >
         {items.map((req, idx) => (
           <div
@@ -532,7 +562,7 @@ function ManagerAppointmentsPage() {
     }
   }, [navigate]);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ['appointmentRequests'],
     queryFn: () => apiClient.getAppointmentRequests(),
   });
@@ -561,14 +591,15 @@ function ManagerAppointmentsPage() {
   });
 
   return (
-    <div data-testid="manager-appointments-page">
+    <div data-testid="manager-appointments-page" aria-busy={isLoading || isFetching}>
       <h2>Manager Appointments</h2>
 
       <div
         data-testid="loading-indicator"
         role="status"
         aria-live="polite"
-        style={{ display: isLoading ? 'block' : 'none' }}
+        aria-hidden={!(isLoading || isFetching)}
+        style={{ display: isLoading || isFetching ? 'block' : 'none' }}
       >
         Loading appointments...
       </div>
@@ -576,14 +607,25 @@ function ManagerAppointmentsPage() {
         data-testid="error-message"
         role="alert"
         aria-live="assertive"
+        aria-hidden={!isError}
         style={{ display: isError ? 'block' : 'none' }}
       >
         Failed to load appointments. Please try again later.
       </div>
+      <button
+        type="button"
+        data-testid="retry-button"
+        aria-label="Retry loading appointments"
+        style={{ display: isError ? 'inline-block' : 'none' }}
+        onClick={() => void refetch()}
+      >
+        Retry
+      </button>
 
       <div
         data-testid="appointments-list"
-        style={{ display: isLoading || isError ? 'none' : 'block' }}
+        style={{ display: isLoading || isFetching || isError ? 'none' : 'block' }}
+        aria-hidden={isLoading || isFetching || isError}
       >
         {items.map((req, idx) => (
           <div

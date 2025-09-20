@@ -26,3 +26,4 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T077 completed (DB-backed appointment request services wired, conflict checks enforced).
 - Update: T091 completed (contract tests aligned with transport string datetimes; backend suite green).
 - Update: T082 completed (OpenAPI spec generation and /docs/openapi.json added; backend tests green).
+- Update: T090 completed (Loading/Error UX and accessibility pass for services and appointments pages; retry buttons wired).

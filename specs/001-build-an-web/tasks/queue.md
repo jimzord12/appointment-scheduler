@@ -11,7 +11,6 @@ description: Active execution queue — current, next, and recent tasks for 001-
 ## Up Next (respect dependencies)
 
 - T088 Manager approval workflow UI
-- T090 Loading/Error UX + a11y pass
 - T083 Migrate User/Service services to DB (phase 1)
 
 ## Later
