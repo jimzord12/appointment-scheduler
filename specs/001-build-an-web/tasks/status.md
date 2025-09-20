@@ -23,3 +23,4 @@ description: Project status overview with completion metrics and readiness notes
 - Source of truth for detailed specs: `tasks/list.md`.
 - Update: T076 completed (duplicate Drizzle schema removed); proceed with T077 wiring DB for appointments.
 - Update: T078–T081 and T084 are implemented and tested (rate limiting, JWT secret enforcement, prod CORS policy, request ID logging, lazy DB init).
+- Update: T077 completed (DB-backed appointment request services wired, conflict checks enforced).

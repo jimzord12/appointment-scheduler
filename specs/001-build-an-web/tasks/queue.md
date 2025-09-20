@@ -30,6 +30,7 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 - T060–T063 Review follow-ups: transport types, schema dedupe, 409 on double-booking
 - T076 Remove duplicate Drizzle schema for appointment requests
+- T077 DB-backed AppointmentRequest/Appointment services
 - T078 Rate limiting with env controls
 - T079 Enforce JWT secret in production
 - T080 Restrict CORS in production

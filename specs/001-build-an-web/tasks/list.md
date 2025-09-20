@@ -95,7 +95,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 Backend
 
 - [x] T076 Remove duplicate Drizzle schema for appointment requests
-- [ ] T077 DB-backed AppointmentRequest/Appointment services
+- [x] T077 DB-backed AppointmentRequest/Appointment services
 - [x] T078 Rate limiting with env controls
 - [x] T079 Enforce JWT secret in production
 - [x] T080 Restrict CORS in production
