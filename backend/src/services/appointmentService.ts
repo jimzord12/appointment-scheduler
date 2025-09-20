@@ -27,12 +27,12 @@ interface StoredAppointmentRequest {
 const requests: StoredAppointmentRequest[] = [];
 
 export const createRequest = async (userId: string, input: unknown) => {
-  const actor = __findUserById(userId);
+  const actor = await __findUserById(userId);
   if (!actor) {
     throw Object.assign(new Error('Unauthorized'), { status: 401 });
   }
   const parsed = CreateAppointmentRequestSchema.parse(input);
-  const service = __findServiceById(parsed.serviceId);
+  const service = await __findServiceById(parsed.serviceId);
   if (!service) {
     throw Object.assign(new Error('Service not found'), { status: 404 });
   }
@@ -48,7 +48,7 @@ export const createRequest = async (userId: string, input: unknown) => {
 };
 
 export const listRequests = async (userId: string) => {
-  const actor = __findUserById(userId);
+  const actor = await __findUserById(userId);
   if (!actor) {
     throw Object.assign(new Error('Unauthorized'), { status: 401 });
   }
@@ -58,7 +58,7 @@ export const listRequests = async (userId: string) => {
 };
 
 export const updateRequest = async (userId: string, input: unknown) => {
-  const actor = __findUserById(userId);
+  const actor = await __findUserById(userId);
   if (!actor) {
     throw Object.assign(new Error('Unauthorized'), { status: 401 });
   }

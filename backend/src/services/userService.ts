@@ -14,7 +14,7 @@ const UpdateProfileInput = z.object({
 });
 
 export async function getProfile(userId: string) {
-  const user = isDbEnabled() ? await usersRepo.findById(userId) : __findUserById(userId);
+  const user = isDbEnabled() ? await usersRepo.findById(userId) : await __findUserById(userId);
   if (!user) {
     throw Object.assign(new Error('Not found'), { status: 404 });
   }

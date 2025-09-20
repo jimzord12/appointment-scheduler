@@ -17,7 +17,7 @@ interface StoredService {
 const servicesStore: StoredService[] = [];
 
 export const createService = async (userId: string, input: unknown) => {
-  const actor = __findUserById(userId);
+  const actor = await __findUserById(userId);
   if (!actor || actor.role !== 'manager') {
     throw Object.assign(new Error('Forbidden'), { status: 403 });
   }
@@ -54,8 +54,17 @@ export function __resetServicesStore() {
   servicesRepo.__resetMemory();
 }
 
-export function __findServiceById(id: string) {
-  return servicesStore.find(s => s.id === id) || null;
+export async function __findServiceById(id: string) {
+  const inMemory = servicesStore.find(s => s.id === id);
+  if (inMemory) return inMemory;
+  // If DB enabled, try to fetch the record
+  try {
+    const rec = await servicesRepo.findById(id);
+    if (!rec) return null;
+    return normalizeService(rec);
+  } catch {
+    return null;
+  }
 }
 
 function normalizeService(r: servicesRepo.ServiceRecord) {

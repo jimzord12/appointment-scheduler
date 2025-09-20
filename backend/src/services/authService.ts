@@ -147,7 +147,25 @@ export function __resetAuthStore() {
   }
 }
 
-export function __findUserById(id: string) {
+export async function __findUserById(id: string) {
+  if (isDbEnabled()) {
+    try {
+      const u = await usersRepo.findById(id);
+      if (!u) return null;
+      // Map DB record shape to StoredUser
+      return {
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        passwordHash: u.passwordHash,
+        role: u.role,
+        createdAt: u.createdAt,
+        updatedAt: u.updatedAt,
+      } as StoredUser;
+    } catch {
+      return null;
+    }
+  }
   return users.find(u => u.id === id) || null;
 }
 

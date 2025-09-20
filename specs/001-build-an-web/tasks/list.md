@@ -101,7 +101,7 @@ Backend
 - [x] T080 Restrict CORS in production
 - [x] T081 Request ID correlation logging
 - [x] T082 Generate OpenAPI from Zod contracts
-- [ ] T083 Migrate User/Service services to DB
+- [x] T083 Migrate User/Service services to DB
 - [x] T084 Lazy DB initialization for tests
 
 Frontend
