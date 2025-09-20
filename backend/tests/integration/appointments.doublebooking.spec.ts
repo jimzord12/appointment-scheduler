@@ -1,7 +1,7 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
 
-import { createApp } from '../../src/app';
+import { createApp } from '../../src/app.js';
 
 const app = createApp();
 const server = agent(app);

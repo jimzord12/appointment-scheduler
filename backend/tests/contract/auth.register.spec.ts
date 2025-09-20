@@ -1,8 +1,8 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
 
-import app from '../../src/app';
-import { AuthResponseSchema, CreateUserSchema } from '../../src/schemas';
+import app from '../../src/app.js';
+import { AuthResponseSchema, CreateUserSchema } from '../../src/schemas/index.js';
 
 // T007: Contract test for POST /auth/register
 // Enforced RED state: expects future successful implementation & validation behavior.

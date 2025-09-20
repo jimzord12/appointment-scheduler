@@ -9,8 +9,8 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
 
-import { createApp } from '../../src/app';
-import { AppointmentRequestSchema } from '../../src/schemas';
+import { createApp } from '../../src/app.js';
+import { AppointmentRequestSchema } from '../../src/schemas/index.js';
 
 const app = createApp();
 const server = agent(app);

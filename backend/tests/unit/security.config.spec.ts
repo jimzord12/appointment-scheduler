@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { assertValidJwtSecret } from '../../src/utils/security';
+import { assertValidJwtSecret } from '../../src/utils/security.js';
 
 describe('security config validation', () => {
   it('does not throw in non-production when JWT_SECRET is missing', () => {

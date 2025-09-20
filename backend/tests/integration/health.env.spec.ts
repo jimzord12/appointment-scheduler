@@ -1,10 +1,10 @@
 import { agent } from 'supertest';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import app from '../../src/app';
+import app from '../../src/app.js';
 
 // Basic environment variables expectation (extend as needed)
-const REQUIRED_ENV_VARS = [
+const REQUIRED_ENV_VARS: string[] = [
   // Add any required vars as they become mandatory
   // 'DATABASE_URL',
 ];

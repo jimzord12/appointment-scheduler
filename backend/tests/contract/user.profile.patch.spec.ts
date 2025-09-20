@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { UserSchema } from '../../src/schemas';
-import { makeServer, registerUser } from '../utils/testClient';
+import { UserSchema } from '../../src/schemas/index.js';
+import { makeServer, registerUser } from '../utils/testClient.js';
 
 // Contract test for PATCH /user/profile
 

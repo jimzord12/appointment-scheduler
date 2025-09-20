@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AuthResponseSchema, LoginSchema } from '../../src/schemas';
+import { AuthResponseSchema, LoginSchema } from '../../src/schemas/index.js';
 import { makeServer, registerUser } from '../utils/testClient';
 
 // T008: Contract test for POST /auth/login (expected to FAIL initially)

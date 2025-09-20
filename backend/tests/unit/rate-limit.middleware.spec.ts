@@ -6,7 +6,7 @@ process.env.RATE_LIMIT_ENABLED = '1';
 process.env.RATE_LIMIT_WINDOW_MS = '50';
 process.env.RATE_LIMIT_MAX = '2';
 
-import { createApp } from '../../src/app';
+import { createApp } from '../../src/app.js';
 
 describe('rate limiting middleware', () => {
   let server = agent(createApp());

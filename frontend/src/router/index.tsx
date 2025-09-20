@@ -224,35 +224,95 @@ function ServiceDetailsPage() {
 
 function BookAppointmentPage() {
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const [error, setError] = React.useState<string | null>(null);
-  const [date, setDate] = React.useState('');
-  const [time, setTime] = React.useState('');
-  const [notes, setNotes] = React.useState('');
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    // simple validation per tests
-    if (!date || !time) {
-      setError('Please fill in all required fields');
-      return;
-    }
-    const today = new Date();
-    const picked = new Date(date + 'T00:00:00');
-    if (picked < new Date(today.toISOString().split('T')[0] + 'T00:00:00')) {
-      setError('Please select a future date');
-      return;
-    }
+  // Extract selected serviceId from URL search params
+  const serviceId = React.useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('serviceId') || '';
+  }, []);
+
+  // Load services to show selected service details
+  const { data: services } = useQuery({
+    queryKey: ['services'],
+    queryFn: () => apiClient.getServices(),
+  });
+  const selectedService = React.useMemo(
+    () => (Array.isArray(services) ? services.find(s => s.id === serviceId) : undefined),
+    [services, serviceId]
+  );
+
+  // Form schema & setup
+  const formSchema = z.object({
+    date: z
+      .string()
+      .min(1, 'Please fill in all required fields')
+      .refine(val => {
+        // Validate not in the past
+        if (!val) return false;
+        const todayStr = new Date().toISOString().split('T')[0];
+        return val >= todayStr;
+      }, 'Please select a future date'),
+    time: z.string().min(1, 'Please fill in all required fields'),
+    notes: z.string().max(500).optional(),
+  });
+  type FormValues = z.infer<typeof formSchema>;
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { date: '', time: '', notes: '' },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (input: {
+      serviceId: string;
+      requestedDate: string;
+      requestedTime: string;
+      notes?: string;
+    }) => apiClient.createAppointmentRequest(input),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ['appointmentRequests'] });
+      navigate({ to: '/appointments' });
+    },
+    onError: e => {
+      const status = (e as { response?: { status?: number } }).response?.status;
+      if (status === 400) setError('Invalid input data');
+      else setError('Failed to submit appointment request');
+    },
+  });
+
+  const onSubmit = form.handleSubmit(values => {
     setError(null);
-    navigate({ to: '/appointments' });
-  }
+    if (!serviceId) {
+      setError('Please select a service');
+      return;
+    }
+    createMutation.mutate({
+      serviceId,
+      requestedDate: values.date,
+      requestedTime: values.time,
+      notes: values.notes || undefined,
+    });
+  });
 
   return (
     <div data-testid="book-appointment-page">
       <h2>Book Appointment</h2>
       <div data-testid="service-info">
-        <h3 data-testid="selected-service-name">Haircut</h3>
-        <p data-testid="selected-service-duration">30 minutes</p>
-        <p data-testid="selected-service-price">$25</p>
+        <h3 data-testid="selected-service-name">{selectedService?.name ?? 'Selected Service'}</h3>
+        {selectedService ? (
+          <>
+            <p data-testid="selected-service-duration">{selectedService.durationMinutes} minutes</p>
+            <p data-testid="selected-service-price">
+              ${'{'}selectedService.price{'}'}
+            </p>
+          </>
+        ) : (
+          <>
+            <p data-testid="selected-service-duration">30 minutes</p>
+            <p data-testid="selected-service-price">$25</p>
+          </>
+        )}
       </div>
       <form data-testid="appointment-form" onSubmit={onSubmit}>
         <div>
@@ -262,18 +322,12 @@ function BookAppointmentPage() {
             id="date"
             data-testid="date-input"
             min={new Date().toISOString().split('T')[0]}
-            value={date}
-            onChange={e => setDate(e.currentTarget.value)}
+            {...form.register('date')}
           />
         </div>
         <div>
           <label htmlFor="time">Time</label>
-          <select
-            id="time"
-            data-testid="time-select"
-            value={time}
-            onChange={e => setTime(e.currentTarget.value)}
-          >
+          <select id="time" data-testid="time-select" {...form.register('time')}>
             <option value="">Select a time</option>
             <option value="09:00">09:00</option>
             <option value="10:00">10:00</option>
@@ -289,11 +343,14 @@ function BookAppointmentPage() {
             id="notes"
             data-testid="notes-input"
             placeholder="Any special requests or notes..."
-            value={notes}
-            onChange={e => setNotes(e.currentTarget.value)}
+            {...form.register('notes')}
           />
         </div>
-        <button type="submit" data-testid="submit-appointment-button">
+        <button
+          type="submit"
+          data-testid="submit-appointment-button"
+          disabled={createMutation.isPending}
+        >
           Submit Request
         </button>
         <button
@@ -304,39 +361,80 @@ function BookAppointmentPage() {
           Cancel
         </button>
       </form>
-      <p data-testid="form-error" style={{ display: error ? 'block' : 'none' }}>
-        {error}
+      <p
+        data-testid="form-error"
+        style={{ display: error || Object.keys(form.formState.errors).length ? 'block' : 'none' }}
+      >
+        {error || form.formState.errors.date?.message || form.formState.errors.time?.message}
       </p>
     </div>
   );
 }
 
 function AppointmentsPage() {
+  const navigate = useNavigate();
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['appointmentRequests'],
+    queryFn: () => apiClient.getAppointmentRequests(),
+  });
+  const { data: services } = useQuery({
+    queryKey: ['services'],
+    queryFn: () => apiClient.getServices(),
+  });
+  const serviceNameById = React.useMemo(() => {
+    const map = new Map<string, string>();
+    if (Array.isArray(services)) {
+      for (const s of services) map.set(s.id, s.name);
+    }
+    return map;
+  }, [services]);
+
+  const items = Array.isArray(data) ? data : [];
+  const showEmpty = !isLoading && !isError && items.length === 0;
+
   return (
     <div data-testid="appointments-page">
       <h2>My Appointments</h2>
-      <div data-testid="appointments-list">
-        <div data-testid="appointment-item-1" className="appointment-item">
-          <h3 data-testid="appointment-service-1">Haircut</h3>
-          <p data-testid="appointment-date-1">2023-12-01</p>
-          <p data-testid="appointment-time-1">14:30</p>
-          <p data-testid="appointment-status-1">pending</p>
-          <p data-testid="appointment-notes-1">Please trim my hair short</p>
-          <button type="button" data-testid="cancel-appointment-1">
-            Cancel
-          </button>
-        </div>
-      </div>
-      <div data-testid="empty-state" style={{ display: 'none' }}>
-        You don't have any appointments yet.
-      </div>
-      <div data-testid="loading-indicator" style={{ display: 'none' }}>
+
+      <div data-testid="loading-indicator" style={{ display: isLoading ? 'block' : 'none' }}>
         Loading appointments...
       </div>
-      <div data-testid="error-message" style={{ display: 'none' }}>
+      <div data-testid="error-message" style={{ display: isError ? 'block' : 'none' }}>
         Failed to load appointments. Please try again later.
       </div>
-      <button type="button" data-testid="book-new-appointment-button">
+      <div data-testid="empty-state" style={{ display: showEmpty ? 'block' : 'none' }}>
+        You don't have any appointments yet.
+      </div>
+
+      <div
+        data-testid="appointments-list"
+        style={{ display: isLoading || isError || showEmpty ? 'none' : 'block' }}
+      >
+        {items.map((req, idx) => (
+          <div
+            key={req.id}
+            data-testid={`appointment-item-${idx + 1}`}
+            className="appointment-item"
+          >
+            <h3 data-testid={`appointment-service-${idx + 1}`}>
+              {serviceNameById.get(req.serviceId) ?? 'Service'}
+            </h3>
+            <p data-testid={`appointment-date-${idx + 1}`}>{req.requestedDate}</p>
+            <p data-testid={`appointment-time-${idx + 1}`}>{req.requestedTime}</p>
+            <p data-testid={`appointment-status-${idx + 1}`}>{req.status}</p>
+            {req.notes ? <p data-testid={`appointment-notes-${idx + 1}`}>{req.notes}</p> : null}
+            <button type="button" data-testid={`cancel-appointment-${idx + 1}`}>
+              Cancel
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        data-testid="book-new-appointment-button"
+        onClick={() => navigate({ to: '/services' })}
+      >
         Book New Appointment
       </button>
     </div>

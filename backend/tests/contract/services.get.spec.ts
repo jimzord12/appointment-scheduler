@@ -1,8 +1,8 @@
 import { agent } from 'supertest';
 import { describe, expect, it } from 'vitest';
 
-import app from '../../src/app';
-import { ServiceSchema } from '../../src/schemas';
+import app from '../../src/app.js';
+import { ServiceSchema } from '../../src/schemas/index.js';
 
 // T011: Contract test GET /services (expected RED)
 

@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { AppointmentRequestSchema, UpdateAppointmentRequestSchema } from '../../src/schemas';
+import {
+  AppointmentRequestSchema,
+  UpdateAppointmentRequestSchema,
+} from '../../src/schemas/index.js';
 import { createManagerAndService, makeServer, registerUser } from '../utils/testClient';
 
 // Contract test for PATCH /appointments/requests/:id

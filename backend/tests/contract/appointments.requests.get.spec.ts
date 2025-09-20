@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AppointmentRequestSchema } from '../../src/schemas';
+import { AppointmentRequestSchema } from '../../src/schemas/index.js';
 import { createManagerAndService, makeServer } from '../utils/testClient';
 
 // T013: Contract test GET /appointments/requests (expected RED)

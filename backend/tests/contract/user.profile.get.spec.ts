@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { UserSchema } from '../../src/schemas';
-import { makeServer, registerUser } from '../utils/testClient';
+import { UserSchema } from '../../src/schemas/index.js';
+import { makeServer, registerUser } from '../utils/testClient.js';
 
 // T009: Contract test for GET /user/profile (expected 401 or not implemented)
 
