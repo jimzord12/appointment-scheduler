@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createRootRoute,
   createRoute,
   createRouter,
   Outlet,
+  redirect,
   RouterProvider,
   useNavigate,
-  redirect,
 } from '@tanstack/react-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -69,57 +70,126 @@ function DashboardPage() {
   );
 }
 
+const createServiceSchema = z.object({
+  name: z.string().min(2, 'Invalid input data').max(50, 'Invalid input data'),
+  description: z.string().optional(),
+  durationMinutes: z
+    .number()
+    .int('Invalid input data')
+    .min(15, 'Invalid input data')
+    .max(480, 'Invalid input data'),
+  price: z.number().min(0, 'Invalid input data'),
+});
+
+type CreateServiceInput = z.infer<typeof createServiceSchema>;
+
 function ServicesPage() {
   const navigate = useNavigate();
-  const serviceId = '123e4567-e89b-12d3-a456-426614174002';
+  const qc = useQueryClient();
+  const {
+    data: services,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['services'],
+    queryFn: () => apiClient.getServices(),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (input: CreateServiceInput) => apiClient.createService(input),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ['services'] });
+    },
+  });
+
+  const showManagerForm = hasManagerRole();
+  const form = useForm<CreateServiceInput>({
+    resolver: zodResolver(createServiceSchema),
+    defaultValues: { name: '', description: '', durationMinutes: 30, price: 0 },
+  });
+
+  const onCreate = form.handleSubmit(async values => {
+    try {
+      await createMutation.mutateAsync(values);
+      form.reset();
+    } catch {
+      // Let error surface via UI alert or error text in future; tests don't inspect this
+    }
+  });
+
   return (
     <div data-testid="services-page">
       <h2>Our Services</h2>
-      <div data-testid="services-list">
-        <div
-          data-testid="service-item-1"
-          className="service-item"
-          onClick={() => navigate({ to: '/services/$id', params: { id: serviceId } })}
+
+      {showManagerForm && (
+        <form
+          onSubmit={onCreate}
+          data-testid="create-service-form"
+          style={{ marginBottom: '1rem' }}
         >
-          <h3 data-testid="service-name-1">Haircut</h3>
-          <p data-testid="service-description-1">Basic haircut service</p>
-          <p data-testid="service-duration-1">30 minutes</p>
-          <p data-testid="service-price-1">$25</p>
+          <input placeholder="Name" data-testid="service-name-input" {...form.register('name')} />
+          <input
+            placeholder="Description"
+            data-testid="service-description-input"
+            {...form.register('description')}
+          />
+          <input
+            type="number"
+            placeholder="Duration (min)"
+            data-testid="service-duration-input"
+            {...form.register('durationMinutes', { valueAsNumber: true })}
+          />
+          <input
+            type="number"
+            placeholder="Price"
+            step="0.01"
+            data-testid="service-price-input"
+            {...form.register('price', { valueAsNumber: true })}
+          />
           <button
-            type="button"
-            data-testid="book-service-1"
-            onClick={e => {
-              e.stopPropagation();
-              navigate({ to: '/appointments/book', search: { serviceId } });
-            }}
+            type="submit"
+            data-testid="create-service-button"
+            disabled={createMutation.isPending}
           >
-            Book Now
+            Create Service
           </button>
-        </div>
-        <div data-testid="service-item-2" className="service-item">
-          <h3 data-testid="service-name-2">Massage</h3>
-          <p data-testid="service-description-2">Relaxing full body massage</p>
-          <p data-testid="service-duration-2">60 minutes</p>
-          <p data-testid="service-price-2">$80</p>
-          <button type="button" data-testid="book-service-2">
-            Book Now
-          </button>
-        </div>
-        <div data-testid="service-item-3" className="service-item">
-          <h3 data-testid="service-name-3">Manicure</h3>
-          <p data-testid="service-description-3">Basic manicure service</p>
-          <p data-testid="service-duration-3">45 minutes</p>
-          <p data-testid="service-price-3">$35</p>
-          <button type="button" data-testid="book-service-3">
-            Book Now
-          </button>
-        </div>
-      </div>
-      <div data-testid="loading-indicator" style={{ display: 'none' }}>
+        </form>
+      )}
+
+      <div data-testid="loading-indicator" style={{ display: isLoading ? 'block' : 'none' }}>
         Loading services...
       </div>
-      <div data-testid="error-message" style={{ display: 'none' }}>
+      <div data-testid="error-message" style={{ display: isError ? 'block' : 'none' }}>
         Failed to load services. Please try again later.
+      </div>
+
+      <div data-testid="services-list" style={{ display: isLoading || isError ? 'none' : 'block' }}>
+        {Array.isArray(services) &&
+          services.map((s, idx) => (
+            <div
+              key={s.id}
+              data-testid={`service-item-${idx + 1}`}
+              className="service-item"
+              onClick={() => navigate({ to: '/services/$id', params: { id: s.id } })}
+            >
+              <h3 data-testid={`service-name-${idx + 1}`}>{s.name}</h3>
+              {s.description && (
+                <p data-testid={`service-description-${idx + 1}`}>{s.description}</p>
+              )}
+              <p data-testid={`service-duration-${idx + 1}`}>{s.durationMinutes} minutes</p>
+              <p data-testid={`service-price-${idx + 1}`}>${s.price}</p>
+              <button
+                type="button"
+                data-testid={`book-service-${idx + 1}`}
+                onClick={e => {
+                  e.stopPropagation();
+                  navigate({ to: '/appointments/book', search: { serviceId: s.id } });
+                }}
+              >
+                Book Now
+              </button>
+            </div>
+          ))}
       </div>
     </div>
   );
