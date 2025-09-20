@@ -6,22 +6,17 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T087 Appointment request form and list
+- T094 CI pipeline: lint, typecheck, test, OpenAPI artifact
 
 ## Up Next (respect dependencies)
 
-- T088 Manager approval workflow UI
-- T083 Migrate User/Service services to DB (phase 1)
+- T095 Seed and local dev database automation
 
 ## Later
 
 - T086 Services list and create (manager-only UI)
 - T087 Appointment request form and list
 - T088 Manager approval workflow UI
-- T092 E2E happy path (MSW off)
-- T093 Quickstart and backend README updates
-- T094 CI pipeline: lint, typecheck, test, OpenAPI artifact
-- T095 Seed and local dev database automation
 
 ## Recently Completed (highlights)
 
@@ -38,3 +33,4 @@ description: Active execution queue — current, next, and recent tasks for 001-
 - T085 Implement authentication pages (RHF + Zod)
 - T089 Routing with TanStack Router and protected routes
 - T086 Services list and create (manager-only UI)
+- T092 E2E happy path (MSW off)

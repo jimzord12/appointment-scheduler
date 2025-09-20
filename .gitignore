@@ -33,3 +33,9 @@ logs/
 tmp/
 temp/
 
+
+# Playwright artifacts
+**/test-results/
+**/playwright-report/
+**/.playwright/
+

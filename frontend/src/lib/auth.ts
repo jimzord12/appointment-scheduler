@@ -1,15 +1,24 @@
 export type Role = 'customer' | 'manager' | 'guest';
 
 export function getRole(): Role {
-  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
+  if (typeof localStorage === 'undefined') return 'guest';
+  // Prefer explicit role stored during real backend login
+  const stored = localStorage.getItem('role');
+  if (stored === 'manager' || stored === 'customer') return stored;
+  // Fallbacks for MSW-based tests using mock tokens
+  const token = localStorage.getItem('token');
   if (!token) return 'guest';
   if (token === 'mock-manager-jwt-token') return 'manager';
+  if (token === 'mock-jwt-token') return 'customer';
+  // Unknown token from real backend → assume authenticated customer unless role later discovered
   return 'customer';
 }
 
 export function isAuthenticated(): boolean {
-  const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
-  return Boolean(token && (token === 'mock-jwt-token' || token === 'mock-manager-jwt-token'));
+  if (typeof localStorage === 'undefined') return false;
+  const token = localStorage.getItem('token');
+  // Consider any non-empty token as authenticated to support real backend JWTs
+  return Boolean(token);
 }
 
 export function hasManagerRole(): boolean {

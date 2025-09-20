@@ -6,10 +6,10 @@ description: Project status overview with completion metrics and readiness notes
 
 ## Completion Summary
 
-- 40 tasks (67.8%) are completed ✅
+- 41 tasks (69.5%) are completed ✅
 - 0 tasks (0%) are partially completed ⚠️
-- 19 tasks (32.2%) are not completed ❌
-- Last updated: 2025-09-20
+- 18 tasks (30.5%) are not completed ❌
+- Last updated: 2025-09-21
 
 ## Readiness
 
@@ -27,3 +27,5 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T091 completed (contract tests aligned with transport string datetimes; backend suite green).
 - Update: T082 completed (OpenAPI spec generation and /docs/openapi.json added; backend tests green).
 - Update: T090 completed (Loading/Error UX and accessibility pass for services and appointments pages; retry buttons wired).
+- Update: T093 completed (Quickstart aligned to workspace; added backend README with environment, scripts, and endpoints).
+- Update: T092 completed (E2E happy path with Playwright; frontend proxy, auth role persistence, and test harness added).

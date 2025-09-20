@@ -1,220 +1,142 @@
 # Quickstart: Appointment Management Web Application
 
+This guide helps you run the monorepo locally on Windows (PowerShell) or any POSIX shell. It reflects the current repository layout and scripts.
+
 ## Prerequisites
 
 - Node.js 22 (latest LTS recommended)
-- PostgreSQL 16 (for production database)
-- npm or yarn or pnpm
+- pnpm (preferred) or npm
 - Git
+- PostgreSQL 16 (only required if you enable DB-backed repositories)
 
-## Installation
+## 1) Clone and install
 
-1. Clone the repository:
-
-```bash
+```pwsh
 git clone <repository-url>
 cd appointment-scheduler
+pnpm install
 ```
 
-2. Install dependencies:
+## 2) Configure backend environment
 
-```bash
-npm install
+The backend keeps its env file in `backend/`.
+
+```pwsh
+# Copy example env (PowerShell)
+Copy-Item backend/.env.example backend/.env
+
+# Then open backend/.env and adjust values as needed
+# Minimum for dev:
+# - Leave JWT_SECRET as the dev default (change for production)
+# - You can keep USE_DB_* = 0 to run without Postgres
 ```
 
-3. Set up environment variables:
+Key variables (from `backend/.env.example`):
 
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-# Required: DATABASE_URL, BETTER_AUTH_SECRET, etc.
-```
+- `PORT` (default `3000`)
+- `JWT_SECRET` (must be a strong secret in production)
+- `ALLOWED_ORIGINS` (comma-separated; used only when `NODE_ENV=production`)
+- `RATE_LIMIT_ENABLED`, `RATE_LIMIT_WINDOW_MINUTES` or `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`
+- `DATABASE_URL` (Postgres connection string; only needed when enabling DB repos)
+- `USE_DB_APPOINTMENTS`, `USE_DB_SERVICES`, `USE_DB_USERS` (feature toggles)
 
-4. Set up the database:
+## 3) Optional: enable DB-backed repositories
 
-```bash
-# Generate database schema
-npm run db:generate
+By default, services use in-memory stores so you can run without Postgres. To use Postgres/Drizzle, set toggles and run migrations:
 
-# Run migrations
-npm run db:migrate
-
-# (Optional) Seed with sample data
-npm run db:seed
-```
-
-## Development Setup
-
-### Monorepo Structure
-
-This project uses a monorepo structure with shared packages:
-
-- `packages/frontend` - React application
-- `packages/backend` - Express.js API server
-- `packages/shared` - Common types and utilities
-
-### Backend Setup
-
-1. The backend is already configured in the monorepo root
-2. Database migrations are run from the root:
-
-```bash
-# Generate TypeScript types from database schema
-npm run db:generate
-
-# Run database migrations
-npm run db:migrate
-
-# Push schema changes to database
-npm run db:push
-```
-
-3. Start the backend development server:
-
-```bash
-npm run dev:backend
-```
-
-The backend will be available at `http://localhost:3001`
-
-4. Optional: Enable DB-backed repositories (appointments, services, users)
-
-- By default, appointment requests use an in-memory store so you can run tests without Postgres.
-- To exercise the Postgres/Drizzle path for appointment requests, set the env toggle and ensure your DB is ready:
-
-```bash
-# .env (backend)
+```pwsh
+# backend/.env
 DATABASE_URL=postgres://user:password@localhost:5432/appointments
 USE_DB_APPOINTMENTS=1
 USE_DB_SERVICES=1
 USE_DB_USERS=1
-```
 
-Then run migrations:
-
-```bash
+# Generate and run migrations
 pnpm -C backend db:generate
 pnpm -C backend db:migrate
 ```
 
-Now starting the server or running tests will use the DB for appointment requests.
+## 4) Run in development
 
-5. Rate limiting configuration
+Start both servers from the repo root:
 
-- The backend includes `express-rate-limit` with sane defaults.
-- Defaults (in non-test env): `RATE_LIMIT_WINDOW_MINUTES=15`, `RATE_LIMIT_MAX=100`.
-- You can override with:
-
-```bash
-# .env (backend)
-RATE_LIMIT_ENABLED=1        # force-enable in tests or disable with 0 in dev
-RATE_LIMIT_WINDOW_MS=60000  # or set RATE_LIMIT_WINDOW_MINUTES=1
-RATE_LIMIT_MAX=60
+```pwsh
+pnpm dev
 ```
 
-When the limit is exceeded, the API responds with HTTP 429 and body `{ "error": "rate_limit" }`.
+Or run individually:
 
-6. JWT secret and CORS in production
-
-- In production (`NODE_ENV=production`), the app will fail fast unless `JWT_SECRET` is set to a non-default strong value.
-- CORS is permissive in dev/test. In production, set `ALLOWED_ORIGINS` (comma-separated) to explicitly allow origins:
-
-```bash
-# .env (backend)
-NODE_ENV=production
-JWT_SECRET=your-strong-secret
-ALLOWED_ORIGINS=https://admin.example.com,https://app.example.com
+```pwsh
+pnpm dev:backend   # API at http://localhost:3000
+pnpm dev:frontend  # Web at http://localhost:5173
 ```
 
-### Frontend Setup
+## 5) API documentation
 
-1. The frontend is configured in the monorepo
-2. Start the frontend development server:
+Once the backend is running:
 
-```bash
-npm run dev:frontend
+- OpenAPI JSON: `http://localhost:3000/docs/openapi.json`
+- Health check: `http://localhost:3000/health`
+
+## 6) Testing
+
+Run all tests from the root:
+
+```pwsh
+pnpm test
 ```
 
-The frontend will be available at `http://localhost:5173`
+Or per package:
 
-## Building for Production
-
-### Backend
-
-```bash
-cd packages/backend
-npm run build
-npm start
+```pwsh
+pnpm -C backend test
+pnpm -C frontend test
 ```
 
-### Frontend
+End-to-end (optional):
 
-```bash
-cd packages/frontend
-npm run build
+```pwsh
+pnpm -C frontend exec playwright install
+pnpm test:e2e
 ```
 
-## Testing
+For a quick DB connectivity smoke test:
 
-### Backend
-
-```bash
-cd packages/backend
-npm test
+```pwsh
+pnpm -C backend run test:db
 ```
 
-### Frontend
+## 7) Rate limiting, JWT, and CORS (production)
 
-```bash
-cd packages/frontend
-npm test
-```
+- Rate limiting is enabled by default outside test unless you disable it; override with env vars in `backend/.env`.
+- In production (`NODE_ENV=production`), the server requires a strong `JWT_SECRET` and restricts CORS to `ALLOWED_ORIGINS`.
 
-## API Documentation
+## Notes
 
-Once the backend is running, visit:
-
-- OpenAPI spec: `http://localhost:3001/docs`
-- API endpoints: `http://localhost:3001/api`
-
-## Default Users
-
-After setup, the following users are available:
-
-- Manager: manager@example.com / password123
-- Customer: customer@example.com / password123
+- There are no seeded default users by default. Use the app or call `/auth/register` to create accounts during development.
+- A production build pipeline will be wired in follow-up tasks (see CI task group). For development, `pnpm dev` is sufficient.
 
 ## Troubleshooting
 
-### Common Issues
+1. Port already in use
 
-1. **Port already in use**
-   - Change ports in .env file
-   - Kill processes using the ports
+- Change `PORT` in `backend/.env` or stop the conflicting process.
 
-2. **Database connection failed**
-   - Check DATABASE_URL in .env
-   - Ensure database is running
-   - Run migrations: `npm run db:migrate`
+2. Database connection failed (when DB repos are enabled)
 
-3. **Build failures**
-   - Clear node_modules: `rm -rf node_modules && npm install`
-   - Check Node.js version: `node --version`
+- Verify `DATABASE_URL` and that Postgres is running.
+- Run migrations: `pnpm -C backend db:migrate`.
 
-### Logs
+3. Build or type errors
 
-- Backend logs: Check console output or logs/ directory
-- Frontend logs: Browser developer tools console
+- Clear modules and reinstall: `Remove-Item -Recurse -Force node_modules; pnpm install` (PowerShell)
+- Check Node version: `node --version`
 
-## Development Workflow
+## Development workflow
 
-1. Create feature branch: `git checkout -b feature/xyz`
-2. Make changes
-3. Run tests: `npm test`
-4. Commit: `git commit -m "feat: add xyz"`
+1. Create a branch: `git checkout -b feature/xyz`
+2. Make changes and add tests
+3. Run tests: `pnpm test`
+4. Commit: `git commit -m "feat: xyz"`
 5. Push: `git push origin feature/xyz`
-6. Create pull request
-
-## Contributing
-
-See CONTRIBUTING.md for detailed guidelines.
+6. Open a PR

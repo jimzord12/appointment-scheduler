@@ -691,6 +691,10 @@ function LoginPage() {
     try {
       const res = await apiClient.login(values);
       localStorage.setItem('token', res.token);
+      // Persist role for real backend flows; MSW tokens still work via fallbacks
+      if (res.user?.role) {
+        localStorage.setItem('role', res.user.role);
+      }
       navigate({ to: '/dashboard' });
     } catch (e) {
       // Map to messages used by tests
