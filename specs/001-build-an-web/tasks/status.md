@@ -24,3 +24,5 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T076 completed (duplicate Drizzle schema removed); proceed with T077 wiring DB for appointments.
 - Update: T078–T081 and T084 are implemented and tested (rate limiting, JWT secret enforcement, prod CORS policy, request ID logging, lazy DB init).
 - Update: T077 completed (DB-backed appointment request services wired, conflict checks enforced).
+- Update: T091 completed (contract tests aligned with transport string datetimes; backend suite green).
+- Update: T082 completed (OpenAPI spec generation and /docs/openapi.json added; backend tests green).

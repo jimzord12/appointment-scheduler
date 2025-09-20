@@ -100,7 +100,7 @@ Backend
 - [x] T079 Enforce JWT secret in production
 - [x] T080 Restrict CORS in production
 - [x] T081 Request ID correlation logging
-- [ ] T082 Generate OpenAPI from Zod contracts
+- [x] T082 Generate OpenAPI from Zod contracts
 - [ ] T083 Migrate User/Service services to DB
 - [x] T084 Lazy DB initialization for tests
 
@@ -115,7 +115,7 @@ Frontend
 
 Integration, Testing, DevOps
 
-- [ ] T091 Stabilize contract tests for transport types
+- [x] T091 Stabilize contract tests for transport types
 - [ ] T092 E2E happy path (MSW off)
 - [ ] T093 Quickstart + backend README
 - [ ] T094 CI: lint, typecheck, tests, OpenAPI artifact

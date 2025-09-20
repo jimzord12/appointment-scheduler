@@ -7,14 +7,12 @@ description: Active execution queue — current, next, and recent tasks for 001-
 ## Now (in progress)
 
 - T085 Implement authentication pages (RHF + Zod)
-- T091 Update and stabilize contract tests for final transport types
 
 ## Up Next (respect dependencies)
 
 - T077 Wire Drizzle DB for appointments (depends on T076)
 - T083 Migrate User/Service services to DB (phase 1)
 - T089 Routing with TanStack Router and protected routes (depends on T085)
-- T082 Generate OpenAPI from Zod contracts (after contracts stable)
 
 ## Later
 
@@ -36,3 +34,5 @@ description: Active execution queue — current, next, and recent tasks for 001-
 - T080 Restrict CORS in production
 - T081 Request ID correlation logging
 - T084 Lazy DB initialization for tests
+- T091 Update and stabilize contract tests for final transport types
+- T082 Generate OpenAPI from Zod contracts (docs endpoint + spec)
