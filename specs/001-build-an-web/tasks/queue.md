@@ -6,11 +6,10 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T085 Implement authentication pages (RHF + Zod)
+- T077 Wire Drizzle DB for appointments (depends on T076)
 
 ## Up Next (respect dependencies)
 
-- T077 Wire Drizzle DB for appointments (depends on T076)
 - T083 Migrate User/Service services to DB (phase 1)
 - T089 Routing with TanStack Router and protected routes (depends on T085)
 

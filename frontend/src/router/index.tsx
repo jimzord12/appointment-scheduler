@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   createRootRoute,
   createRoute,
@@ -7,7 +8,10 @@ import {
   useNavigate,
 } from '@tanstack/react-router';
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
+import { apiClient } from '../lib/api/client.js';
 import { getRole } from '../lib/auth.js';
 
 // Simple auth helper
@@ -306,40 +310,113 @@ function ManagerAppointmentsPage() {
   );
 }
 
+const loginSchema = z.object({
+  email: z.string().email({ message: 'Invalid input data' }),
+  password: z.string().min(1, { message: 'Invalid input data' }),
+});
+
+type LoginInput = z.infer<typeof loginSchema>;
+
 function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({ resolver: zodResolver(loginSchema) });
   const [error, setError] = React.useState('');
-  const doLogin = () => {
-    const validEmail = /.+@.+\..+/i.test(email);
-    if (!validEmail || password.length < 4) {
-      setError('Invalid input');
-      return;
+
+  const onSubmit = async (values: LoginInput) => {
+    setError('');
+    try {
+      const res = await apiClient.login(values);
+      localStorage.setItem('token', res.token);
+      navigate({ to: '/dashboard' });
+    } catch (e) {
+      // Map to messages used by tests
+      const msg =
+        (e as { response?: { status?: number } }).response?.status === 400
+          ? 'Invalid input data'
+          : 'Invalid credentials';
+      setError(msg);
     }
-    const token = email === 'manager@example.com' ? 'mock-manager-jwt-token' : 'mock-jwt-token';
-    localStorage.setItem('token', token);
-    navigate({ to: '/dashboard' });
   };
+
   return (
     <div data-testid="login-page">
       <h2>Login</h2>
-      <input
-        data-testid="email-input"
-        value={email}
-        onChange={e => setEmail(e.currentTarget.value)}
-      />
-      <input
-        data-testid="password-input"
-        type="password"
-        value={password}
-        onChange={e => setPassword(e.currentTarget.value)}
-      />
-      <button type="button" data-testid="login-button" onClick={doLogin}>
-        Login
-      </button>
-      <p data-testid="login-error" style={{ display: error ? 'block' : 'none' }}>
-        {error}
+      <form
+        data-testid="login-form"
+        onSubmit={handleSubmit(onSubmit)}
+        style={{ display: 'contents' }}
+      >
+        <input data-testid="email-input" type="email" {...register('email')} />
+        <input data-testid="password-input" type="password" {...register('password')} />
+        <button type="submit" data-testid="login-button" disabled={isSubmitting}>
+          Login
+        </button>
+      </form>
+      <p
+        data-testid="login-error"
+        style={{ display: error || errors.email || errors.password ? 'block' : 'none' }}
+      >
+        {error || errors.email?.message || errors.password?.message}
+      </p>
+    </div>
+  );
+}
+
+const registerSchema = z.object({
+  name: z.string().min(2, { message: 'Invalid input data' }),
+  email: z.string().email({ message: 'Invalid input data' }),
+  password: z.string().min(8, { message: 'Invalid input data' }),
+});
+
+type RegisterInput = z.infer<typeof registerSchema>;
+
+function RegisterPage() {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterInput>({ resolver: zodResolver(registerSchema) });
+  const [error, setError] = React.useState('');
+
+  const onSubmit = async (values: RegisterInput) => {
+    setError('');
+    try {
+      await apiClient.register(values);
+      // On success, go to login per integration tests
+      navigate({ to: '/login' });
+    } catch (e) {
+      const status = (e as { response?: { status?: number } }).response?.status;
+      if (status === 400) setError('Invalid input data');
+      else if (status === 409) setError('User already exists');
+      else setError('Invalid input data');
+    }
+  };
+
+  return (
+    <div data-testid="register-page">
+      <h2>Register</h2>
+      <form
+        data-testid="register-form"
+        onSubmit={handleSubmit(onSubmit)}
+        style={{ display: 'contents' }}
+      >
+        <input data-testid="name-input" type="text" {...register('name')} />
+        <input data-testid="email-input" type="email" {...register('email')} />
+        <input data-testid="password-input" type="password" {...register('password')} />
+        <button type="submit" data-testid="register-button" disabled={isSubmitting}>
+          Register
+        </button>
+      </form>
+      <p
+        data-testid="register-error"
+        style={{ display: error || Object.keys(errors).length ? 'block' : 'none' }}
+      >
+        {error || errors.name?.message || errors.email?.message || errors.password?.message}
       </p>
     </div>
   );
@@ -388,6 +465,11 @@ const loginRoute = createRoute({
   path: '/login',
   component: LoginPage,
 });
+const registerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/register',
+  component: RegisterPage,
+});
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -399,6 +481,7 @@ const routeTree = rootRoute.addChildren([
   profileRoute,
   managerAppointmentsRoute,
   loginRoute,
+  registerRoute,
 ]);
 
 export const router = createRouter({ routeTree });

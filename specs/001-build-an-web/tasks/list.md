@@ -106,7 +106,7 @@ Backend
 
 Frontend
 
-- [ ] T085 Auth pages (RHF + Zod)
+- [x] T085 Auth pages (RHF + Zod)
 - [ ] T086 Services list + create (manager-only)
 - [ ] T087 Appointment request form & list
 - [ ] T088 Manager approval workflow UI
