@@ -4,7 +4,7 @@ import {
   AppointmentRequestSchema,
   CreateAppointmentRequestSchema,
 } from '../../src/schemas/index.js';
-import { createManagerAndService, makeServer, registerUser } from '../utils/testClient';
+import { createManagerAndService, makeServer, registerUser } from '../utils/testClient.js';
 
 // T014: Contract test POST /appointments/requests (expected RED)
 

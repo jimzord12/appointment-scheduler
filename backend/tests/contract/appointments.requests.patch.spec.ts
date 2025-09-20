@@ -4,7 +4,7 @@ import {
   AppointmentRequestSchema,
   UpdateAppointmentRequestSchema,
 } from '../../src/schemas/index.js';
-import { createManagerAndService, makeServer, registerUser } from '../utils/testClient';
+import { createManagerAndService, makeServer, registerUser } from '../utils/testClient.js';
 
 // Contract test for PATCH /appointments/requests/:id
 
