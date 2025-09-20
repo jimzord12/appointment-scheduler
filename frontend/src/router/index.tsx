@@ -125,24 +125,52 @@ function ServicesPage() {
         <form
           onSubmit={onCreate}
           data-testid="create-service-form"
+          aria-busy={createMutation.isPending}
           style={{ marginBottom: '1rem' }}
         >
-          <input placeholder="Name" data-testid="service-name-input" {...form.register('name')} />
+          <label htmlFor="service-name" className="sr-only">
+            Service Name
+          </label>
           <input
+            id="service-name"
+            placeholder="Name"
+            aria-label="Service Name"
+            aria-invalid={!!form.formState.errors.name}
+            data-testid="service-name-input"
+            {...form.register('name')}
+          />
+          <label htmlFor="service-description" className="sr-only">
+            Description
+          </label>
+          <input
+            id="service-description"
             placeholder="Description"
+            aria-label="Service Description"
             data-testid="service-description-input"
             {...form.register('description')}
           />
+          <label htmlFor="service-duration" className="sr-only">
+            Duration (minutes)
+          </label>
           <input
+            id="service-duration"
             type="number"
             placeholder="Duration (min)"
+            aria-label="Duration in minutes"
+            aria-invalid={!!form.formState.errors.durationMinutes}
             data-testid="service-duration-input"
             {...form.register('durationMinutes', { valueAsNumber: true })}
           />
+          <label htmlFor="service-price" className="sr-only">
+            Price
+          </label>
           <input
+            id="service-price"
             type="number"
             placeholder="Price"
             step="0.01"
+            aria-label="Service Price"
+            aria-invalid={!!form.formState.errors.price}
             data-testid="service-price-input"
             {...form.register('price', { valueAsNumber: true })}
           />
@@ -156,10 +184,20 @@ function ServicesPage() {
         </form>
       )}
 
-      <div data-testid="loading-indicator" style={{ display: isLoading ? 'block' : 'none' }}>
+      <div
+        data-testid="loading-indicator"
+        role="status"
+        aria-live="polite"
+        style={{ display: isLoading ? 'block' : 'none' }}
+      >
         Loading services...
       </div>
-      <div data-testid="error-message" style={{ display: isError ? 'block' : 'none' }}>
+      <div
+        data-testid="error-message"
+        role="alert"
+        aria-live="assertive"
+        style={{ display: isError ? 'block' : 'none' }}
+      >
         Failed to load services. Please try again later.
       </div>
 
@@ -312,7 +350,7 @@ function BookAppointmentPage() {
           </>
         )}
       </div>
-      <form data-testid="appointment-form" onSubmit={onSubmit}>
+      <form data-testid="appointment-form" onSubmit={onSubmit} aria-busy={createMutation.isPending}>
         <div>
           <label htmlFor="date">Date</label>
           <input
@@ -320,12 +358,18 @@ function BookAppointmentPage() {
             id="date"
             data-testid="date-input"
             min={new Date().toISOString().split('T')[0]}
+            aria-invalid={!!form.formState.errors.date}
             {...form.register('date')}
           />
         </div>
         <div>
           <label htmlFor="time">Time</label>
-          <select id="time" data-testid="time-select" {...form.register('time')}>
+          <select
+            id="time"
+            data-testid="time-select"
+            aria-invalid={!!form.formState.errors.time}
+            {...form.register('time')}
+          >
             <option value="">Select a time</option>
             <option value="09:00">09:00</option>
             <option value="10:00">10:00</option>
@@ -361,6 +405,8 @@ function BookAppointmentPage() {
       </form>
       <p
         data-testid="form-error"
+        role="alert"
+        aria-live="assertive"
         style={{ display: error || Object.keys(form.formState.errors).length ? 'block' : 'none' }}
       >
         {error || form.formState.errors.date?.message || form.formState.errors.time?.message}
@@ -394,13 +440,28 @@ function AppointmentsPage() {
     <div data-testid="appointments-page">
       <h2>My Appointments</h2>
 
-      <div data-testid="loading-indicator" style={{ display: isLoading ? 'block' : 'none' }}>
+      <div
+        data-testid="loading-indicator"
+        role="status"
+        aria-live="polite"
+        style={{ display: isLoading ? 'block' : 'none' }}
+      >
         Loading appointments...
       </div>
-      <div data-testid="error-message" style={{ display: isError ? 'block' : 'none' }}>
+      <div
+        data-testid="error-message"
+        role="alert"
+        aria-live="assertive"
+        style={{ display: isError ? 'block' : 'none' }}
+      >
         Failed to load appointments. Please try again later.
       </div>
-      <div data-testid="empty-state" style={{ display: showEmpty ? 'block' : 'none' }}>
+      <div
+        data-testid="empty-state"
+        role="status"
+        aria-live="polite"
+        style={{ display: showEmpty ? 'block' : 'none' }}
+      >
         You don't have any appointments yet.
       </div>
 
@@ -503,10 +564,20 @@ function ManagerAppointmentsPage() {
     <div data-testid="manager-appointments-page">
       <h2>Manager Appointments</h2>
 
-      <div data-testid="loading-indicator" style={{ display: isLoading ? 'block' : 'none' }}>
+      <div
+        data-testid="loading-indicator"
+        role="status"
+        aria-live="polite"
+        style={{ display: isLoading ? 'block' : 'none' }}
+      >
         Loading appointments...
       </div>
-      <div data-testid="error-message" style={{ display: isError ? 'block' : 'none' }}>
+      <div
+        data-testid="error-message"
+        role="alert"
+        aria-live="assertive"
+        style={{ display: isError ? 'block' : 'none' }}
+      >
         Failed to load appointments. Please try again later.
       </div>
 
@@ -515,7 +586,11 @@ function ManagerAppointmentsPage() {
         style={{ display: isLoading || isError ? 'none' : 'block' }}
       >
         {items.map((req, idx) => (
-          <div key={req.id} data-testid={`appointment-item-${idx + 1}`} className="appointment-item">
+          <div
+            key={req.id}
+            data-testid={`appointment-item-${idx + 1}`}
+            className="appointment-item"
+          >
             <h3 data-testid={`appointment-service-${idx + 1}`}>
               {serviceNameById.get(req.serviceId) ?? 'Service'}
             </h3>
@@ -592,15 +667,28 @@ function LoginPage() {
         data-testid="login-form"
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'contents' }}
+        aria-busy={isSubmitting}
       >
-        <input data-testid="email-input" type="email" {...register('email')} />
-        <input data-testid="password-input" type="password" {...register('password')} />
+        <input
+          data-testid="email-input"
+          type="email"
+          aria-invalid={!!errors.email}
+          {...register('email')}
+        />
+        <input
+          data-testid="password-input"
+          type="password"
+          aria-invalid={!!errors.password}
+          {...register('password')}
+        />
         <button type="submit" data-testid="login-button" disabled={isSubmitting}>
           Login
         </button>
       </form>
       <p
         data-testid="login-error"
+        role="alert"
+        aria-live="assertive"
         style={{ display: error || errors.email || errors.password ? 'block' : 'none' }}
       >
         {error || errors.email?.message || errors.password?.message}
@@ -647,16 +735,34 @@ function RegisterPage() {
         data-testid="register-form"
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'contents' }}
+        aria-busy={isSubmitting}
       >
-        <input data-testid="name-input" type="text" {...register('name')} />
-        <input data-testid="email-input" type="email" {...register('email')} />
-        <input data-testid="password-input" type="password" {...register('password')} />
+        <input
+          data-testid="name-input"
+          type="text"
+          aria-invalid={!!errors.name}
+          {...register('name')}
+        />
+        <input
+          data-testid="email-input"
+          type="email"
+          aria-invalid={!!errors.email}
+          {...register('email')}
+        />
+        <input
+          data-testid="password-input"
+          type="password"
+          aria-invalid={!!errors.password}
+          {...register('password')}
+        />
         <button type="submit" data-testid="register-button" disabled={isSubmitting}>
           Register
         </button>
       </form>
       <p
         data-testid="register-error"
+        role="alert"
+        aria-live="assertive"
         style={{ display: error || Object.keys(errors).length ? 'block' : 'none' }}
       >
         {error || errors.name?.message || errors.email?.message || errors.password?.message}
