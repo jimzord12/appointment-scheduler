@@ -6,11 +6,10 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T041 Auth pages/components
+- T042 Services management UI
 
 ## Up Next (respect dependencies)
 
-- T042 Services management UI
 - T043 Appointment request UI
 - T044 Routing with TanStack Router
 - T045 API hooks with TanStack Query

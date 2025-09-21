@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiClient } from '../lib/api/client.js';
+import { authStore } from '../stores/auth.js';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid input data' }),
@@ -26,10 +27,7 @@ export function LoginPage() {
     setError('');
     try {
       const res = await apiClient.login(values);
-      localStorage.setItem('token', res.token);
-      if (res.user?.role) {
-        localStorage.setItem('role', res.user.role);
-      }
+      authStore.getState().setAuth({ token: res.token, user: res.user });
       navigate({ to: '/dashboard' });
     } catch (e) {
       const msg =
