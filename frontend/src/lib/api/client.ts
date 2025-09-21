@@ -3,7 +3,7 @@ import {
   authProcedures,
   serviceProcedures,
   userProcedures,
-} from '../../../../specs/001-build-an-web/contracts/api-contracts.js';
+} from '../../../../shared/contracts/api-contracts.js';
 
 type Json = Record<string, unknown> | Array<unknown> | string | number | boolean | null;
 

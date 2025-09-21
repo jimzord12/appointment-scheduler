@@ -7,7 +7,7 @@ import {
   CreateServiceSchema,
   CreateUserSchema,
   LoginSchema,
-} from '../../../specs/001-build-an-web/contracts/api-contracts.js';
+} from '../../../shared/contracts/api-contracts.js';
 
 // Mock data
 const mockUser = {

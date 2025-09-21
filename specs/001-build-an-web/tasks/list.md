@@ -49,7 +49,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 
 ## Phase 3.5: Frontend Core Implementation
 
-- [ ] T038 Auth store
+- [x] T038 Auth store
 - [ ] T039 Services store
 - [ ] T040 Appointments store
 - [ ] T041 Auth pages/components
