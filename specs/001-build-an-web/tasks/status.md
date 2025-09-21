@@ -6,9 +6,9 @@ description: Project status overview with completion metrics and readiness notes
 
 ## Completion Summary
 
-- 57 tasks (96.6%) are completed ✅
+- 58 tasks (98.3%) are completed ✅
 - 0 tasks (0%) are partially completed ⚠️
-- 2 tasks (3.4%) are not completed ❌
+- 1 tasks (1.7%) are not completed ❌
 - Last updated: 2025-09-21
 
 ## Readiness
@@ -25,3 +25,4 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T073 completed (PATCH schema regression test added; enum enforcement and valid payload acceptance verified).
 - Update: T046 completed (UI polish & shadcn components integration). Refactored BookAppointment, Services, Appointments, and ManagerAppointments pages to use shared UI primitives (Button, Input, Label, Select, Textarea, Card). Frontend tests: 121/121 passing.
 - Update: T056 completed (Backend API README finalized with endpoints, auth, errors, logging, OpenAPI generation, curl examples, and Postgres setup).
+- Update: T057 completed (Removed deprecated Drizzle schema alias and obsolete type shims; typecheck and full backend test suite passing.)

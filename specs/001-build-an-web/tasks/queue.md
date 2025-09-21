@@ -6,11 +6,10 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T057 Clean duplication & refactors
+- T058 Final CI pipeline config
 
 ## Up Next (respect dependencies)
 
-- T058 Final CI pipeline config
 - T059 Release prep
 
 ## Later
@@ -18,6 +17,8 @@ description: Active execution queue — current, next, and recent tasks for 001-
 - (no change)
 
 ## Recently Completed (highlights)
+
+- T057 Clean duplication & refactors
 
 - T056 Backend API README
 
