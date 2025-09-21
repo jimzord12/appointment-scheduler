@@ -10,12 +10,10 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Up Next (respect dependencies)
 
-- T071 Quickstart env + rate limit notes
+- T073 Regression test for PATCH schema
 
 ## Later
 
-- T072 Backend API README updates
-- T073 Regression test for PATCH schema
 - T074 Normalize time format handling
 - T075 CI: Add backend test workflow badge
 
@@ -36,3 +34,5 @@ description: Active execution queue — current, next, and recent tasks for 001-
 - T086 Services list and create (manager-only UI)
 - T092 E2E happy path (MSW off)
 - T066 Tighten validateBody typing
+- T071 Quickstart env + rate limit notes
+- T072 Backend API README updates

@@ -6,9 +6,9 @@ description: Project status overview with completion metrics and readiness notes
 
 ## Completion Summary
 
-- 44 tasks (74.6%) are completed ✅
+- 46 tasks (78.0%) are completed ✅
 - 0 tasks (0%) are partially completed ⚠️
-- 15 tasks (25.4%) are not completed ❌
+- 13 tasks (22.0%) are not completed ❌
 - Last updated: 2025-09-21
 
 ## Readiness
@@ -32,3 +32,5 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T094 completed (CI pipeline runs lint, typecheck, tests; uploads OpenAPI artifact).
 - Update: T095 completed (Seed script and dev DB automation added; quickstart and README updated).
 - Update: T066 completed (validateBody middleware typed structurally and verified via backend typecheck/tests).
+- Update: T071 completed (Quickstart updated with env/rate limiting notes and examples).
+- Update: T072 completed (Backend README expanded: auth, headers, error model, logging/request ID, OpenAPI, curl examples).

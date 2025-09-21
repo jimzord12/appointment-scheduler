@@ -84,8 +84,8 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 - [x] T062 Remove duplicate Drizzle schema and unify
 - [x] T063 Double-booking returns 409
 - [x] T066 Tighten validateBody typing
-- [ ] T071 Quickstart env + rate limit notes
-- [ ] T072 Backend API README updates
+- [x] T071 Quickstart env + rate limit notes
+- [x] T072 Backend API README updates
 - [ ] T073 Regression test for PATCH schema
 - [ ] T074 Normalize time format handling
 - [ ] T075 CI: Add backend test workflow badge
