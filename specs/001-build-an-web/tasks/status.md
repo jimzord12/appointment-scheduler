@@ -27,3 +27,4 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T056 completed (Backend API README finalized with endpoints, auth, errors, logging, OpenAPI generation, curl examples, and Postgres setup).
 - Update: T057 completed (Removed deprecated Drizzle schema alias and obsolete type shims; typecheck and full backend test suite passing.)
 - Update: T058 completed (CI hardened with pnpm cache, Node 22, recursive lint/typecheck/tests, artifact uploads for OpenAPI and test-results, concurrency, minimal permissions.)
+- Update: T059 completed (Release prep: CHANGELOG drafted, package versions aligned, and OpenAPI artifact generated.)

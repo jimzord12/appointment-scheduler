@@ -6,11 +6,11 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T059 Release prep
+- (none)
 
 ## Up Next (respect dependencies)
 
-- T059 Release prep
+- (none)
 
 ## Later
 
@@ -18,6 +18,7 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Recently Completed (highlights)
 
+- T059 Release prep
 - T058 Final CI pipeline config
 - T057 Clean duplication & refactors
 
