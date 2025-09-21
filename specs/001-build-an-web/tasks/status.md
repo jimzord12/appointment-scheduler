@@ -32,6 +32,9 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T092 completed (E2E happy path with Playwright; frontend proxy, auth role persistence, and test harness added).
 - Update: T094 completed (CI pipeline runs lint, typecheck, tests; uploads OpenAPI artifact).
 - Update: T095 completed (Seed script and dev DB automation added; quickstart and README updated).
+- Update: T043 completed (Appointment request UI implemented and covered by integration tests).
+- Update: T044 completed (Routing wired with TanStack Router including protected routes and booking flow).
+- Update: T045 completed (API hooks implemented using TanStack Query for services and appointments).
 - Update: T066 completed (validateBody middleware typed structurally and verified via backend typecheck/tests).
 - Update: T071 completed (Quickstart updated with env/rate limiting notes and examples).
 - Update: T072 completed (Backend README expanded: auth, headers, error model, logging/request ID, OpenAPI, curl examples).
