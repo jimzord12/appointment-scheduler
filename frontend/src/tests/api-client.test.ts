@@ -5,7 +5,7 @@ import {
   AuthResponseSchema,
   ServiceSchema,
   UserSchema,
-} from '../../../specs/001-build-an-web/contracts/api-contracts.js';
+} from '../../../shared/contracts/api-contracts.js';
 import { apiClient } from '../lib/api/client.js';
 
 // Deterministic ISO timestamps used by MSW handlers

@@ -45,6 +45,7 @@ export function LoginPage() {
         data-testid="login-form"
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'contents' }}
+        noValidate
         aria-busy={isSubmitting}
       >
         <label htmlFor="email">Email</label>

@@ -43,6 +43,7 @@ export function RegisterPage() {
         data-testid="register-form"
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'contents' }}
+        noValidate
         aria-busy={isSubmitting}
       >
         <label htmlFor="name">Name</label>
