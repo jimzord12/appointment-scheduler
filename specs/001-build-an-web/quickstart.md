@@ -54,6 +54,7 @@ USE_DB_USERS=1
 # Generate and run migrations
 pnpm -C backend db:generate
 pnpm -C backend db:migrate
+pnpm -C backend db:seed
 ```
 
 ## 4) Run in development
@@ -104,6 +105,12 @@ For a quick DB connectivity smoke test:
 
 ```pwsh
 pnpm -C backend run test:db
+```
+
+## 7) Convenience: bring up local DB and seed
+
+```pwsh
+pnpm -C backend run dev:db
 ```
 
 ## 7) Rate limiting, JWT, and CORS (production)

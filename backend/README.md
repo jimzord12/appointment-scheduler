@@ -13,6 +13,7 @@ Run from repo root using pnpm workspace filters, or inside `backend/`.
 - `pnpm -C backend db:generate` Generate Drizzle migrations
 - `pnpm -C backend db:migrate` Apply migrations
 - `pnpm -C backend db:push` Push schema (use cautiously)
+- `pnpm -C backend db:seed` Seed demo data (manager user + sample services)
 
 ## Environment
 
@@ -63,7 +64,13 @@ pnpm -C backend db:generate
 pnpm -C backend db:migrate
 ```
 
-3. Start the server:
+3. (Optional) Seed demo data:
+
+```
+pnpm -C backend db:seed
+```
+
+4. Start the server:
 
 ```
 pnpm -C backend dev

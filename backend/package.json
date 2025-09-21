@@ -11,6 +11,8 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "openapi:generate": "tsx ./scripts/generate-openapi.ts",
+    "db:seed": "tsx ./scripts/seed.ts",
+    "dev:db": "docker compose up -d db && pnpm db:migrate && pnpm db:seed",
     "start": "node dist/app.js",
     "db:generate": "drizzle-kit generate --config=./drizzle/config.ts",
     "db:migrate": "drizzle-kit migrate --config=./drizzle/config.ts",

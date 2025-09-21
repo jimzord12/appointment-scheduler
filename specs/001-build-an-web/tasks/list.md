@@ -119,4 +119,4 @@ Integration, Testing, DevOps
 - [x] T092 E2E happy path (MSW off)
 - [x] T093 Quickstart + backend README
 - [x] T094 CI: lint, typecheck, tests, OpenAPI artifact
-- [ ] T095 Seed + local dev DB automation
+- [x] T095 Seed + local dev DB automation

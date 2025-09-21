@@ -10,7 +10,7 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Up Next (respect dependencies)
 
-- T095 Seed and local dev database automation
+- T086 Services list and create (manager-only UI)
 
 ## Later
 
