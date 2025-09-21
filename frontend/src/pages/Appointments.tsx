@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
+import { Button } from '../components/ui/button.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card.js';
 import { apiClient } from '../lib/api/client.js';
 
 export function AppointmentsPage() {
@@ -72,32 +74,41 @@ export function AppointmentsPage() {
         aria-hidden={isLoading || isFetching || isError || showEmpty}
       >
         {items.map((req, idx) => (
-          <div
+          <Card
             key={req.id}
             data-testid={`appointment-item-${idx + 1}`}
-            className="appointment-item"
+            className="appointment-item mb-2"
           >
-            <h3 data-testid={`appointment-service-${idx + 1}`}>
-              {serviceNameById.get(req.serviceId) ?? 'Service'}
-            </h3>
-            <p data-testid={`appointment-date-${idx + 1}`}>{req.requestedDate}</p>
-            <p data-testid={`appointment-time-${idx + 1}`}>{req.requestedTime}</p>
-            <p data-testid={`appointment-status-${idx + 1}`}>{req.status}</p>
-            {req.notes ? <p data-testid={`appointment-notes-${idx + 1}`}>{req.notes}</p> : null}
-            <button type="button" data-testid={`cancel-appointment-${idx + 1}`}>
-              Cancel
-            </button>
-          </div>
+            <CardHeader>
+              <CardTitle data-testid={`appointment-service-${idx + 1}`}>
+                {serviceNameById.get(req.serviceId) ?? 'Service'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p data-testid={`appointment-date-${idx + 1}`}>{req.requestedDate}</p>
+              <p data-testid={`appointment-time-${idx + 1}`}>{req.requestedTime}</p>
+              <p data-testid={`appointment-status-${idx + 1}`}>{req.status}</p>
+              {req.notes ? <p data-testid={`appointment-notes-${idx + 1}`}>{req.notes}</p> : null}
+              <Button
+                type="button"
+                data-testid={`cancel-appointment-${idx + 1}`}
+                variant="outline"
+                className="mt-2"
+              >
+                Cancel
+              </Button>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
-      <button
+      <Button
         type="button"
         data-testid="book-new-appointment-button"
         onClick={() => navigate({ to: '/services' })}
       >
         Book New Appointment
-      </button>
+      </Button>
     </div>
   );
 }

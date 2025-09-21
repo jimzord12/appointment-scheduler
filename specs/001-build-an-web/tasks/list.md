@@ -57,7 +57,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 - [x] T043 Appointment request UI
 - [x] T044 Routing with TanStack Router
 - [x] T045 API hooks with TanStack Query
-- [ ] T046 UI polish & shadcn components integration
+- [x] T046 UI polish & shadcn components integration
 
 ## Phase 3.6: Cross-Cutting Integration & Hardening
 

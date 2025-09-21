@@ -4,6 +4,10 @@ import { useNavigate } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { Button } from '../components/ui/button.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card.js';
+import { Input } from '../components/ui/input.js';
+import { Label } from '../components/ui/label.js';
 import { apiClient } from '../lib/api/client.js';
 import { hasManagerRole } from '../lib/auth.js';
 
@@ -61,66 +65,73 @@ export function ServicesPage() {
       <h2>Our Services</h2>
 
       {showManagerForm && (
-        <form
-          onSubmit={onCreate}
-          data-testid="create-service-form"
-          aria-busy={createMutation.isPending}
-          style={{ marginBottom: '1rem' }}
-        >
-          <label htmlFor="service-name" className="sr-only">
-            Service Name
-          </label>
-          <input
-            id="service-name"
-            placeholder="Name"
-            aria-label="Service Name"
-            aria-invalid={!!form.formState.errors.name}
-            data-testid="service-name-input"
-            {...form.register('name')}
-          />
-          <label htmlFor="service-description" className="sr-only">
-            Description
-          </label>
-          <input
-            id="service-description"
-            placeholder="Description"
-            aria-label="Service Description"
-            data-testid="service-description-input"
-            {...form.register('description')}
-          />
-          <label htmlFor="service-duration" className="sr-only">
-            Duration (minutes)
-          </label>
-          <input
-            id="service-duration"
-            type="number"
-            placeholder="Duration (min)"
-            aria-label="Duration in minutes"
-            aria-invalid={!!form.formState.errors.durationMinutes}
-            data-testid="service-duration-input"
-            {...form.register('durationMinutes', { valueAsNumber: true })}
-          />
-          <label htmlFor="service-price" className="sr-only">
-            Price
-          </label>
-          <input
-            id="service-price"
-            type="number"
-            placeholder="Price"
-            step="0.01"
-            aria-label="Service Price"
-            aria-invalid={!!form.formState.errors.price}
-            data-testid="service-price-input"
-            {...form.register('price', { valueAsNumber: true })}
-          />
-          <button
-            type="submit"
-            data-testid="create-service-button"
-            disabled={createMutation.isPending}
-          >
-            Create Service
-          </button>
-        </form>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>Create Service</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={onCreate}
+              data-testid="create-service-form"
+              aria-busy={createMutation.isPending}
+            >
+              <Label htmlFor="service-name" className="sr-only">
+                Service Name
+              </Label>
+              <Input
+                id="service-name"
+                placeholder="Name"
+                aria-label="Service Name"
+                aria-invalid={!!form.formState.errors.name}
+                data-testid="service-name-input"
+                {...form.register('name')}
+              />
+              <Label htmlFor="service-description" className="sr-only">
+                Description
+              </Label>
+              <Input
+                id="service-description"
+                placeholder="Description"
+                aria-label="Service Description"
+                data-testid="service-description-input"
+                {...form.register('description')}
+              />
+              <Label htmlFor="service-duration" className="sr-only">
+                Duration (minutes)
+              </Label>
+              <Input
+                id="service-duration"
+                type="number"
+                placeholder="Duration (min)"
+                aria-label="Duration in minutes"
+                aria-invalid={!!form.formState.errors.durationMinutes}
+                data-testid="service-duration-input"
+                {...form.register('durationMinutes', { valueAsNumber: true })}
+              />
+              <Label htmlFor="service-price" className="sr-only">
+                Price
+              </Label>
+              <Input
+                id="service-price"
+                type="number"
+                placeholder="Price"
+                step="0.01"
+                aria-label="Service Price"
+                aria-invalid={!!form.formState.errors.price}
+                data-testid="service-price-input"
+                {...form.register('price', { valueAsNumber: true })}
+              />
+              <Button
+                type="submit"
+                data-testid="create-service-button"
+                disabled={createMutation.isPending}
+                className="mt-2"
+              >
+                Create Service
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       )}
 
       <div
@@ -158,29 +169,34 @@ export function ServicesPage() {
       >
         {Array.isArray(services) &&
           services.map((s, idx) => (
-            <div
+            <Card
               key={s.id}
               data-testid={`service-item-${idx + 1}`}
-              className="service-item"
+              className="service-item mb-2 cursor-pointer"
               onClick={() => navigate({ to: '/services/$id', params: { id: s.id } })}
             >
-              <h3 data-testid={`service-name-${idx + 1}`}>{s.name}</h3>
-              {s.description && (
-                <p data-testid={`service-description-${idx + 1}`}>{s.description}</p>
-              )}
-              <p data-testid={`service-duration-${idx + 1}`}>{s.durationMinutes} minutes</p>
-              <p data-testid={`service-price-${idx + 1}`}>${s.price}</p>
-              <button
-                type="button"
-                data-testid={`book-service-${idx + 1}`}
-                onClick={e => {
-                  e.stopPropagation();
-                  navigate({ to: '/appointments/book', search: { serviceId: s.id } });
-                }}
-              >
-                Book Now
-              </button>
-            </div>
+              <CardHeader>
+                <CardTitle data-testid={`service-name-${idx + 1}`}>{s.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {s.description && (
+                  <p data-testid={`service-description-${idx + 1}`}>{s.description}</p>
+                )}
+                <p data-testid={`service-duration-${idx + 1}`}>{s.durationMinutes} minutes</p>
+                <p data-testid={`service-price-${idx + 1}`}>${s.price}</p>
+                <Button
+                  type="button"
+                  data-testid={`book-service-${idx + 1}`}
+                  onClick={e => {
+                    e.stopPropagation();
+                    navigate({ to: '/appointments/book', search: { serviceId: s.id } });
+                  }}
+                  className="mt-2"
+                >
+                  Book Now
+                </Button>
+              </CardContent>
+            </Card>
           ))}
       </div>
     </div>

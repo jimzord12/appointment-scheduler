@@ -6,9 +6,9 @@ description: Project status overview with completion metrics and readiness notes
 
 ## Completion Summary
 
-- 55 tasks (93.2%) are completed ✅
+- 56 tasks (94.9%) are completed ✅
 - 0 tasks (0%) are partially completed ⚠️
-- 4 tasks (6.8%) are not completed ❌
+- 3 tasks (5.1%) are not completed ❌
 - Last updated: 2025-09-21
 
 ## Readiness
@@ -23,29 +23,4 @@ description: Project status overview with completion metrics and readiness notes
 - Source of truth for detailed specs: `tasks/list.md`.
 - Update: T076 completed (duplicate Drizzle schema removed); proceed with T077 wiring DB for appointments.
 - Update: T073 completed (PATCH schema regression test added; enum enforcement and valid payload acceptance verified).
-- Update: T078–T081 and T084 are implemented and tested (rate limiting, JWT secret enforcement, prod CORS policy, request ID logging, lazy DB init).
-- Update: T077 completed (DB-backed appointment request services wired, conflict checks enforced).
-- Update: T091 completed (contract tests aligned with transport string datetimes; backend suite green).
-- Update: T082 completed (OpenAPI spec generation and /docs/openapi.json added; backend tests green).
-- Update: T090 completed (Loading/Error UX and accessibility pass for services and appointments pages; retry buttons wired).
-- Update: T093 completed (Quickstart aligned to workspace; added backend README with environment, scripts, and endpoints).
-- Update: T092 completed (E2E happy path with Playwright; frontend proxy, auth role persistence, and test harness added).
-- Update: T094 completed (CI pipeline runs lint, typecheck, tests; uploads OpenAPI artifact).
-- Update: T095 completed (Seed script and dev DB automation added; quickstart and README updated).
-- Update: T043 completed (Appointment request UI implemented and covered by integration tests).
-- Update: T044 completed (Routing wired with TanStack Router including protected routes and booking flow).
-- Update: T045 completed (API hooks implemented using TanStack Query for services and appointments).
-- Update: T066 completed (validateBody middleware typed structurally and verified via backend typecheck/tests).
-- Update: T071 completed (Quickstart updated with env/rate limiting notes and examples).
-- Update: T072 completed (Backend README expanded: auth, headers, error model, logging/request ID, OpenAPI, curl examples).
-- Update: T075 completed (CI badge added to backend README; queue/list updated.)
-- Update: T038 completed (Auth store with Zustand incl. persistence + tests.)
-- Update: T039 completed (Services store with Zustand, fetch/create, tests.)
-- Update: T040 completed (Appointments store with Zustand, fetch/create/update, tests.)
-- Update: T041 completed (Auth pages wired to auth store; added store integration test.)
-- Update: T053 completed (Added unit tests for time normalization util; ESM test import fix; vitest types configured).
-- Update: T054 completed (Added unit tests for Login and Register form validation; fixed Zod schema bug in Register page).
-- Update: T051 completed (Added requestId generation coverage in logging middleware tests; fixed strict TS types in test).
-- Update: T055 completed (Quickstart improved: pnpm install guidance, npm alternatives, Docker DB steps, troubleshooting for missing pnpm).
-- Update: T050 completed (Frontend bundle analysis via visualizer plugin; `npm --prefix frontend run analyze` outputs `dist/stats.html`).
-- Update: Linting signal improved: ESLint now ignores build outputs (dist/build/.next) repo-wide to prevent false positives from compiled bundles (T004, T094).
+- Update: T046 completed (UI polish & shadcn components integration). Refactored BookAppointment, Services, Appointments, and ManagerAppointments pages to use shared UI primitives (Button, Input, Label, Select, Textarea, Card). Frontend tests: 121/121 passing.

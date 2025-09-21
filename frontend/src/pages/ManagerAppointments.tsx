@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
+import { Button } from '../components/ui/button.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card.js';
 import { apiClient } from '../lib/api/client.js';
 import { getRole } from '../lib/auth.js';
 
@@ -80,42 +82,46 @@ export function ManagerAppointmentsPage() {
         aria-hidden={isLoading || isFetching || isError}
       >
         {items.map((req, idx) => (
-          <div
+          <Card
             key={req.id}
             data-testid={`appointment-item-${idx + 1}`}
-            className="appointment-item"
+            className="appointment-item mb-2"
           >
-            <h3 data-testid={`appointment-service-${idx + 1}`}>
-              {serviceNameById.get(req.serviceId) ?? 'Service'}
-            </h3>
-            {/* Customer name not available without extra fetch; could be added later */}
-            <p data-testid={`appointment-date-${idx + 1}`}>{req.requestedDate}</p>
-            <p data-testid={`appointment-time-${idx + 1}`}>{req.requestedTime}</p>
-            <p data-testid={`appointment-status-${idx + 1}`}>{req.status}</p>
-            {req.managerNotes ? (
-              <p data-testid={`appointment-manager-notes-${idx + 1}`}>{req.managerNotes}</p>
-            ) : null}
-            {req.status === 'pending' ? (
-              <div data-testid={`appointment-actions-${idx + 1}`}>
-                <button
-                  type="button"
-                  data-testid={`approve-appointment-${idx + 1}`}
-                  disabled={updateMutation.isPending}
-                  onClick={() => updateMutation.mutate({ id: req.id, status: 'approved' })}
-                >
-                  Approve
-                </button>
-                <button
-                  type="button"
-                  data-testid={`reject-appointment-${idx + 1}`}
-                  disabled={updateMutation.isPending}
-                  onClick={() => updateMutation.mutate({ id: req.id, status: 'rejected' })}
-                >
-                  Reject
-                </button>
-              </div>
-            ) : null}
-          </div>
+            <CardHeader>
+              <CardTitle data-testid={`appointment-service-${idx + 1}`}>
+                {serviceNameById.get(req.serviceId) ?? 'Service'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p data-testid={`appointment-date-${idx + 1}`}>{req.requestedDate}</p>
+              <p data-testid={`appointment-time-${idx + 1}`}>{req.requestedTime}</p>
+              <p data-testid={`appointment-status-${idx + 1}`}>{req.status}</p>
+              {req.managerNotes ? (
+                <p data-testid={`appointment-manager-notes-${idx + 1}`}>{req.managerNotes}</p>
+              ) : null}
+              {req.status === 'pending' ? (
+                <div data-testid={`appointment-actions-${idx + 1}`} className="mt-2 flex gap-2">
+                  <Button
+                    type="button"
+                    data-testid={`approve-appointment-${idx + 1}`}
+                    disabled={updateMutation.isPending}
+                    onClick={() => updateMutation.mutate({ id: req.id, status: 'approved' })}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    type="button"
+                    data-testid={`reject-appointment-${idx + 1}`}
+                    disabled={updateMutation.isPending}
+                    variant="outline"
+                    onClick={() => updateMutation.mutate({ id: req.id, status: 'rejected' })}
+                  >
+                    Reject
+                  </Button>
+                </div>
+              ) : null}
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

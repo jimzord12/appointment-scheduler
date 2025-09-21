@@ -6,24 +6,22 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T046 UI polish & shadcn components integration
+- T047 Security hardening verification
 
 ## Up Next (respect dependencies)
 
-- T047 Security hardening verification
 - T049 Backend performance tests
 - T052 Accessibility tests
 
 ## Later
 
-- T047 Security hardening verification
 - T049 Backend performance tests
-- T052 Accessibility tests
 - T052 Accessibility tests
 
 ## Recently Completed (highlights)
 
 - T050 Frontend bundle analysis script
+- T046 UI polish & shadcn components integration
 - T042 Services management UI
 - T043 Appointment request UI
 - T044 Routing with TanStack Router

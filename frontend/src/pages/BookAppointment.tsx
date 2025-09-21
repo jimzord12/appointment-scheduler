@@ -5,6 +5,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { Button } from '../components/ui/button.js';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card.js';
+import { Input } from '../components/ui/input.js';
+import { Label } from '../components/ui/label.js';
+import { Select } from '../components/ui/select.js';
+import { Textarea } from '../components/ui/textarea.js';
 import { apiClient } from '../lib/api/client.js';
 
 export function BookAppointmentPage() {
@@ -79,24 +85,35 @@ export function BookAppointmentPage() {
   return (
     <div data-testid="book-appointment-page">
       <h2>Book Appointment</h2>
-      <div data-testid="service-info">
-        <h3 data-testid="selected-service-name">{selectedService?.name ?? 'Selected Service'}</h3>
-        {selectedService ? (
-          <>
-            <p data-testid="selected-service-duration">{selectedService.durationMinutes} minutes</p>
-            <p data-testid="selected-service-price">${selectedService.price}</p>
-          </>
-        ) : (
-          <>
-            <p data-testid="selected-service-duration">30 minutes</p>
-            <p data-testid="selected-service-price">$25</p>
-          </>
-        )}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Selected Service</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div data-testid="service-info">
+            <h3 data-testid="selected-service-name">
+              {selectedService?.name ?? 'Selected Service'}
+            </h3>
+            {selectedService ? (
+              <>
+                <p data-testid="selected-service-duration">
+                  {selectedService.durationMinutes} minutes
+                </p>
+                <p data-testid="selected-service-price">${selectedService.price}</p>
+              </>
+            ) : (
+              <>
+                <p data-testid="selected-service-duration">30 minutes</p>
+                <p data-testid="selected-service-price">$25</p>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
       <form data-testid="appointment-form" onSubmit={onSubmit} aria-busy={createMutation.isPending}>
         <div>
-          <label htmlFor="date">Date</label>
-          <input
+          <Label htmlFor="date">Date</Label>
+          <Input
             type="date"
             id="date"
             data-testid="date-input"
@@ -106,8 +123,8 @@ export function BookAppointmentPage() {
           />
         </div>
         <div>
-          <label htmlFor="time">Time</label>
-          <select
+          <Label htmlFor="time">Time</Label>
+          <Select
             id="time"
             data-testid="time-select"
             aria-invalid={!!form.formState.errors.time}
@@ -120,31 +137,34 @@ export function BookAppointmentPage() {
             <option value="14:00">14:00</option>
             <option value="15:00">15:00</option>
             <option value="16:00">16:00</option>
-          </select>
+          </Select>
         </div>
         <div>
-          <label htmlFor="notes">Special Requests (Optional)</label>
-          <textarea
+          <Label htmlFor="notes">Special Requests (Optional)</Label>
+          <Textarea
             id="notes"
             data-testid="notes-input"
             placeholder="Any special requests or notes..."
             {...form.register('notes')}
           />
         </div>
-        <button
-          type="submit"
-          data-testid="submit-appointment-button"
-          disabled={createMutation.isPending}
-        >
-          Submit Request
-        </button>
-        <button
-          type="button"
-          data-testid="cancel-button"
-          onClick={() => navigate({ to: '/services' })}
-        >
-          Cancel
-        </button>
+        <div className="mt-2 flex gap-2">
+          <Button
+            type="submit"
+            data-testid="submit-appointment-button"
+            disabled={createMutation.isPending}
+          >
+            Submit Request
+          </Button>
+          <Button
+            type="button"
+            data-testid="cancel-button"
+            variant="outline"
+            onClick={() => navigate({ to: '/services' })}
+          >
+            Cancel
+          </Button>
+        </div>
       </form>
       <p
         data-testid="form-error"
