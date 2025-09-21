@@ -46,6 +46,106 @@ Routers are mounted at root:
 
 OpenAPI is generated from Zod contracts (`src/openapi.ts`).
 
+## Authentication & Authorization
+
+- Authentication uses JWT in the `Authorization` header with the Bearer scheme:
+  - `Authorization: Bearer <jwt>`
+- Roles: `customer` and `manager`.
+  - Endpoints requiring manager privileges are annotated below.
+- Token claims expected: `sub` (user id) and `role`.
+  - Missing/invalid tokens result in `401 { "error": "unauthorized" }`.
+  - Non-manager on manager-only routes results in `403 { "error": "forbidden" }`.
+
+## Headers & Conventions
+
+- `Content-Type: application/json` and `Accept: application/json` for JSON endpoints.
+- Optional correlation header: `X-Request-Id`. When provided, it’s echoed in logs for traceability.
+- Responses are JSON; error responses follow a consistent shape (see Error model).
+
+## Error model
+
+- Unauthorized: `401 { "error": "unauthorized" }`
+- Forbidden: `403 { "error": "forbidden" }`
+- Rate limited: `429 { "error": "rate_limit" }`
+- Validation failure (Zod): `400 { "error": "Validation failed", "issues": [...] }`
+- Other errors: `5xx { "error": "<message>", "stack": "..." }` (stack omitted in production)
+
+## Correlation & Logging
+
+- JSON structured logs include fields like `timestamp`, `level`, `message`, `method`, `url`, `statusCode`, `responseTime`, and `requestId`.
+- You can send `X-Request-Id` to correlate your client logs with server logs; otherwise the server generates an id (e.g., `req_ab12cd34`).
+- Default log level is `info`; debug logging can be enabled by changing the logging middleware configuration in code.
+
+## OpenAPI docs & generation
+
+- Live spec: `GET /docs/openapi.json`
+- Generate file locally:
+
+```pwsh
+pnpm -C backend openapi:generate
+```
+
+This writes `backend/openapi.json` using the Zod contracts.
+
+## Curl examples
+
+Register:
+
+```pwsh
+curl -s -X POST http://localhost:3000/auth/register ^
+  -H "Content-Type: application/json" ^
+  -d '{"name":"Alice","email":"alice@example.com","password":"password123"}'
+```
+
+Login:
+
+```pwsh
+curl -s -X POST http://localhost:3000/auth/login ^
+  -H "Content-Type: application/json" ^
+  -d '{"email":"alice@example.com","password":"password123"}'
+```
+
+Get profile (requires token):
+
+```pwsh
+curl -s http://localhost:3000/user/profile ^
+  -H "Authorization: Bearer <jwt>"
+```
+
+List services (requires token):
+
+```pwsh
+curl -s http://localhost:3000/services ^
+  -H "Authorization: Bearer <jwt>"
+```
+
+Create service (manager only):
+
+```pwsh
+curl -s -X POST http://localhost:3000/services ^
+  -H "Authorization: Bearer <jwt>" ^
+  -H "Content-Type: application/json" ^
+  -d '{"name":"Haircut","durationMinutes":30}'
+```
+
+Create appointment request (requires token):
+
+```pwsh
+curl -s -X POST http://localhost:3000/appointments/requests ^
+  -H "Authorization: Bearer <jwt>" ^
+  -H "Content-Type: application/json" ^
+  -d '{"serviceId":"<uuid>","requestedTime":"2025-09-21T10:00:00.000Z"}'
+```
+
+Approve appointment request (manager only):
+
+```pwsh
+curl -s -X PATCH http://localhost:3000/appointments/requests/<id> ^
+  -H "Authorization: Bearer <jwt>" ^
+  -H "Content-Type: application/json" ^
+  -d '{"status":"approved"}'
+```
+
 ## Running with Postgres (optional)
 
 1. Set env toggles and connection string in `backend/.env`:
