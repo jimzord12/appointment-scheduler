@@ -51,7 +51,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 
 - [x] T038 Auth store
 - [x] T039 Services store
-- [ ] T040 Appointments store
+- [x] T040 Appointments store
 - [ ] T041 Auth pages/components
 - [ ] T042 Services management UI
 - [ ] T043 Appointment request UI

@@ -38,6 +38,7 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T075 completed (CI badge added to backend README; queue/list updated.)
 - Update: T038 completed (Auth store with Zustand incl. persistence + tests.)
 - Update: T039 completed (Services store with Zustand, fetch/create, tests.)
+- Update: T040 completed (Appointments store with Zustand, fetch/create/update, tests.)
 - Update: T053 completed (Added unit tests for time normalization util; ESM test import fix; vitest types configured).
 - Update: T054 completed (Added unit tests for Login and Register form validation; fixed Zod schema bug in Register page).
 - Update: T051 completed (Added requestId generation coverage in logging middleware tests; fixed strict TS types in test).
