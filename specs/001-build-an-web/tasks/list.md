@@ -83,7 +83,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 - [x] T061 Update backend tests to match transport
 - [x] T062 Remove duplicate Drizzle schema and unify
 - [x] T063 Double-booking returns 409
-- [ ] T066 Tighten validateBody typing
+- [x] T066 Tighten validateBody typing
 - [ ] T071 Quickstart env + rate limit notes
 - [ ] T072 Backend API README updates
 - [ ] T073 Regression test for PATCH schema
