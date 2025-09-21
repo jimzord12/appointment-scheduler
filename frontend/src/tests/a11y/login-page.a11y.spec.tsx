@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import axe from 'axe-core';
+import axe, { AxeResults } from 'axe-core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { LoginPage } from '../../pages/Login.js';
@@ -14,12 +14,12 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 async function runAxe(container: HTMLElement) {
-  const results = await axe.run(container, {
+  const results = axe.run(container, {
     rules: {
       // Our minimal test page structure may trip the generic label rule in JSDOM; keep focus on critical issues.
       label: { enabled: false },
     },
-  } as any);
+  } as any) as unknown as Promise<AxeResults>;
   return results;
 }
 

@@ -6,9 +6,9 @@ import { describe, expect, it } from 'vitest';
 import { AppLayout } from '../../components/layout/AppLayout.js';
 
 async function runAxe(container: ElementContext): Promise<AxeResults> {
-  const results = await axe.run(container, {
+  const results = axe.run(container, {
     // Keep defaults; can tune rules if needed later
-  } as any);
+  } as any) as unknown as Promise<AxeResults>;
   return results;
 }
 

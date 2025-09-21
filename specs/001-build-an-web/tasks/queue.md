@@ -6,17 +6,20 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- (empty)
+- T057 Clean duplication & refactors
 
 ## Up Next (respect dependencies)
 
-- (empty)
+- T058 Final CI pipeline config
+- T059 Release prep
 
 ## Later
 
 - (no change)
 
 ## Recently Completed (highlights)
+
+- T056 Backend API README
 
 - T050 Frontend bundle analysis script
 - T049 Backend performance tests
