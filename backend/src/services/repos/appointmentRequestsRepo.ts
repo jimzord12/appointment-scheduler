@@ -1,4 +1,5 @@
 import { and, eq, ne } from 'drizzle-orm';
+import { normalizeHhMm } from '../../utils/time.js';
 
 // Lazy env evaluation per call to avoid import-time throws in tests
 const isDbEnabled = () => process.env.USE_DB_APPOINTMENTS === '1' && !!process.env.DATABASE_URL;
@@ -51,7 +52,7 @@ export async function create(
         userId: input.userId,
         serviceId: input.serviceId,
         requestedDate: input.requestedDate,
-        requestedTime: input.requestedTime,
+        requestedTime: normalizeHhMm(input.requestedTime),
         status: 'pending',
         notes: input.notes,
       })
@@ -63,7 +64,7 @@ export async function create(
     userId: input.userId,
     serviceId: input.serviceId,
     requestedDate: input.requestedDate,
-    requestedTime: input.requestedTime,
+    requestedTime: normalizeHhMm(input.requestedTime),
     status: 'pending',
     notes: input.notes,
     createdAt: now(),

@@ -134,7 +134,7 @@ Create appointment request (requires token):
 curl -s -X POST http://localhost:3000/appointments/requests ^
   -H "Authorization: Bearer <jwt>" ^
   -H "Content-Type: application/json" ^
-  -d '{"serviceId":"<uuid>","requestedTime":"2025-09-21T10:00:00.000Z"}'
+  -d '{"serviceId":"<uuid>","requestedDate":"2030-01-01","requestedTime":"10:00"}'
 ```
 
 Approve appointment request (manager only):

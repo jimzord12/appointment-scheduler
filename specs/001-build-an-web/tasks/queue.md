@@ -14,11 +14,12 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Later
 
-- T074 Normalize time format handling
 - T075 CI: Add backend test workflow badge
+ 
 
 ## Recently Completed (highlights)
 
+- T074 Normalize time format handling
 - T060–T063 Review follow-ups: transport types, schema dedupe, 409 on double-booking
 - T076 Remove duplicate Drizzle schema for appointment requests
 - T077 DB-backed AppointmentRequest/Appointment services
