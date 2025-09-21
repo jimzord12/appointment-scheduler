@@ -8,7 +8,7 @@ import { apiClient } from '../lib/api/client.js';
 
 const registerSchema = z.object({
   name: z.string().min(2, { message: 'Invalid input data' }),
-  email: z.email({ message: 'Invalid input data' }),
+  email: z.string().email({ message: 'Invalid input data' }),
   password: z.string().min(8, { message: 'Invalid input data' }),
 });
 

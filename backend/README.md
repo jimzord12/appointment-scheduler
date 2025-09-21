@@ -1,5 +1,7 @@
 # Backend (Express + TypeScript)
 
+[![CI](https://github.com/jimzord12/appointment-scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/jimzord12/appointment-scheduler/actions/workflows/ci.yml)
+
 API server for the Appointment Scheduler.
 
 ## Scripts

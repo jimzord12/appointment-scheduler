@@ -14,7 +14,15 @@ This guide helps you run the monorepo locally on Windows (PowerShell) or any POS
 ```pwsh
 git clone <repository-url>
 cd appointment-scheduler
+
+# If pnpm is not installed, install it once:
+npm install -g pnpm
+
+# Install dependencies (monorepo)
 pnpm install
+
+# Alternatively, using npm (slower, not preferred):
+# npm install --workspaces
 ```
 
 ## 2) Configure backend environment
@@ -52,8 +60,13 @@ USE_DB_APPOINTMENTS=1
 USE_DB_SERVICES=1
 USE_DB_USERS=1
 
-# Generate and run migrations
+# Option A: Use local Postgres you manage
 pnpm -C backend db:generate
+pnpm -C backend db:migrate
+pnpm -C backend db:seed
+
+# Option B: Spin up Postgres via Docker Compose (test env defaults)
+docker compose up -d db
 pnpm -C backend db:migrate
 pnpm -C backend db:seed
 ```
@@ -93,6 +106,12 @@ Or per package:
 ```pwsh
 pnpm -C backend test
 pnpm -C frontend test
+```
+
+If pnpm isn’t found in your shell:
+
+```pwsh
+npm install -g pnpm
 ```
 
 End-to-end (optional):
@@ -158,7 +177,11 @@ pnpm -C backend run dev:db
 - Verify `DATABASE_URL` and that Postgres is running.
 - Run migrations: `pnpm -C backend db:migrate`.
 
-3. Build or type errors
+3. pnpm not found
+
+- Install globally: `npm install -g pnpm`
+
+4. Build or type errors
 
 - Clear modules and reinstall: `Remove-Item -Recurse -Force node_modules; pnpm install` (PowerShell)
 - Check Node version: `node --version`

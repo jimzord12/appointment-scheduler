@@ -64,14 +64,14 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 - [x] T048 Double-booking enforcement test
 - [ ] T049 Backend performance tests
 - [ ] T050 Frontend bundle analysis script
-- [ ] T051 Logging validation test
+- [x] T051 Logging validation test
 - [ ] T052 Accessibility tests
 
 ## Phase 3.7: Polish & Documentation
 
-- [ ] T053 Utility/date validation unit tests
-- [ ] T054 Frontend form validation unit tests
-- [ ] T055 Quickstart updates
+- [x] T053 Utility/date validation unit tests
+	- [x] T054 Frontend form validation unit tests
+	- [x] T055 Quickstart updates
 - [ ] T056 Backend API README
 - [ ] T057 Clean duplication & refactors
 - [ ] T058 Final CI pipeline config
@@ -88,7 +88,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 - [x] T072 Backend API README updates
 - [x] T073 Regression test for PATCH schema
 - [x] T074 Normalize time format handling
-- [ ] T075 CI: Add backend test workflow badge
+- [x] T075 CI: Add backend test workflow badge
 
 ## Phase 3.9: Current Increment
 

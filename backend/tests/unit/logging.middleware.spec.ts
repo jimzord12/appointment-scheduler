@@ -93,6 +93,25 @@ describe('Logging Middleware', () => {
   });
 
   describe('loggingMiddleware', () => {
+    it('generates a requestId when header is absent', () => {
+      const middleware = loggingMiddleware();
+
+      // Ensure no header present
+      delete (mockRequest.headers as any)['x-request-id'];
+      delete (mockRequest.headers as any)['X-Request-Id'];
+
+      middleware(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockConsoleInfo).toHaveBeenCalled();
+
+      const logOutput = mockConsoleInfo.mock.calls[0][0];
+      const parsedLog = JSON.parse(logOutput);
+
+      expect(parsedLog.message).toBe('Incoming request');
+      expect(typeof parsedLog.requestId).toBe('string');
+      expect(parsedLog.requestId).toMatch(/^req_[a-z0-9]{8}$/);
+    });
     it('should log incoming requests', () => {
       const middleware = loggingMiddleware();
 
@@ -226,7 +245,7 @@ describe('Logging Middleware', () => {
       const mockError = new Error('Response error');
 
       // Mock the 'on' method to simulate an error event
-      const mockOn = vi.fn().mockImplementation((event, callback) => {
+      const mockOn = vi.fn().mockImplementation((event: string, callback: (err: Error) => void) => {
         if (event === 'error') {
           callback(mockError);
         }

@@ -14,11 +14,16 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Later
 
-- T075 CI: Add backend test workflow badge
- 
+- (none)
+
 
 ## Recently Completed (highlights)
 
+- T055 Quickstart updates
+- T051 Logging validation test
+- T054 Frontend form validation unit tests
+- T053 Utility/date validation unit tests
+- T075 CI: Add backend test workflow badge
 - T074 Normalize time format handling
 - T060–T063 Review follow-ups: transport types, schema dedupe, 409 on double-booking
 - T076 Remove duplicate Drizzle schema for appointment requests

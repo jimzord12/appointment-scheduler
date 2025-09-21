@@ -11,7 +11,7 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "types": ["node", "express"]
+    "types": ["node", "express", "vitest"]
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
