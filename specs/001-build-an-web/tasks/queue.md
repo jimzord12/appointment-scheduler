@@ -6,11 +6,10 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T042 Services management UI
+- T043 Appointment request UI
 
 ## Up Next (respect dependencies)
 
-- T043 Appointment request UI
 - T044 Routing with TanStack Router
 - T045 API hooks with TanStack Query
 - T046 UI polish & shadcn components integration
@@ -25,6 +24,7 @@ description: Active execution queue — current, next, and recent tasks for 001-
 ## Recently Completed (highlights)
 
 - T050 Frontend bundle analysis script
+- T042 Services management UI
 - T004/T094 ESLint ignores refined to skip build output (dist/build/.next)
 - T055 Quickstart updates
 - T051 Logging validation test
