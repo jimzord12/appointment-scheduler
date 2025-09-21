@@ -1,5 +1,5 @@
+import zv4 from 'zod';
 import 'zod-openapi';
-import * as zv4 from 'zod/v4';
 import { createDocument } from 'zod-openapi';
 
 import {
@@ -231,7 +231,7 @@ export function buildOpenApiSpec() {
           patch: {
             summary: 'Approve or reject an appointment request',
             requestParams: {
-              path: zv4.object({ id: zv4.string().uuid() }),
+              path: zv4.object({ id: zv4.uuid() }),
             },
             requestBody: {
               content: {

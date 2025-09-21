@@ -1,0 +1,16 @@
+services:
+  db:
+    env_file: './backend/.env.test'
+    environment:
+      POSTGRES_USER: test-user
+      POSTGRES_PASSWORD: secret-password
+      POSTGRES_DB: appointments
+    image: postgres
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

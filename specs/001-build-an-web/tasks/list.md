@@ -118,5 +118,5 @@ Integration, Testing, DevOps
 - [x] T091 Stabilize contract tests for transport types
 - [x] T092 E2E happy path (MSW off)
 - [x] T093 Quickstart + backend README
-- [ ] T094 CI: lint, typecheck, tests, OpenAPI artifact
+- [x] T094 CI: lint, typecheck, tests, OpenAPI artifact
 - [ ] T095 Seed + local dev DB automation

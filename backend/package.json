@@ -10,6 +10,7 @@
     "test:db": "vitest --run tests/integration/db.happy-path.spec.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
+    "openapi:generate": "tsx ./scripts/generate-openapi.ts",
     "start": "node dist/app.js",
     "db:generate": "drizzle-kit generate --config=./drizzle/config.ts",
     "db:migrate": "drizzle-kit migrate --config=./drizzle/config.ts",

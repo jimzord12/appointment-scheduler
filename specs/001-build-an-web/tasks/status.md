@@ -6,9 +6,9 @@ description: Project status overview with completion metrics and readiness notes
 
 ## Completion Summary
 
-- 41 tasks (69.5%) are completed ✅
+- 42 tasks (71.2%) are completed ✅
 - 0 tasks (0%) are partially completed ⚠️
-- 18 tasks (30.5%) are not completed ❌
+- 17 tasks (28.8%) are not completed ❌
 - Last updated: 2025-09-21
 
 ## Readiness
@@ -29,3 +29,4 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T090 completed (Loading/Error UX and accessibility pass for services and appointments pages; retry buttons wired).
 - Update: T093 completed (Quickstart aligned to workspace; added backend README with environment, scripts, and endpoints).
 - Update: T092 completed (E2E happy path with Playwright; frontend proxy, auth role persistence, and test harness added).
+- Update: T094 completed (CI pipeline runs lint, typecheck, tests; uploads OpenAPI artifact).

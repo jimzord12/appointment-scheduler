@@ -6,7 +6,7 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T094 CI pipeline: lint, typecheck, test, OpenAPI artifact
+- (none)
 
 ## Up Next (respect dependencies)
 
