@@ -6,11 +6,10 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T039 Services store
+- T040 Appointments store
 
 ## Up Next (respect dependencies)
 
-- T040 Appointments store
 - T041 Auth pages/components
 - T042 Services management UI
 - T043 Appointment request UI
