@@ -63,10 +63,10 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 
 - [x] T047 Security hardening verification
 - [x] T048 Double-booking enforcement test
-- [ ] T049 Backend performance tests
+- [x] T049 Backend performance tests
 - [x] T050 Frontend bundle analysis script
 - [x] T051 Logging validation test
-- [ ] T052 Accessibility tests
+- [x] T052 Accessibility tests
 
 ## Phase 3.7: Polish & Documentation
 

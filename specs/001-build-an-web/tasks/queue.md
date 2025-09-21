@@ -6,19 +6,21 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T049 Backend performance tests
+- (empty)
 
 ## Up Next (respect dependencies)
 
-- T052 Accessibility tests
+- (empty)
 
 ## Later
 
-- T052 Accessibility tests
+- (no change)
 
 ## Recently Completed (highlights)
 
 - T050 Frontend bundle analysis script
+- T049 Backend performance tests
+- T052 Accessibility tests
 - T046 UI polish & shadcn components integration
 - T042 Services management UI
 - T043 Appointment request UI
