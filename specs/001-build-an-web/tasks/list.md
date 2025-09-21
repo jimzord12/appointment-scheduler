@@ -61,7 +61,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 
 ## Phase 3.6: Cross-Cutting Integration & Hardening
 
-- [ ] T047 Security hardening verification
+- [x] T047 Security hardening verification
 - [x] T048 Double-booking enforcement test
 - [ ] T049 Backend performance tests
 - [x] T050 Frontend bundle analysis script

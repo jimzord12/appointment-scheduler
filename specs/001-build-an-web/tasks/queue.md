@@ -6,16 +6,14 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T047 Security hardening verification
+- T049 Backend performance tests
 
 ## Up Next (respect dependencies)
 
-- T049 Backend performance tests
 - T052 Accessibility tests
 
 ## Later
 
-- T049 Backend performance tests
 - T052 Accessibility tests
 
 ## Recently Completed (highlights)
