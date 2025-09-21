@@ -75,7 +75,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
   - [x] T055 Quickstart updates
 - [x] T056 Backend API README
 - [x] T057 Clean duplication & refactors
-- [ ] T058 Final CI pipeline config
+- [x] T058 Final CI pipeline config
 - [ ] T059 Release prep
 
 ## Phase 3.8: Review Follow-ups

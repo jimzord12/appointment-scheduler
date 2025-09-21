@@ -6,7 +6,7 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Now (in progress)
 
-- T058 Final CI pipeline config
+- T059 Release prep
 
 ## Up Next (respect dependencies)
 
@@ -18,6 +18,7 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Recently Completed (highlights)
 
+- T058 Final CI pipeline config
 - T057 Clean duplication & refactors
 
 - T056 Backend API README

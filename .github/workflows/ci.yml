@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: ['**']
@@ -9,6 +12,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,6 +42,18 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Upload test results (if any)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-results/**
+            frontend/test-results/**
+            backend/test-results/**
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Generate OpenAPI (backend)
         run: pnpm -C backend run openapi:generate
 
@@ -44,3 +62,4 @@ jobs:
         with:
           name: openapi-json
           path: backend/openapi.json
+          retention-days: 7
