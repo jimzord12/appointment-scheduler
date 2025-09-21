@@ -6,9 +6,9 @@ description: Project status overview with completion metrics and readiness notes
 
 ## Completion Summary
 
-- 53 tasks (89.8%) are completed ✅
+- 54 tasks (91.5%) are completed ✅
 - 0 tasks (0%) are partially completed ⚠️
-- 6 tasks (10.2%) are not completed ❌
+- 5 tasks (8.5%) are not completed ❌
 - Last updated: 2025-09-21
 
 ## Readiness
@@ -35,8 +35,10 @@ description: Project status overview with completion metrics and readiness notes
 - Update: T066 completed (validateBody middleware typed structurally and verified via backend typecheck/tests).
 - Update: T071 completed (Quickstart updated with env/rate limiting notes and examples).
 - Update: T072 completed (Backend README expanded: auth, headers, error model, logging/request ID, OpenAPI, curl examples).
- - Update: T075 completed (CI badge added to backend README; queue/list updated.)
- - Update: T053 completed (Added unit tests for time normalization util; ESM test import fix; vitest types configured).
- - Update: T054 completed (Added unit tests for Login and Register form validation; fixed Zod schema bug in Register page).
- - Update: T051 completed (Added requestId generation coverage in logging middleware tests; fixed strict TS types in test).
- - Update: T055 completed (Quickstart improved: pnpm install guidance, npm alternatives, Docker DB steps, troubleshooting for missing pnpm).
+- Update: T075 completed (CI badge added to backend README; queue/list updated.)
+- Update: T053 completed (Added unit tests for time normalization util; ESM test import fix; vitest types configured).
+- Update: T054 completed (Added unit tests for Login and Register form validation; fixed Zod schema bug in Register page).
+- Update: T051 completed (Added requestId generation coverage in logging middleware tests; fixed strict TS types in test).
+- Update: T055 completed (Quickstart improved: pnpm install guidance, npm alternatives, Docker DB steps, troubleshooting for missing pnpm).
+- Update: T050 completed (Frontend bundle analysis via visualizer plugin; `npm --prefix frontend run analyze` outputs `dist/stats.html`).
+- Update: Linting signal improved: ESLint now ignores build outputs (dist/build/.next) repo-wide to prevent false positives from compiled bundles (T004, T094).

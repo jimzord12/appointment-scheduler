@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { normalizeHhMm } from '../../src/utils/time.js';
 
 // T053: Utility/date validation unit tests — cover time normalization helper.

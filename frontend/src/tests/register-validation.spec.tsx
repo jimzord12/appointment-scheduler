@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
+import { describe, expect, it } from 'vitest';
+
 import { RegisterPage } from '../pages/Register.js';
 
 // T054: Frontend form validation unit tests — Register form

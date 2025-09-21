@@ -8,7 +8,7 @@ const isoDateString = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, { message: 'Expected date in YYYY-MM-DD format' })
   .refine(
-    v => {
+    (v: string) => {
       const d = new Date(v + 'T00:00:00Z');
       // Check constructed date validity and preserve original components (avoid JS date coercion mismatches)
       return !isNaN(d.getTime()) && v === d.toISOString().slice(0, 10);

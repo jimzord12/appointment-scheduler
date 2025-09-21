@@ -1,10 +1,12 @@
 import 'express';
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: {
-      id: string;
-      role: 'customer' | 'manager';
-    } | null;
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        role: 'customer' | 'manager';
+      } | null;
+    }
   }
 }

@@ -25,6 +25,7 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 - [x] T002 Backend TypeScript setup (Express 5, Zod, Drizzle, etc.)
 - [x] T003 Frontend Vite React TS setup
 - [x] T004 Root linting & formatting configured
+  - Update: Hardened ESLint ignore globs to exclude build artifacts (e.g., **/dist/**, **/build/**, **/.next/**) to avoid linting compiled bundles.
 - [x] T005 Environment configuration
 
 ## Phase 3.2: Tests First (Backend Contracts & Models)
@@ -63,15 +64,15 @@ References to T064/T065/T067/T068/T069/T070 should use their replacements.
 - [ ] T047 Security hardening verification
 - [x] T048 Double-booking enforcement test
 - [ ] T049 Backend performance tests
-- [ ] T050 Frontend bundle analysis script
+- [x] T050 Frontend bundle analysis script
 - [x] T051 Logging validation test
 - [ ] T052 Accessibility tests
 
 ## Phase 3.7: Polish & Documentation
 
 - [x] T053 Utility/date validation unit tests
-	- [x] T054 Frontend form validation unit tests
-	- [x] T055 Quickstart updates
+  - [x] T054 Frontend form validation unit tests
+  - [x] T055 Quickstart updates
 - [ ] T056 Backend API README
 - [ ] T057 Clean duplication & refactors
 - [ ] T058 Final CI pipeline config

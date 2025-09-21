@@ -11,8 +11,12 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "types": ["node", "express", "vitest"]
+    "types": ["node", "express", "vitest"],
+    "baseUrl": ".",
+    "paths": {
+      "zod": ["./node_modules/zod"]
+    }
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

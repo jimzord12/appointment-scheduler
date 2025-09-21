@@ -127,13 +127,28 @@ For a quick DB connectivity smoke test:
 pnpm -C backend run test:db
 ```
 
-## 7) Convenience: bring up local DB and seed
+## 7) Frontend bundle analysis
+
+Generate a bundle report (treemap + raw data) for the frontend build:
+
+```pwsh
+npm --prefix frontend run analyze
+```
+
+Artifacts are written to `frontend/dist/`:
+
+- `stats.html` – interactive treemap visualization
+- Raw stats embedded in the HTML and available via the plugin
+
+Open `frontend/dist/stats.html` in your browser to explore bundle composition and identify optimization opportunities.
+
+## 8) Convenience: bring up local DB and seed
 
 ```pwsh
 pnpm -C backend run dev:db
 ```
 
-## 7) Rate limiting, JWT, and CORS
+## 9) Rate limiting, JWT, and CORS
 
 - Rate limiting
   - Behavior: If `RATE_LIMIT_ENABLED` is set, it's enabled when `1` or `true` (case-insensitive). If it is not set, the default is enabled except under the test runner (`VITEST`).

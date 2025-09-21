@@ -1,8 +1,25 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig, PluginOption } from 'vite';
 
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    react(),
+    // Enable bundle analysis when running in analyze mode
+    mode === 'analyze'
+      ? [
+          visualizer({
+            filename: 'dist/bundle-analysis.html',
+          }) as PluginOption,
+        ]
+      : [],
+  ].filter(Boolean),
+  optimizeDeps: {
+    include: ['zod'],
+  },
+  resolve: {
+    dedupe: ['zod'],
+  },
   server: {
     proxy: {
       // Proxy frontend /api/* requests to the backend and remove the /api prefix
@@ -13,4 +30,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

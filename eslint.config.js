@@ -9,7 +9,7 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
@@ -110,11 +110,14 @@ export default [
   {
     ignores: [
       'node_modules/**',
-      'dist/**',
-      'build/**',
-      '.next/**',
-      '.out/**',
-      'coverage/**',
+      'frontend/node_modules/**',
+      'backend/node_modules/**',
+      'shared/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/.next/**',
+      '**/.out/**',
+      '**/coverage/**',
       '*.min.js',
       'package-lock.json',
       'pnpm-lock.yaml',
