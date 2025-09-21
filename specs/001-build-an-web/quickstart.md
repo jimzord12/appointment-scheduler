@@ -29,6 +29,7 @@ Copy-Item backend/.env.example backend/.env
 # Minimum for dev:
 # - Leave JWT_SECRET as the dev default (change for production)
 # - You can keep USE_DB_* = 0 to run without Postgres
+# - Rate limiting: the provided .env.example sets RATE_LIMIT_ENABLED=0 to avoid interference in dev
 ```
 
 Key variables (from `backend/.env.example`):
@@ -113,10 +114,33 @@ pnpm -C backend run test:db
 pnpm -C backend run dev:db
 ```
 
-## 7) Rate limiting, JWT, and CORS (production)
+## 7) Rate limiting, JWT, and CORS
 
-- Rate limiting is enabled by default outside test unless you disable it; override with env vars in `backend/.env`.
-- In production (`NODE_ENV=production`), the server requires a strong `JWT_SECRET` and restricts CORS to `ALLOWED_ORIGINS`.
+- Rate limiting
+  - Behavior: If `RATE_LIMIT_ENABLED` is set, it's enabled when `1` or `true` (case-insensitive). If it is not set, the default is enabled except under the test runner (`VITEST`).
+  - Dev default: The shipped `backend/.env.example` sets `RATE_LIMIT_ENABLED=0` to avoid throttling during development.
+  - Configuration:
+    - Window: use either `RATE_LIMIT_WINDOW_MS` (takes precedence) or `RATE_LIMIT_WINDOW_MINUTES` (default `15`).
+    - Max: `RATE_LIMIT_MAX` requests per window (default `100`).
+  - Examples:
+
+    ```ini
+    # Disable (recommended for local dev)
+    RATE_LIMIT_ENABLED=0
+
+    # Enable with a 10-minute window and 200 requests max
+    RATE_LIMIT_ENABLED=1
+    RATE_LIMIT_WINDOW_MINUTES=10
+    RATE_LIMIT_MAX=200
+
+    # Or specify window in milliseconds (overrides minutes)
+    RATE_LIMIT_ENABLED=true
+    RATE_LIMIT_WINDOW_MS=300000  # 5 minutes
+    RATE_LIMIT_MAX=120
+    ```
+
+- JWT & CORS (production)
+  - In production (`NODE_ENV=production`), the server requires a strong `JWT_SECRET` and restricts CORS to `ALLOWED_ORIGINS`.
 
 ## Notes
 

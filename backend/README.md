@@ -78,7 +78,12 @@ pnpm -C backend dev
 
 ## Security notes
 
-- Rate limiting responds with 429 and `{ "error": "rate_limit" }` when exceeded.
+- Rate limiting
+  - Enable/disable: `RATE_LIMIT_ENABLED` accepts `1`/`true` to enable, `0`/`false` to disable. If unset, it defaults to enabled except during tests (`VITEST` env).
+  - Window: `RATE_LIMIT_WINDOW_MS` (priority) or `RATE_LIMIT_WINDOW_MINUTES` (default `15`).
+  - Max: `RATE_LIMIT_MAX` per window (default `100`).
+  - Response shape on exceed: HTTP 429 with `{ "error": "rate_limit" }`.
+  - Dev tip: `.env.example` ships with `RATE_LIMIT_ENABLED=0` to avoid throttling in local dev.
 - In production, a strong `JWT_SECRET` is required and CORS is restricted to `ALLOWED_ORIGINS`.
 
 ## Tests
