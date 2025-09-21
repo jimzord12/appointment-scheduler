@@ -6,9 +6,9 @@ description: Project status overview with completion metrics and readiness notes
 
 ## Completion Summary
 
-- 46 tasks (78.0%) are completed ✅
+- 47 tasks (79.7%) are completed ✅
 - 0 tasks (0%) are partially completed ⚠️
-- 13 tasks (22.0%) are not completed ❌
+- 12 tasks (20.3%) are not completed ❌
 - Last updated: 2025-09-21
 
 ## Readiness
@@ -22,6 +22,7 @@ description: Project status overview with completion metrics and readiness notes
 - No tasks marked “cannot be implemented” at this time.
 - Source of truth for detailed specs: `tasks/list.md`.
 - Update: T076 completed (duplicate Drizzle schema removed); proceed with T077 wiring DB for appointments.
+- Update: T073 completed (PATCH schema regression test added; enum enforcement and valid payload acceptance verified).
 - Update: T078–T081 and T084 are implemented and tested (rate limiting, JWT secret enforcement, prod CORS policy, request ID logging, lazy DB init).
 - Update: T077 completed (DB-backed appointment request services wired, conflict checks enforced).
 - Update: T091 completed (contract tests aligned with transport string datetimes; backend suite green).

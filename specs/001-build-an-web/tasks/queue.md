@@ -10,7 +10,7 @@ description: Active execution queue — current, next, and recent tasks for 001-
 
 ## Up Next (respect dependencies)
 
-- T073 Regression test for PATCH schema
+- (none)
 
 ## Later
 
