@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Base layer: set up CSS variables slots for theme tokens (tweakcn to fill later) */
 @layer base {
@@ -17,7 +17,9 @@
     --ring: 59 130 246; /* blue-500 */
   }
 
-  html, body, #root {
+  html,
+  body,
+  #root {
     height: 100%;
   }
   body {

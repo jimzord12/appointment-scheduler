@@ -73,7 +73,7 @@
 - [x] T013 Implement i18n setup for EN/EL with locale formats
   - Files: `frontend/src/lib/i18n/index.ts`, `frontend/src/lib/i18n/en.json`, `frontend/src/lib/i18n/el.json`
   - Deliver: router/layout integrates language switcher
-- T014 Create LanguageSwitcher and apply translations across pages
+- [x] T014 Create LanguageSwitcher and apply translations across pages
   - Files: `frontend/src/components/LanguageSwitcher.tsx`, `frontend/src/pages/**`
   - Deliver: live updates without reload
 - [x] T015 GSAP in-view animation utilities and hooks
