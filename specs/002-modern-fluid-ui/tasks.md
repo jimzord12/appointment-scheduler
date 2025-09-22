@@ -88,7 +88,7 @@
 - [x] T017 Apply theme and i18n controls into app shell and all pages
   - Files: `frontend/src/pages/**`, `frontend/src/components/AppShell.tsx`
   - Deliver: consistent application across modals, toasts, errors
-- T018 Respect reduced motion globally; add opt-out control (optional)
+- [x] T018 Respect reduced motion globally; add opt-out control (optional)
   - Files: `frontend/src/lib/anim/inview.ts`, `frontend/src/components/SettingsPanel.tsx`
   - Deliver: minimize/disable animations when requested
 

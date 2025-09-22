@@ -1,4 +1,13 @@
+import { preferencesStore } from '../../stores/preferences.js';
+
 export function prefersReducedMotion() {
+  // User preference overrides system
+  try {
+    const motion = preferencesStore.getState().motion;
+    if (motion === 'reduced') return true;
+  } catch {
+    // store might not be initialized in some test environments
+  }
   return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 }
 

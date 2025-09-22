@@ -2,6 +2,7 @@ import { Outlet } from '@tanstack/react-router';
 
 import { t } from '../../lib/i18n/index.js';
 import { LanguageSwitcher } from '../LanguageSwitcher.js';
+import { SettingsPanel } from '../SettingsPanel.js';
 import { ThemeToggle } from '../ThemeToggle.js';
 
 export function AppLayout() {
@@ -14,6 +15,7 @@ export function AppLayout() {
         <div style={{ display: 'flex', gap: 12 }}>
           <LanguageSwitcher />
           <ThemeToggle />
+          <SettingsPanel />
         </div>
       </header>
       <Outlet />
