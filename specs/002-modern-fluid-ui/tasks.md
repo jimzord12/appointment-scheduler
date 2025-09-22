@@ -52,7 +52,7 @@
 - [x] T007 [P] Integration: theme toggle persists across reload and sessions
   - Files: `frontend/src/tests/theme.persistence.spec.ts`
   - Based on: FR-001, FR-002, FR-004
-- T008 [P] Integration: language switch updates UI and persists
+- [x] T008 [P] Integration: language switch updates UI and persists
   - Files: `frontend/src/tests/i18n.switch.persistence.spec.ts`
   - Based on: FR-006–FR-011
 - [x] T009 [P] Integration: reduced motion disables/simplifies animations
