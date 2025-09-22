@@ -82,10 +82,10 @@
 
 ## Phase 3.4: Integration
 
-- T016 Preference persistence per-user (when signed-in) and per-device (anonymous)
+- [x] T016 Preference persistence per-user (when signed-in) and per-device (anonymous)
   - Files: `frontend/src/stores/preferences.ts`, `frontend/src/lib/persistence.ts`
   - Deliver: precedence: user > device > system > default
-- T017 Apply theme and i18n controls into app shell and all pages
+- [x] T017 Apply theme and i18n controls into app shell and all pages
   - Files: `frontend/src/pages/**`, `frontend/src/components/AppShell.tsx`
   - Deliver: consistent application across modals, toasts, errors
 - T018 Respect reduced motion globally; add opt-out control (optional)

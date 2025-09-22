@@ -32,12 +32,14 @@ export const authStore = create<AuthState>((set, get) => ({
     // Persist
     localStorage.setItem('token', token);
     if (user?.role) localStorage.setItem('role', user.role);
+    if (user?.id) localStorage.setItem('userId', user.id);
 
     set({ token, role: user?.role ?? null, user: user ?? null });
   },
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('userId');
     set({ token: null, role: null, user: null });
   },
   hydrateFromStorage: () => {
