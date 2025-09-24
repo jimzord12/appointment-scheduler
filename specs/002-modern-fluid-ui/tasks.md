@@ -98,7 +98,7 @@
   - Files: `frontend/src/lib/anim/**`, component hotspots
 - [x] T020 [P] A11y audit: axe and manual checks across themes and languages
   - Files: `frontend/src/tests/**`
-- T021 [P] Documentation: update README and quickstart with usage
+- [x] T021 [P] Documentation: update README and quickstart with usage
   - Files: `frontend/README.md`, `specs/002-modern-fluid-ui/quickstart.md`
 
 ## Parallel Execution Examples
