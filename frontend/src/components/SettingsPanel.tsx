@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { preferencesStore } from '../stores/preferences.js';
 
 export function SettingsPanel() {

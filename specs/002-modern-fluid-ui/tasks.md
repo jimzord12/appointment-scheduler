@@ -94,9 +94,9 @@
 
 ## Phase 3.5: Polish
 
-- T019 [P] Performance pass: ensure 60 FPS target; simplify when >24ms/500ms
+- [x] T019 [P] Performance pass: ensure 60 FPS target; simplify when >24ms/500ms
   - Files: `frontend/src/lib/anim/**`, component hotspots
-- T020 [P] A11y audit: axe and manual checks across themes and languages
+- [x] T020 [P] A11y audit: axe and manual checks across themes and languages
   - Files: `frontend/src/tests/**`
 - T021 [P] Documentation: update README and quickstart with usage
   - Files: `frontend/README.md`, `specs/002-modern-fluid-ui/quickstart.md`

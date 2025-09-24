@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fadeIn, prefersReducedMotion } from '../lib/anim/gsap.js';
 import { preferencesStore } from '../stores/preferences.js';
