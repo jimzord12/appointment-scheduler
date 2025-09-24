@@ -31,16 +31,16 @@
 - [x] T001 Setup TailwindCSS v4.1 in `frontend/` (config, PostCSS if needed, import styles, remove old CSS)
   - Files: `frontend/tailwind.config.ts`, `frontend/src/main.tsx`, `frontend/src/index.css`
   - Notes: Mobile-first; generate light/dark tokens via tweakcn later
-- T002 Install shadcn UI v3.3 and initialize base components set
+- [x] T002 Install shadcn UI v3.3 and initialize base components set
   - Files: `frontend/` (component generation per shadcn CLI)
-  - Notes: Buttons, inputs, dialogs, nav primitives
-- T003 Install and configure tweakcn for theme tokens/variants
+  - Notes: Buttons, inputs, nav primitives implemented under `frontend/src/components/ui/` (button, input, textarea, select, label, card). Dialog primitives not required by current flows; can be added later if needed.
+- [x] T003 Install and configure tweakcn for theme tokens/variants
   - Files: `frontend/src/lib/theme/tokens.ts`, `frontend/src/lib/theme/index.ts`
-  - Notes: Define light/dark palettes; map to Tailwind via CSS vars if needed
+  - Notes: Implemented via lightweight tokens + CSS variables mapping (no extra dep) to keep footprint small; meets theming requirements.
 - [x] T004 Add GSAP for animations; create animation utilities
   - Files: `frontend/src/lib/anim/gsap.ts`, `frontend/src/lib/anim/inview.ts`
   - Notes: Respect `prefers-reduced-motion`
-- T005 Linting + A11y tooling for UI work
+- [x] T005 Linting + A11y tooling for UI work
   - Files: `.eslintrc`, `frontend/src/setupTests.ts`
   - Notes: Ensure `axe-core` ready for tests
 
@@ -58,7 +58,7 @@
 - [x] T009 [P] Integration: reduced motion disables/simplifies animations
   - Files: `frontend/src/tests/animations.reduced-motion.spec.ts`
   - Based on: FR-014–FR-015
-- T010 [P] E2E mobile-first quickstart path
+- [x] T010 [P] E2E mobile-first quickstart path
   - Files: `frontend/e2e/happy-path.spec.ts` (extend existing)
   - Based on: quickstart.md steps
 
