@@ -1,8 +1,11 @@
+import { resolve } from 'node:path';
+
 import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, PluginOption } from 'vite';
 
 const ReactCompilerConfig = {};
+const srcDir = resolve(process.cwd(), 'src');
 
 export default defineConfig(({ mode }) => ({
   plugins: [
@@ -24,6 +27,9 @@ export default defineConfig(({ mode }) => ({
     include: ['zod'],
   },
   resolve: {
+    alias: {
+      '@': srcDir,
+    },
     dedupe: ['zod'],
   },
   server: {
