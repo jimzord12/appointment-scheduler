@@ -1,7 +1,7 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Modern Fluid UI
 
-**Branch**: `[002-modern-fluid-ui]` | **Date**: 2025-09-22 | **Spec**: specs/002-modern-fluid-ui/spec.md
-**Input**: Feature specification from `specs/002-modern-fluid-ui/spec.md`
+**Branch**: `[002-modern-fluid-ui]` | **Date**: 2025-09-25 | **Spec**: `specs/002-modern-fluid-ui/spec.md`
+**Input**: Feature specification from `c:\\Github\\appointment-scheduler\\specs\\002-modern-fluid-ui\\spec.md`
 
 ## Execution Flow (/plan command scope)
 
@@ -32,7 +32,18 @@
 
 ## Summary
 
-Deliver a Modern Fluid UI that is mobile-first, supports Light and Dark themes, provides bilingual i18n (English/Greek), and applies smooth in-view animations. Frontend stack and constraints: TailwindCSS v4.1 for styling, shadcn UI v3.3 for accessible components, tweakcn for theme tokens/variants, and GSAP for performant, non-blocking animations. Preferences (theme, language, motion) persist per-user when signed-in and per-device when anonymous, with accessibility requirements (WCAG AA, reduced motion) enforced.
+Deliver a Modern Fluid UI that is mobile-first, supports Light and Dark themes, provides bilingual i18n (English/Greek), and applies smooth in-view animations. Frontend stack: TailwindCSS v4.1 for styling, shadcn UI v3.3 for accessible components, tweakcn for theme tokens/variants, and GSAP for performant, non-blocking animations. Preferences (theme, language, motion) persist per-user when signed-in and per-device (anonymous) locally. Enforce WCAG AA contrast and respect reduced motion.
+
+Additionally, apply a UI polish pass using shadcn + tweakcn to beautify existing pages:
+
+- Global: App shell header/footer, navigation, toasts, and dialogs (when needed by flows)
+- Auth: Login and Register pages (forms, validation states, focus states)
+- Dashboard: Overview cards, lists, and empty states
+- Services: Service catalogue (cards/table), filters/search, loading/skeletons
+- Appointments: Request form, list/detail views, decision states (approved/rejected)
+- Profile/Settings: Preferences (theme, language, motion), account sections
+
+Component set (initial): Button, Input, Textarea, Select, Label, Card, Badge, Tabs, Table, Alert/Callout, Toast. Add Dialog/Popover/Dropdown when needed. Use tweakcn-driven tokens (light/dark) to keep components consistent and themeable.
 
 ## Technical Context
 
@@ -40,11 +51,22 @@ Deliver a Modern Fluid UI that is mobile-first, supports Light and Dark themes, 
 **Primary Dependencies**: TailwindCSS 4.1 (styling), shadcn UI 3.3 (components), tweakcn (theme tokens/variants), GSAP (animations), TanStack Router 1, TanStack Query 5, React Hook Form 7, Zustand 5, Zod 4
 **Storage**: N/A (frontend-only for this feature; preferences persisted per-user on backend and per-device locally)
 **Testing**: Vitest 3, React Testing Library 16, Playwright 1.55 (E2E), axe-core (a11y)
-**Target Platform**: Web (mobile-first; must look and work great on smartphones)
-**Project Type**: web (frontend + backend present in repo; this feature affects frontend styling and UX)
-**Performance Goals**: 60 FPS target for animations; avoid sustained >24ms frame cost over 500ms; fast first paint honoring theme/language cache
-**Constraints**: WCAG AA contrast; respect prefers-reduced-motion; bilingual EN/EL coverage; theme/language controls available on all pages
+**Target Platform**: Web (mobile-first)
+**Project Type**: web (frontend + backend present; this feature modifies frontend UI)
+**Performance Goals**: 60 FPS animations target; simplify/skip animations if sustained frame time > 24ms over 500ms
+**Constraints**: WCAG AA contrast; respect prefers-reduced-motion; bilingual EN/EL; theme/language controls available on all pages
 **Scale/Scope**: App-level styling refresh across existing pages; no new data entities beyond display preferences
+
+UI components and page enhancements (shadcn + tweakcn):
+
+- Pages → components mapping
+  - Auth (Login/Register): Card, Input, Label, Button, Alert (errors), helper text
+  - Dashboard: Card, Badge, Tabs, Table/List, Skeleton loaders
+  - Services: Card or Table, Select/Inputs for filters, Button groups, Empty state
+  - Appointments: Form (Input/Select/Textarea), Card for list items, Status Badge, Tabs for states
+  - Profile/Settings: Card, Switch (for motion), Select (language), ThemeToggle, Alert for confirmations
+- Theming: tweakcn tokens define color roles (bg/fg/muted/primary/ring) with CSS vars wired to Tailwind utilities
+- A11y: ensure focus-visible styles, color contrast AA, keyboard navigation across interactive components
 
 ## Constitution Check
 
@@ -59,16 +81,19 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 **Architecture**:
 
-- Feature modifies frontend UI layer; no new libraries beyond those listed in Technical Context
-- Libraries: TailwindCSS (utility styling), shadcn UI (component primitives), tweakcn (theming), GSAP (animations)
-- No custom wrapper frameworks; use libraries directly
+- EVERY feature as library? (no direct app code)
+- Libraries listed: [name + purpose for each]
+- CLI per library: [commands with --help/--version/--format]
+- Library docs: llms.txt format planned?
 
 **Testing (NON-NEGOTIABLE)**:
 
-- Enforce RED-GREEN-Refactor where applicable; for UI styling, use visual and a11y tests first (axe, RTL snapshots for class toggles), then implement
-- E2E flows validate theme/language persistence and reduced-motion behavior
-- Avoid mocks for browser APIs when feasible; use jsdom + Playwright
-- No skipping RED phase for functional changes
+- RED-GREEN-Refactor cycle enforced? (test MUST fail first)
+- Git commits show tests before implementation?
+- Order: Contract→Integration→E2E→Unit strictly followed?
+- Real dependencies used? (actual DBs, not mocks)
+- Integration tests for: new libraries, contract changes, shared schemas?
+- FORBIDDEN: Implementation before test, skipping RED phase
 
 **Observability**:
 
@@ -78,7 +103,9 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 **Versioning**:
 
-- Frontend package versioning unchanged; changes tracked via feature branch and changelog
+- Version number assigned? (MAJOR.MINOR.BUILD)
+- BUILD increments on every change?
+- Breaking changes handled? (parallel tests, migration plan)
 
 ## Project Structure
 
@@ -155,7 +182,7 @@ ios/ or android/
    - Rationale: [why chosen]
    - Alternatives considered: [what else evaluated]
 
-**Output**: research.md with all NEEDS CLARIFICATION resolved (none outstanding; decisions captured from spec and user inputs)
+**Output**: research.md with all NEEDS CLARIFICATION resolved
 
 ## Phase 1: Design & Contracts
 
@@ -238,7 +265,7 @@ _This checklist is updated during execution flow_
 
 - [x] Phase 0: Research complete (/plan command)
 - [x] Phase 1: Design complete (/plan command)
-- [ ] Phase 2: Task planning complete (/plan command - describe approach only)
+- [x] Phase 2: Task planning complete (/plan command - describe approach only)
 - [ ] Phase 3: Tasks generated (/tasks command)
 - [ ] Phase 4: Implementation complete
 - [ ] Phase 5: Validation passed
