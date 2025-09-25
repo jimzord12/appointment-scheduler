@@ -1,7 +1,7 @@
 # Scheduling UI PRD
 
-**Feature**: Complete UI polish for appointment scheduling app  
-**Source**: Exported from Notion on 2025-09-26  
+**Feature**: Complete UI polish for appointment scheduling app
+**Source**: Exported from Notion on 2025-09-26
 **Stakeholders**: Product (Ana K.), Design (Leo M.), Engineering (Frontend: Priya S., Backend: Evan J.), QA (Niamh T.)
 
 ## Product North Star
