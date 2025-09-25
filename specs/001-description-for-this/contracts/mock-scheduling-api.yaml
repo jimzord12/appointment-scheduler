@@ -1,0 +1,332 @@
+openapi: 3.1.0
+info:
+  title: Appointment Scheduler Mock API
+  version: 0.1.0
+  description: >-
+    MSW-backed mock API that mirrors the production appointment scheduler service
+    while the backend is under construction. Handlers must validate against the
+    shared Zod schemas referenced here.
+servers:
+  - url: https://app.local/api
+paths:
+  /appointments:
+    get:
+      summary: List appointments for the active user persona
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pending, approved, completed, cancelled]
+      responses:
+        '200':
+          description: Collection of appointments with countdown timers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentsResponse'
+    post:
+      summary: Create appointment request (customer flow)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentCreateRequest'
+      responses:
+        '201':
+          description: Pending appointment awaiting manager approval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResource'
+        '409':
+          description: Customer already has an active appointment
+  /appointments/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve appointment by id
+      responses:
+        '200':
+          description: Appointment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResource'
+        '404':
+          description: Appointment not found
+  /appointments/{id}/status:
+    patch:
+      summary: Update appointment status (manager flow)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentStatusUpdate'
+      responses:
+        '200':
+          description: Updated appointment with manager decision record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResource'
+        '409':
+          description: Invalid state transition
+  /services:
+    get:
+      summary: List bookable services
+      responses:
+        '200':
+          description: Collection of services grouped by category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServicesResponse'
+  /user/profile:
+    get:
+      summary: Retrieve profile for active session user
+      responses:
+        '200':
+          description: User profile including locale, notification preferences, and hasActiveAppointment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+    patch:
+      summary: Update notification preferences and locale
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+      responses:
+        '200':
+          description: Updated user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+  /notifications/manager:
+    post:
+      summary: Emit mock notification when manager decision recorded
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManagerNotification'
+      responses:
+        '202':
+          description: Notification enqueued (mock)
+components:
+  schemas:
+    AppointmentResource:
+      type: object
+      required:
+        - id
+        - customerId
+        - serviceId
+        - scheduledStart
+        - scheduledEnd
+        - status
+        - countdownSeconds
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        serviceId:
+          type: string
+          format: uuid
+        scheduledStart:
+          type: string
+          format: date-time
+        scheduledEnd:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, approved, rejected, completed, cancelled]
+        countdownSeconds:
+          type: integer
+          minimum: 0
+        notes:
+          type: string
+          nullable: true
+          maxLength: 500
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        managerDecision:
+          $ref: '#/components/schemas/ManagerDecision'
+    AppointmentsResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppointmentResource'
+    AppointmentCreateRequest:
+      type: object
+      required: [serviceId, scheduledStart, notes]
+      properties:
+        serviceId:
+          type: string
+          format: uuid
+        scheduledStart:
+          type: string
+          format: date-time
+        notes:
+          type: string
+          nullable: true
+          maxLength: 500
+    AppointmentStatusUpdate:
+      type: object
+      required: [decision]
+      properties:
+        decision:
+          type: string
+          enum: [approved, rejected, cancelled]
+        comment:
+          type: string
+          nullable: true
+          maxLength: 300
+    ManagerDecision:
+      type: object
+      nullable: true
+      required:
+        - managerId
+        - decision
+        - decisionTimestamp
+      properties:
+        managerId:
+          type: string
+          format: uuid
+        decision:
+          type: string
+          enum: [approved, rejected]
+        decisionTimestamp:
+          type: string
+          format: date-time
+        comment:
+          type: string
+          nullable: true
+          maxLength: 300
+    ServicesResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+    Service:
+      type: object
+      required: [id, name, durationMinutes, priceCents, category, active]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        durationMinutes:
+          type: integer
+          minimum: 15
+        priceCents:
+          type: integer
+          minimum: 0
+        category:
+          type: string
+          enum: [hair, nails, spa, other]
+        active:
+          type: boolean
+    UserProfile:
+      type: object
+      required:
+        - id
+        - role
+        - displayName
+        - email
+        - preferredLocale
+        - timeZone
+        - hasActiveAppointment
+        - notificationPreferences
+      properties:
+        id:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [customer, stylist, manager]
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          nullable: true
+        preferredLocale:
+          type: string
+          enum: [en-US, el-GR]
+        timeZone:
+          type: string
+        hasActiveAppointment:
+          type: boolean
+        notificationPreferences:
+          $ref: '#/components/schemas/NotificationPreferences'
+    UserProfileUpdate:
+      type: object
+      required: [preferredLocale, notificationPreferences]
+      properties:
+        preferredLocale:
+          type: string
+          enum: [en-US, el-GR]
+        notificationPreferences:
+          $ref: '#/components/schemas/NotificationPreferences'
+    NotificationPreferences:
+      type: object
+      required: [email, sms, push]
+      properties:
+        email:
+          type: boolean
+        sms:
+          type: boolean
+        push:
+          type: boolean
+    ManagerNotification:
+      type: object
+      required: [appointmentId, managerId, decision]
+      properties:
+        appointmentId:
+          type: string
+          format: uuid
+        managerId:
+          type: string
+          format: uuid
+        decision:
+          type: string
+          enum: [approved, rejected]
+        timestamp:
+          type: string
+          format: date-time

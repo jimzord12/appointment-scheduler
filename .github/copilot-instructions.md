@@ -1,274 +1,30 @@
-# GitHub Copilot Instructions: Appointment Management Web Application
+# appointment-scheduler Development Guidelines
 
-## Project Overview
+Auto-generated from all feature plans. Last updated: 2025-09-25
 
-This is a web application for small businesses to manage appointments with a request-approval workflow.
+## Active Technologies
 
-## Tech Stack
+- React 19, TypeScript 5.x, Node.js 20+ (MSW tooling) + Shadcn UI v3 (Radix primitives), Tailwind CSS 4 with Tweakcn Darkmatter theme, MSW, Faker v10, TanStack Router 1, TanStack Query 5, Zustand 5, React Hook Form 7, Zod 4 (001-description-for-this)
 
-- **Frontend**: React 19, Vite 7, TypeScript 5, TailwindCSS 4, shadcn 3, TanStack Router 1, React Hook Form 7, Zustand 5, TanStack Query 5, date-fns 4
-- **Backend**: Node.js 22, Express.js 5, TypeScript 5, Drizzle 0, PostgreSQL 16, better-auth 1, oRPC 1, Zod 4
-- **Database**: Drizzle ORM with PostgreSQL (prod) / SQLite (dev)
-- **Testing**: Vitest 3, React Testing Library 16, supertest 7, MSW 2
-- **Shared**: oRPC 1, Zod 4, zod-openapi 5, dotenv 17, ESLint 9, Prettier 3, Husky 9, lint-staged 16
-
-## Architecture
-
-- Monorepo structure with packages/frontend, packages/backend, and packages/shared
-- End-to-end type-safe API communication with oRPC
-- Type-safe database operations with Drizzle ORM
-- Modern authentication with better-auth
-- Efficient state management with Zustand + TanStack Query
-- Zod schemas for runtime validation
-- OpenAPI spec generation with zod-openapi
-- Code quality with ESLint, Prettier, Husky, and lint-staged
-
-## Key Features
-
-- User registration and authentication
-- Appointment request creation
-- Manager approval/rejection workflow
-- Service management
-- Time slot availability checking
-
-## Development Guidelines
-
-### Code Style
-
-- Use TypeScript strict mode
-- Follow ESLint and Prettier configurations
-- Use descriptive variable and function names
-- Add JSDoc comments for complex functions
-
-### API Design
-
-- Use oRPC for end-to-end type-safe API communication
-- Define procedures with Zod schemas for input/output validation
-- Implement proper error handling with meaningful messages
-- Use Drizzle ORM for type-safe database operations
-- Follow RESTful conventions where applicable
-
-### Database
-
-- Use Drizzle ORM for all database operations
-- Define schemas with proper relationships and constraints
-- Use transactions for complex operations
-- Implement proper indexing for performance
-
-### Authentication
-
-- Use better-auth for authentication flows
-- Implement role-based access control (customer, manager)
-- Secure API endpoints with proper authorization
-- Handle JWT tokens securely
-
-### State Management
-
-- Use Zustand for client-side state management
-- Use TanStack Query for server state synchronization
-- Implement proper loading and error states
-- Cache data appropriately to reduce API calls
-
-### Forms
-
-- Use React Hook Form for form handling
-- Integrate with Zod for form validation
-- Implement proper error messages and user feedback
-- Handle form submission with loading states
-- Implement rate limiting
-- Sanitize user inputs
-- Use HTTPS in production
-
-## File Structure
+## Project Structure
 
 ```
-packages/
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── hooks/
-│   │   ├── stores/          # Zustand stores
-│   │   └── lib/
-│   └── public/
-├── backend/
-│   ├── src/
-│   │   ├── routes/
-│   │   ├── models/          # Drizzle schemas
-│   │   ├── middleware/
-│   │   ├── procedures/      # oRPC procedures
-│   │   └── utils/
-│   ├── drizzle/             # Database migrations
-│   └── dist/
-└── shared/
-    ├── src/
-    │   ├── schemas/         # Zod schemas
-    │   └── types/
-    └── dist/
+backend/
+frontend/
+tests/
 ```
 
-## Common Patterns
+## Commands
 
-### Component Creation
+npm test; npm run lint
 
-```tsx
-interface Props {
-  // props
-}
+## Code Style
 
-export function ComponentName({ prop }: Props) {
-  return <div>{/* JSX */}</div>;
-}
-```
+React 19, TypeScript 5.x, Node.js 20+ (MSW tooling): Follow standard conventions
 
-### oRPC Procedure
+## Recent Changes
 
-```ts
-import { z } from 'zod';
-import { procedure } from '../orpc';
+- 001-description-for-this: Added React 19, TypeScript 5.x, Node.js 20+ (MSW tooling) + Shadcn UI v3 (Radix primitives), Tailwind CSS 4 with Tweakcn Darkmatter theme, MSW, Faker v10, TanStack Router 1, TanStack Query 5, Zustand 5, React Hook Form 7, Zod 4
 
-const inputSchema = z.object({
-  // input validation
-});
-
-export const exampleProcedure = procedure
-  .input(inputSchema)
-  .output(
-    z.object({
-      /* output schema */
-    })
-  )
-  .handler(async ({ input }) => {
-    // implementation
-    return result;
-  });
-```
-
-### Drizzle Database Query
-
-```ts
-import { db } from '../db';
-import { users } from '../schema';
-
-export async function getUser(id: string) {
-  return db.select().from(users).where(eq(users.id, id)).limit(1);
-}
-```
-
-### Zustand Store
-
-```ts
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-
-interface AppState {
-  user: User | null;
-  setUser: (user: User) => void;
-}
-
-export const useAppStore = create<AppState>()(
-  devtools(
-    set => ({
-      user: null,
-      setUser: user => set({ user }),
-    }),
-    { name: 'app-store' }
-  )
-);
-```
-
-### React Hook Form with Zod
-
-```tsx
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
-
-export function LoginForm() {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-  });
-
-  return <form onSubmit={form.handleSubmit(onSubmit)}>{/* form fields */}</form>;
-}
-```
-
-### Supertest Tests
-
-```ts
-import { agent } from 'supertest';
-import { describe, expect, it } from 'vitest';
-import app from '../../src/app';
-import { AuthResponseSchema, CreateUserSchema } from '../../src/schemas';
-
-// T007: Contract test for POST /auth/register
-// Enforced RED state: expects future successful implementation & validation behavior.
-
-const server = agent(app);
-
-describe('POST /auth/register (contract)', () => {
-  const endpoint = '/auth/register';
-
-  it('returns 201 with AuthResponseSchema shape when valid payload provided (expected FAIL until implemented)', async () => {
-    const payload = { name: 'Test User', email: 'test@example.com', password: 'password123' };
-    const res = await server.post(endpoint).send(payload);
-    expect(res.status).toBe(201); // Fails now (endpoint absent)
-    const parsed = AuthResponseSchema.safeParse(res.body);
-    expect(parsed.success).toBe(true); // Unreachable until implemented
-  });
-
-  it('rejects missing required fields', async () => {
-    const res = await server.post(endpoint).send({});
-    expect(res.status).toBe(400); // Fails now (likely 404)
-  });
-
-  it('rejects weak password', async () => {
-    const res = await server
-      .post(endpoint)
-      .send({ name: 'A', email: 'weak@example.com', password: '123' });
-    expect(res.status).toBe(400); // Fails now
-  });
-
-  it('schema compile sanity check (should remain green)', () => {
-    const invalid = CreateUserSchema.safeParse({});
-    expect(invalid.success).toBe(false);
-  });
-});
-```
-
-## Best Practices
-
-- Keep components small and focused
-- Use custom hooks for shared logic
-- Implement proper loading and error states
-- Follow accessibility guidelines
-- Optimize bundle size
-- Use environment variables for configuration
-
-## Git Workflow
-
-- Use feature branches
-- Write clear commit messages
-- Create pull requests for review
-- Run tests before pushing
-- Keep commits atomic
-
-## Performance Tips
-
-### Frontend
-
-- Always respect React Hooks rules, so that the new React's Compiler optimizations can be fully utilized.
-- Implement lazy loading for routes
-- Use Suspense for data fetching
-- Code-split components using dynamic imports where appropriate
-- Utilize useTransition and concurrent features
-- Optimize images and assets
-
-### Backend
-
-- Use database indexes
-- (Future) Implement caching where appropriate
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->

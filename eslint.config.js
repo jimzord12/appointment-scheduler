@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import importPlugin from 'eslint-plugin-import';
 import react from 'eslint-plugin-react';
+import reactCompilerPlugin from 'eslint-plugin-react-compiler';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -32,6 +33,7 @@ export default [
       'react-hooks': reactHooks,
       import: importPlugin,
       '@typescript-eslint': tseslint.plugin,
+      'react-compiler': reactCompilerPlugin,
     },
     rules: {
       // TypeScript rules
@@ -43,6 +45,7 @@ export default [
       '@typescript-eslint/no-empty-function': 'warn',
 
       // React rules
+      'react-compiler/react-compiler': 'error',
       'react/react-in-jsx-scope': 'off', // Not needed with React 17+
       'react/prop-types': 'off', // Using TypeScript for prop types
       'react/jsx-uses-react': 'off',
